@@ -1,0 +1,8 @@
+docker*
+Dockerfile*
+Makefile
+.env
+.git*
+.idea
+.override_dev_env.sample
+venv
