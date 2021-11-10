@@ -1,12 +1,19 @@
 {% extends "base.html" %}
+{% load i18n %}
 {% block extra_head %}
       <link href="{{ STATIC_URL }}css/site_base.css" rel="stylesheet"/>
 {% endblock %}
+
+
 {% block extra_tab %}
-{% comment %}
-Add Tab for Third Party Apps
-<li>
- <a href="{{ PROJECT_ROOT }}app">App</a>
+
+<li id="nav_teste">
+      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{% trans "Teste" %}<i class="fa fa-angle-down fa-lg"></i></a>
+      <ul class="dropdown-menu">
+            <li><a href="#">{% trans "Item 1" %}</a></li>
+            <li><a href="#">{% trans "Item 2" %}</a></li>
+            <li><a href="#">{% trans "Item 3" %}</a></li>      
+            <li><a href="#">{% trans "Item 4" %}</a></li>
+      </ul>
 </li>
-{% endcomment %}
 {% endblock %}
