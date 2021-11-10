@@ -1,77 +1,121 @@
-FROM python:3.8.9-buster
-LABEL GeoNode development team
+ARG BASE_IMAGE=python:3.8-slim-buster
 
-RUN mkdir -p /usr/src/opengeosgb
+FROM $BASE_IMAGE AS build
+LABEL mantainer="NDS CPRM"
 
-# Enable postgresql-client-13
-RUN echo "deb http://apt.postgresql.org/pub/repos/apt/ buster-pgdg main" | tee /etc/apt/sources.list.d/pgdg.list
-RUN echo "deb http://deb.debian.org/debian/ stable main contrib non-free" | tee /etc/apt/sources.list.d/debian.list
-RUN wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add -
+ENV GEONODE_ROOT=/usr/src/opengeosgb \
+    GEONODE_VENV=/opt/venv
+    #GEONODE_CONTRIBS=/usr/src/geonode-contribs
+
+## Prepraing dependencies
+# GDAL 3 & PROJ4 -> Build from source (GDAL > 3.2.x & PROJ > 6)
+# GDAL -> https://github.com/OSGeo/gdal
+# PROJ -> https://github.com/OSGeo/PROJ
+#RUN apt-get update && apt-get install -y devscripts build-essential debhelper pkg-kde-tools sharutils
+## RUN git clone https://salsa.debian.org/debian-gis-team/proj.git /tmp/proj
+## RUN cd /tmp/proj && debuild -i -us -uc -b && dpkg -i ../*.deb
 
 # To get GDAL 3.2.1 to fix this issue https://github.com/OSGeo/gdal/issues/1692
 # TODO: The following line should be removed if base image upgraded to Bullseye
-RUN echo "deb http://deb.debian.org/debian/ bullseye main contrib non-free" | tee /etc/apt/sources.list.d/debian.list
+# RUN echo "deb http://deb.debian.org/debian/ bullseye main contrib non-free" | tee /etc/apt/sources.list.d/debian.list
 
 # This section is borrowed from the official Django image but adds GDAL and others
-RUN apt-get update && apt-get install -y \
-    libgdal-dev libpq-dev libxml2-dev \
-    libxml2 libxslt1-dev zlib1g-dev libjpeg-dev \
-    libmemcached-dev libldap2-dev libsasl2-dev libffi-dev
-
-RUN apt-get update && apt-get install -y \
-    gcc zip gettext geoip-bin cron \
-    postgresql-client-13 \
-    sqlite3 spatialite-bin libsqlite3-mod-spatialite \
-    python3-dev python3-gdal python3-psycopg2 python3-ldap \
-    python3-pip python3-pil python3-lxml python3-pylibmc \
-    uwsgi uwsgi-plugin-python3 \
-    firefox-esr \
-    --no-install-recommends && rm -rf /var/lib/apt/lists/*
-
+RUN set -xe && \
+    apt-get update && \
+    apt-get install -y --no-install-recommends --no-install-suggests \
+      git build-essential libgdal-dev libpq-dev libxml2-dev \
+      libxslt1-dev zlib1g-dev libjpeg-dev libmemcached-dev  \
+      libldap2-dev libsasl2-dev libffi-dev && \
+    apt-get -y autoremove --purge && \
+    rm -rf /var/lib/apt/lists/*
 
 # add bower and grunt command
-COPY . /usr/src/opengeosgb/
-WORKDIR /usr/src/opengeosgb
+COPY . $GEONODE_ROOT
+WORKDIR $GEONODE_ROOT
 
-COPY monitoring-cron /etc/cron.d/monitoring-cron
-RUN chmod 0644 /etc/cron.d/monitoring-cron
-RUN crontab /etc/cron.d/monitoring-cron
-RUN touch /var/log/cron.log
-RUN service cron start
+# Install virtual env
+RUN set -xe && \
+    python -m venv $GEONODE_VENV
 
-COPY wait-for-databases.sh /usr/bin/wait-for-databases
-RUN chmod +x /usr/bin/wait-for-databases
-RUN chmod +x /usr/src/opengeosgb/tasks.py \
-    && chmod +x /usr/src/opengeosgb/entrypoint.sh
+# Add venv to PATH
+ENV PATH=$GEONODE_VENV/bin:$PATH
 
-COPY celery.sh /usr/bin/celery-commands
-RUN chmod +x /usr/bin/celery-commands
+# Install dependencies
+RUN set -xe && \
+    pip install --upgrade --no-cache-dir -r requirements.txt &&  \
+    pip install --no-cache-dir pygdal==$(gdal-config --version).* &&  \
+    pip install --no-cache-dir flower==0.9.4 && \
+    pip install --no-cache-dir pylibmc sherlock && \
+    # Django Haystack only supports these versions
+    pip install --no-cache-dir "elasticsearch>=2.0.0,<3.0.0"
 
-COPY celery-cmd /usr/bin/celery-cmd
-RUN chmod +x /usr/bin/celery-cmd
+# Install Main Geonode Module
+RUN set -xe && \
+    pip install --no-cache-dir --upgrade  -e .
 
-# Prepraing dependencies
-RUN apt-get update && apt-get install -y devscripts build-essential debhelper pkg-kde-tools sharutils
-# RUN git clone https://salsa.debian.org/debian-gis-team/proj.git /tmp/proj
-# RUN cd /tmp/proj && debuild -i -us -uc -b && dpkg -i ../*.deb
+# Install Geonode contribs
+RUN set -xe && \
+    pip install --no-cache-dir -e "git+https://github.com/GeoNode/geonode-contribs.git@master#egg=geonode_logstash&subdirectory=geonode-logstash" && \
+    pip install --no-cache-dir -e "git+https://github.com/GeoNode/geonode-contribs.git@master#egg=geonode_ldap&subdirectory=ldap"
 
-# Install pip packages
-RUN pip install pip --upgrade
-RUN pip install --upgrade --no-cache-dir  --src /usr/src -r requirements.txt \
-    && pip install pygdal==$(gdal-config --version).* \
-    && pip install flower==0.9.4
+# Cleaned Image
+FROM $BASE_IMAGE
 
-RUN pip install --upgrade  -e .
+ENV GEONODE_ROOT=/usr/src/opengeosgb \
+    GEONODE_VENV=/opt/venv
 
-# Activate "memcached"
-RUN apt install -y memcached
-RUN pip install pylibmc \
-    && pip install sherlock
+COPY --from=build $GEONODE_VENV $GEONODE_VENV
+COPY --from=build $GEONODE_ROOT $GEONODE_ROOT
 
-# Install "geonode-contribs" apps
-RUN cd /usr/src; git clone https://github.com/GeoNode/geonode-contribs.git -b master
-# Install logstash and centralized dashboard dependencies
-RUN cd /usr/src/geonode-contribs/geonode-logstash; pip install --upgrade  -e . \
-    cd /usr/src/geonode-contribs/ldap; pip install --upgrade  -e .
+# Add venv to PATH
+ENV PATH=$GEONODE_VENV/bin:$PATH
+
+WORKDIR $GEONODE_ROOT
+
+# PostgreSQL Repos
+RUN set -xe && \
+    apt-get update && \
+    apt-get install -y --no-install-recommends --no-install-suggests \
+        gnupg wget && \
+    echo "deb http://apt.postgresql.org/pub/repos/apt/ buster-pgdg main" | tee /etc/apt/sources.list.d/pgdg.list && \
+    # echo "deb http://deb.debian.org/debian/ stable main contrib non-free" | tee /etc/apt/sources.list.d/debian.list
+    wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add - && \
+    apt-get -y purge wget gnupg && \
+    apt-get -y autoremove --purge && \
+    rm -rf /var/lib/apt/lists/*
+
+# Dependency binaries
+RUN set -xe && \
+    apt-get update && \
+    apt-get install -y --no-install-recommends --no-install-suggests \
+        zip unzip gettext geoip-bin cron gdal-bin postgresql-client-13 && \
+    apt-get -y autoremove --purge && \
+    rm -rf /var/lib/apt/lists/*
+
+# Executables
+#COPY monitoring-cron /etc/cron.d/monitoring-cron
+RUN set -xe && \
+    mv monitoring-cron /etc/cron.d/monitoring-cron && \
+    chmod 0644 /etc/cron.d/monitoring-cron && \
+    crontab /etc/cron.d/monitoring-cron && \
+    touch /var/log/cron.log && \
+    service cron start
+
+#COPY wait-for-databases.sh /usr/bin/wait-for-databases
+RUN set -xe && \
+    mv wait-for-databases.sh /usr/bin/wait-for-databases && \
+    chmod +x /usr/bin/wait-for-databases && \
+    chmod +x tasks.py &&  \
+    chmod +x entrypoint.sh
+
+#COPY celery.sh /usr/bin/celery-commands
+RUN set -xe && \
+    mv celery.sh /usr/bin/celery-commands && \
+    chmod +x /usr/bin/celery-commands
+
+#COPY celery-cmd /usr/bin/celery-cmd
+RUN set -xe && \
+    mv celery-cmd /usr/bin/celery-cmd && \
+    chmod +x /usr/bin/celery-cmd
 
 ENTRYPOINT /usr/src/opengeosgb/entrypoint.sh

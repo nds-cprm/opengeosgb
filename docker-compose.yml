@@ -1,4 +1,4 @@
-version: '2.2'
+version: '3.7'
 services:
   db:
     image: geonode/postgis:13
@@ -27,7 +27,7 @@ services:
         org.geonode.deployment.name: ${COMPOSE_PROJECT_NAME}
 
   geoserver:
-    image: geonode/geoserver:2.18.2
+    image: ndscprm/geonode-geoserver:2.18.2
     build: ./docker/geoserver/
     restart: unless-stopped
     container_name: geoserver4${COMPOSE_PROJECT_NAME}
@@ -39,6 +39,7 @@ services:
     depends_on:
       - db
       - data-dir-conf
+      - elasticsearch
     volumes:
       - statics:/mnt/volumes/statics
       - geoserver-data-dir:/geoserver_data/data
@@ -50,6 +51,7 @@ services:
 
   django:
     restart: unless-stopped
+    image: ndscprm/geonode:3.2.1
     build: .
     container_name: django4${COMPOSE_PROJECT_NAME}
     stdin_open: true
@@ -57,16 +59,20 @@ services:
     labels:
       org.geonode.component: django
       org.geonode.instance.name: geonode
+    ports:
+      - '8000'
     depends_on:
       - db
       - rabbitmq
       - data-dir-conf
+      - elasticsearch
     volumes:
       - statics:/mnt/volumes/statics
       - geoserver-data-dir:/geoserver_data/data
       - backup-restore:/backup_restore
       - data:/data
       - tmp:/tmp
+      #- entrypoint.sh:/usr/src/opengeosgb/entrypoint.sh
     env_file:
       - .env
     environment:
@@ -76,7 +82,7 @@ services:
   celery:
     restart: unless-stopped
     #build: .
-    image: ${COMPOSE_PROJECT_NAME}_django:latest
+    image: ndscprm/geonode:3.2.1
     container_name: celery4${COMPOSE_PROJECT_NAME}
     stdin_open: true
     # tty: true
@@ -86,6 +92,7 @@ services:
     depends_on:
       - django
       - db
+      - elasticsearch
       - rabbitmq
       - data-dir-conf
     volumes:
@@ -94,14 +101,40 @@ services:
       - backup-restore:/backup_restore
       - data:/data
       - tmp:/tmp
+      #- entrypoint.sh:/usr/src/opengeosgb/entrypoint.sh
     env_file:
       - .env
     environment:
       CELERY_CMD: celery-cmd
       IS_CELERY: 'True'
+      ASYNC_SIGNALS: 'True'
+
+  memcached:
+    image: memcached:1.6-buster
+    restart: unless-stopped
+    container_name: memcached4${COMPOSE_PROJECT_NAME}
+    stdin_open: true
+    # tty: true
+    labels:
+        org.geonode.component: memcached
+        org.geonode.instance.name: geonode
+
+  elasticsearch:
+    image: elasticsearch:5.6
+    restart: unless-stopped
+    container_name: elasticsearch4${COMPOSE_PROJECT_NAME}
+    environment:
+      - "discovery.type=single-node"
+    stdin_open: true
+    tty: true
+    volumes:
+      - elasticdata:/usr/share/elasticsearch/data
+    labels:
+        org.geonode.component: elasticsearch
+        org.geonode.instance.name: geonode
 
   geonode:
-    image: geonode/nginx:3.x
+    image: ndscprm/geonode-nginx:3.x
     build: ./docker/nginx/
     restart: unless-stopped
     container_name: nginx4${COMPOSE_PROJECT_NAME}
@@ -124,14 +157,14 @@ services:
       - .env
 
   # Gets and installs letsencrypt certificates
-  letsencrypt:
-    image: geonode/letsencrypt:latest
-    build: ./docker/letsencrypt/
-    restart: on-failure
-    volumes:
-      - nginx-certificates:/geonode-certificates/
-    env_file:
-      - .env
+#  letsencrypt:
+#    image: geonode/letsencrypt:latest
+#    build: ./docker/letsencrypt/
+#    restart: on-failure
+#    volumes:
+#      - nginx-certificates:/geonode-certificates/
+#    env_file:
+#      - .env
 
   data-dir-conf:
     image: geonode/geoserver_data:2.18.2
@@ -182,3 +215,5 @@ volumes:
     name: ${COMPOSE_PROJECT_NAME}-data
   tmp:
     name: ${COMPOSE_PROJECT_NAME}-tmp
+  elasticdata:
+    name: ${COMPOSE_PROJECT_NAME}-elasticdata

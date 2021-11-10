@@ -3,16 +3,19 @@
 # Exit script in case of error
 set -e
 
-# Start cron && memcached services
+# pip install -e git+https://alvaro.barcellos:nds%40cprm@gitlab.ti.lemaf.ufla.br/zetta/ide-zetta-client.git@teste_cprm#egg=django_geonode_mapstore_client
+# pip install -e git+https://github.com/nds-cprm/geonode-mapstore-client.git@3.2.x#egg=django_geonode_mapstore_client
+
+# Start cron services
+# service memcached restart
 service cron restart
-service memcached restart
 
 echo $"\n\n\n"
 echo "-----------------------------------------------------"
 echo "STARTING DJANGO ENTRYPOINT $(date)"
 echo "-----------------------------------------------------"
 
-/usr/local/bin/invoke update > /usr/src/opengeosgb/invoke.log 2>&1
+invoke update > $GEONODE_ROOT/invoke.log 2>&1
 
 source $HOME/.bashrc
 source $HOME/.override_env
@@ -30,7 +33,7 @@ echo MONITORING_HOST_NAME=$MONITORING_HOST_NAME
 echo MONITORING_SERVICE_NAME=$MONITORING_SERVICE_NAME
 echo MONITORING_DATA_TTL=$MONITORING_DATA_TTL
 
-/usr/local/bin/invoke waitfordbs > /usr/src/opengeosgb/invoke.log 2>&1
+invoke waitfordbs > $GEONODE_ROOT/invoke.log 2>&1
 echo "waitfordbs task done"
 
 cmd="$@"
@@ -48,31 +51,31 @@ else
     else
 
         echo "running migrations"
-        /usr/local/bin/invoke migrations > /usr/src/opengeosgb/invoke.log 2>&1
+        invoke migrations > $GEONODE_ROOT/invoke.log 2>&1
         echo "migrations task done"
 
-        /usr/local/bin/invoke prepare > /usr/src/opengeosgb/invoke.log 2>&1
+        invoke prepare > $GEONODE_ROOT/invoke.log 2>&1
         echo "prepare task done"
 
-        if [ ${FORCE_REINIT} = "true" ]  || [ ${FORCE_REINIT} = "True" ] || [ ! -e "/mnt/volumes/statics/geonode_init.lock" ]; then
-            /usr/local/bin/invoke updategeoip > /usr/src/opengeosgb/invoke.log 2>&1
+        if [ ${FORCE_REINIT} = "true" ]  || [ ${FORCE_REINIT} = "True" ] || [ ! "/mnt/volumes/statics/geonode_init.lock" ]; then
+            invoke updategeoip > $GEONODE_ROOT/invoke.log 2>&1
             echo "updategeoip task done"
-            /usr/local/bin/invoke fixtures > /usr/src/opengeosgb/invoke.log 2>&1
+            invoke fixtures > $GEONODE_ROOT/invoke.log 2>&1
             echo "fixture task done"
-            /usr/local/bin/invoke monitoringfixture > /usr/src/opengeosgb/invoke.log 2>&1
+            invoke monitoringfixture > $GEONODE_ROOT/invoke.log 2>&1
             echo "monitoringfixture task done"
-            /usr/local/bin/invoke initialized > /usr/src/opengeosgb/invoke.log 2>&1
+            invoke initialized > $GEONODE_ROOT/invoke.log 2>&1
             echo "initialized"
         fi
 
         echo "refresh static data"
-        /usr/local/bin/invoke statics > /usr/src/opengeosgb/invoke.log 2>&1
+        invoke statics > $GEONODE_ROOT/invoke.log 2>&1
         echo "static data refreshed"
-        /usr/local/bin/invoke waitforgeoserver > /usr/src/opengeosgb/invoke.log 2>&1
+        invoke waitforgeoserver > $GEONODE_ROOT/invoke.log 2>&1
         echo "waitforgeoserver task done"
-        /usr/local/bin/invoke geoserverfixture > /usr/src/opengeosgb/invoke.log 2>&1
+        invoke geoserverfixture > $GEONODE_ROOT/invoke.log 2>&1
         echo "geoserverfixture task done"
-        /usr/local/bin/invoke updateadmin > /usr/src/opengeosgb/invoke.log 2>&1
+        invoke updateadmin > $GEONODE_ROOT/invoke.log 2>&1
         echo "updateadmin task done"
 
         cmd=$UWSGI_CMD
@@ -84,6 +87,6 @@ echo "-----------------------------------------------------"
 echo "FINISHED DJANGO ENTRYPOINT --------------------------"
 echo "-----------------------------------------------------"
 
-# Run the CMD 
+# Run the CMD
 echo "got command $cmd"
 exec $cmd

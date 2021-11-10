@@ -1,2 +1,2 @@
 . $HOME/.override_env
-/usr/local/bin/python /usr/src/opengeosgb/manage.py $@
+$(which python || which python3 || echo python) $GEONODE_ROOT/manage.py $@
