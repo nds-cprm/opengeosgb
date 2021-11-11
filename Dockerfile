@@ -1,6 +1,8 @@
-ARG BASE_IMAGE=python:3.8-slim-buster
+ARG DEBIAN_VERSION=bullseye
+ARG PYTHON_VERSION=3.8
+ARG BASE_IMAGE=python:${PYTHON_VERSION}-slim-${DEBIAN_VERSION}
 
-FROM $BASE_IMAGE AS build
+FROM $BASE_IMAGE AS BUILD
 LABEL mantainer="NDS CPRM"
 
 ENV GEONODE_ROOT=/usr/src/opengeosgb \
@@ -59,13 +61,15 @@ RUN set -xe && \
     pip install --no-cache-dir -e "git+https://github.com/GeoNode/geonode-contribs.git@master#egg=geonode_ldap&subdirectory=ldap"
 
 # Cleaned Image
-FROM $BASE_IMAGE
+FROM $BASE_IMAGE AS RELEASE
+
+ARG DEBIAN_VERSION
 
 ENV GEONODE_ROOT=/usr/src/opengeosgb \
     GEONODE_VENV=/opt/venv
 
-COPY --from=build $GEONODE_VENV $GEONODE_VENV
-COPY --from=build $GEONODE_ROOT $GEONODE_ROOT
+COPY --from=BUILD $GEONODE_VENV $GEONODE_VENV
+COPY --from=BUILD $GEONODE_ROOT $GEONODE_ROOT
 
 # Add venv to PATH
 ENV PATH=$GEONODE_VENV/bin:$PATH
@@ -77,7 +81,7 @@ RUN set -xe && \
     apt-get update && \
     apt-get install -y --no-install-recommends --no-install-suggests \
         gnupg wget && \
-    echo "deb http://apt.postgresql.org/pub/repos/apt/ buster-pgdg main" | tee /etc/apt/sources.list.d/pgdg.list && \
+    echo "deb http://apt.postgresql.org/pub/repos/apt/ ${DEBIAN_VERSION}-pgdg main" | tee /etc/apt/sources.list.d/pgdg.list && \
     # echo "deb http://deb.debian.org/debian/ stable main contrib non-free" | tee /etc/apt/sources.list.d/debian.list
     wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add - && \
     apt-get -y purge wget gnupg && \
