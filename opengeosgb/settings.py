@@ -141,3 +141,24 @@ if LDAP_ENABLED and 'geonode_ldap' not in INSTALLED_APPS:
 
 # Add your specific LDAP configuration after this comment:
 # https://docs.geonode.org/en/master/advanced/contrib/#configuration
+
+# Social Providers
+# https://docs.geonode.org/en/master/advanced/social/index.html
+# LinkedIn and Facebook are available by default
+INSTALLED_APPS += (
+    "allauth.socialaccount.providers.linkedin_oauth2",
+    # "allauth.socialaccount.providers.facebook",  # Breaks the template if not created a SocialApp
+    "allauth.socialaccount.providers.google",
+)
+
+SOCIALACCOUNT_PROVIDERS['google'] = {
+    'SCOPE': [
+        'profile',
+        'email',
+    ],
+    'AUTH_PARAMS': {
+        'access_type': 'online',
+    }
+}
+
+SOCIALACCOUNT_PROFILE_EXTRACTORS['google'] = "opencprm.people.profileextractors.GoogleExtractor"
