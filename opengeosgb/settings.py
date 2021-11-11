@@ -146,7 +146,7 @@ if LDAP_ENABLED and 'geonode_ldap' not in INSTALLED_APPS:
 # https://docs.geonode.org/en/master/advanced/social/index.html
 # LinkedIn and Facebook are available by default
 INSTALLED_APPS += (
-    "allauth.socialaccount.providers.linkedin_oauth2",
+    # "allauth.socialaccount.providers.linkedin_oauth2",
     # "allauth.socialaccount.providers.facebook",  # Breaks the template if not created a SocialApp
     "allauth.socialaccount.providers.google",
 )
@@ -161,4 +161,4 @@ SOCIALACCOUNT_PROVIDERS['google'] = {
     }
 }
 
-SOCIALACCOUNT_PROFILE_EXTRACTORS['google'] = "opencprm.people.profileextractors.GoogleExtractor"
+SOCIALACCOUNT_PROFILE_EXTRACTORS['google'] = "opengeosgb.people.profileextractors.GoogleExtractor"
