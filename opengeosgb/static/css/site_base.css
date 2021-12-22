@@ -1,0 +1,122 @@
+.navbar-brand {
+    width: 350px;
+    background: transparent url("../img/logo_sgb.png") no-repeat;
+    background-position-y: center;
+}
+
+.navbar-nav .search input {
+    /* width: 120px; */
+    height: 32px;
+    border: 1px solid #333333;
+    border-radius: 5px;
+    outline-width: 0;
+    text-indent: 32px;
+    -webkit-transition: width 0.2s;
+    transition: width 0.2s;
+}
+
+.home .jumbotron {
+    position: relative;
+    background: #0494db;
+    color: white;
+    margin-bottom: 0;
+    padding: 1em 0 1em;
+    text-shadow: 2px 2px 2px rgb(0 0 0 / 40%);
+}
+
+.home .navbar-inverse {
+    background-color: #071d41;
+  }
+
+body {
+    color: #071d41;
+    background-color: #071d41;
+  }
+
+  a {
+    color: #0494db;
+  }
+  .navbar-inverse .navbar-nav > li > a:hover {
+    background-color: #0494db;
+  }
+
+  .navbar-inverse .navbar-nav > .open > a,
+  .navbar-inverse .navbar-nav > .open > a:focus,
+  .navbar-inverse .navbar-nav > .open > a:hover {
+    background-color: #0494db;
+  }
+  .navbar-nav .dropdown-menu {
+    background-color: #0494db;
+    border-top: 1px solid #0494db;
+  }
+  .navbar-nav .dropdown-menu li a:hover {
+    background-color: #0494db;
+    color: white;
+  }
+  .navbar-nav .dropdown-menu .divider {
+    background-color: #0494db;
+  }
+  .navbar-nav .search {
+    left: 15px;
+    position: relative;
+    color: #444;
+    top: 20px;
+    margin-right: 55px;
+  }
+  .home #datasets a .category:hover {
+    color: #0494db;
+  }
+  .home-facets a:hover {
+    color: #0494db;
+    text-decoration: none;
+  }
+  nav.filter .active {
+    color: #0494db;
+  }
+  nav.filter .active .badge {
+    background: #0494db;
+  }
+  .home .big-search {
+    background: #071d41;
+    color: white;
+    padding-bottom: 0.1em;
+    padding-top: 0.1em;
+    display: none;
+}
+
+.texto-footer {
+
+}
+.home #showcase {
+  /*background: #eeeeee;*/
+  padding: 0.5em 0;
+  text-align: center;
+}
+
+.texto-footer-copyright {
+  color: #5f5f5f;
+  padding: 1em;
+}
+
+.footer-copyright {
+  background: #cdced1;
+  padding: 0.1em;
+  /* padding: 0.8em;
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0.1px; */
+}
+footer{
+  padding: 0em;
+  background: #cdced1;
+}
+.upper-footer{
+  background-color: #071d41;
+  color: white;
+  padding: 1em;
+}
+
+.home-facets {
+  padding: 1em;
+}

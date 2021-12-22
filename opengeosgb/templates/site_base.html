@@ -4,16 +4,18 @@
       <link href="{{ STATIC_URL }}css/site_base.css" rel="stylesheet"/>
 {% endblock %}
 
+{% block tabs %}
 
-{% block extra_tab %}
+      {% block extra_tab %}
+      <li><a href="/layers/?limit=5">{% trans "Layers" %}</a></li>
 
-<li id="nav_teste">
-      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{% trans "Teste" %}<i class="fa fa-angle-down fa-lg"></i></a>
-      <ul class="dropdown-menu">
-            <li><a href="#">{% trans "Item 1" %}</a></li>
-            <li><a href="#">{% trans "Item 2" %}</a></li>
-            <li><a href="#">{% trans "Item 3" %}</a></li>      
-            <li><a href="#">{% trans "Item 4" %}</a></li>
-      </ul>
-</li>
+      <li id="nav_maps">
+            <a href="/documents/?limit=5">{% trans "Documents" %}</a>
+      </li>
+
+      <li id="nav_maps">
+            <a href="/maps/?limit=5">{% trans "Maps" %}</a>
+      </li>
+
+      {% endblock %}
 {% endblock %}

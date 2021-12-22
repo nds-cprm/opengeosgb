@@ -2,122 +2,122 @@
 {% load markdownify %}
 {% load i18n %}
 {% load base_tags %}
+
 {% comment %}
 This is where you can override the hero area block. You can simply modify the content below or replace it wholesale to meet your own needs.
 {% endcomment %}
+<head><title>OpenGeoSGB</title></head>
+
 {% block hero %}
-{% if custom_theme.welcome_theme == 'JUMBOTRON_BG' or not slides %}
-<div class="jumbotron">
-  <div class="container">
-    {% with jumbotron_welcome_title=custom_theme.jumbotron_welcome_title|default:"Welcome"|template_trans %}
-    <h1>{% trans jumbotron_welcome_title %}</h1>
-    {% endwith %}
-    <p></p>
-    {% with jumbotron_welcome_content=custom_theme.jumbotron_welcome_content|default:"GeoNode is an open source platform for sharing geospatial data and maps."|template_trans %}
-    <p>{% trans jumbotron_welcome_content %}</p>
-    {% endwith %}
-    {% if not custom_theme.jumbotron_cta_hide %}
-    <p><a class="btn btn-default btn-lg" target="_blank"
-        href="{{custom_theme.jumbotron_cta_link|default:_("https://docs.geonode.org/en/master/usage/index.html")}}"
-        role="button">{{custom_theme.jumbotron_cta_text|default:_("Get Started &raquo;")}}</a></p>
-    {% endif %}
-  </div>
-</div>
-{% else %}
-<div class="geonode-slide-show">
-  <div class="jumbotron jumbotron--no_bg">
-    <div class="container">
-      <div id="myCarousel" class="carousel slide" data-ride="carousel">
-        <!-- Indicators -->
-        {% if slides.count > 1%}
-        <ol class="carousel-indicators">
-          {% for slide in slides %}
-          <li data-target="#myCarousel" data-slide-to="{{ forloop.counter | add:'-1' }}"
-            class="{% if forloop.counter == 1 %}active{%endif%}"></li>
-          {% endfor %}
-        </ol>
-        {% endif %}
-        {% with jumbotron_welcome_title=custom_theme.jumbotron_welcome_title|default:"Welcome"|template_trans %}
-        <h1 class="carousel-header">{% trans jumbotron_welcome_title %}</h1>
-        {% endwith %}
-        <!-- Wrapper for slides -->
-        <div class="carousel-inner" role="listbox">
-          {% for slide in slides %}
-          <div class="item {% if forloop.counter == 1 %}active{%endif%}">
-            {% if slide.jumbotron_slide_image %}
-            <img src="{{ slide.jumbotron_slide_image_thumbnail.url }}" alt="{{ slide.slide_name }}">
-            {% endif %}
-            {% if not slide.hide_jumbotron_slide_content %}
-            <div class="carousel-caption">
-              {% with jumbotron_slide_content=slide.jumbotron_slide_content|markdownify %}
-              {% trans jumbotron_slide_content %}
-              {% endwith %}
-            </div>
-            {% endif %}
-          </div>
-          {% endfor %}
+    <div class="jumbotron">
+        <div class="container">
+            <h1>{{custom_theme.jumbotron_welcome_title|default:_("OpenGeoSGB")}}</h1>
+            <p></p>
+            <p>{{custom_theme.jumbotron_welcome_content|default:_("Dados, informações e mapas do SGB.")}}</p>
         </div>
-        <!-- Left and right controls -->
-        {% if slides.count > 1%}
-        <a class="left carousel-control" href="#myCarousel" data-slide="prev">
-          <span class="glyphicon glyphicon-chevron-left"></span>
-          <span class="sr-only">Previous</span>
-        </a>
-        <a class="right carousel-control" href="#myCarousel" data-slide="next">
-          <span class="glyphicon glyphicon-chevron-right"></span>
-          <span class="sr-only">Next</span>
-        </a>
-        {% endif %}
-      </div>
     </div>
-  </div>
-</div>
-{% endif %}
-{% endblock hero %}
+{% endblock %}
 
 {% comment %} 
 Removido a quantiade de usuários
 {% endcomment%}
+
+
+
 {% block showcase %}
-  <section id="showcase">
-    <div class="row">
-      <div class="container text-center">
-        <div class="row home-facets">
-        {% with facet_type='home' %}
-          {% facets as facets %}
-          <div class="col-md-4">
-            <p><a href="{% url "layer_browse" %}"><i class="fa fa-square-o fa-4x rotate-45"></i></a></p>
-            <h2><a href="{% url "layer_browse" %}">{{ facets.layer|default:_("No") }} {% blocktrans count counter=facets.layer %}Layer{% plural %}Layers{% endblocktrans %}</a></h2>
-            <p>{% trans "Click to search for geospatial data published by other users, organizations and public sources. Download data in standard formats." %}</p>
-            {% if user.is_authenticated %}
-            <p class="text-center"><a class="btn btn-default" href="{% url "layer_upload" %}" role="button">{% trans "Add layers" %} &raquo;</a></p>
-            {% else %}
-            <p class="text-center"><a class="btn btn-default" href="{% url "layer_browse" %}" role="button">{% trans "Explore layers" %} &raquo;</a></p>
-            {% endif %}
-          </div>
-          <div class="col-md-4">
-            <p><a href="{% url "maps_browse" %}"><i class="fa fa-map-marker fa-4x"></i></a></p>
-            <h2><a href="{% url "maps_browse" %}">{{ facets.map|default:_("No") }} {% blocktrans count counter=facets.map %}Map{% plural %}Maps{% endblocktrans %}</a></h2>
-            <p>{% trans "Data is available for browsing, aggregating and styling to generate maps which can be saved, downloaded, shared publicly or restricted to specify users only." %}</p>
-            {% if user.is_authenticated %}
-            <p><a class="btn btn-default" href="{% url "new_map" %}" role="button">{% trans "Create maps" %} &raquo;</a></p>
-            {% else %}
-            <p><a class="btn btn-default" href="{% url "maps_browse" %}" role="button">{% trans "Explore maps" %} &raquo;</a></p>
-            {% endif %}
-          </div>
-          <div class="col-md-4">
-            <p><a href="{% url "document_browse" %}"><i class="fa fa-newspaper-o fa-4x"></i></a></p>
-            <h2><a href="{% url "document_browse" %}">{{ facets.document|default:_("No") }} {% blocktrans count counter=facets.document %}Document{% plural %}Documents{% endblocktrans %}</a></h2>
-            <p>{% trans "As for the layers and maps GeoNode allows to publish tabular and text data, manage theirs metadata and associated documents." %}</p>
-            {% if user.is_authenticated %}
-            <p class="text-center"><a class="btn btn-default" href="{% url "document_browse" %}" role="button">{% trans "Add documents" %} &raquo;</a></p>
-            {% else %}
-            <p class="text-center"><a class="btn btn-default" href="{% url "document_browse" %}" role="button">{% trans "Explore documents" %} &raquo;</a></p>
-            {% endif %}
-          </div>          
-        {% endwith %}
+<section id="showcase">
+  <div class="row">
+    <div class="container text-center">
+      <div class="row home-facets">
+      {% with facet_type='home' %}
+        {% facets as facets %}
+        <div class="col-md-4">
+          <p><a href="/layers/?limit=5"><i class="fa fa-square-o fa-4x rotate-45"></i></a></p>
+          <h2><a href="/layers/?limit=5">{{ facets.layer|default:_("No") }} {% blocktrans count counter=facets.layer %}Layer{% plural %}Layers{% endblocktrans %}</a></h2>
+          <p>{% trans "Click to search for geospatial data published by other users, organizations and public sources. Download data in standard formats." %}</p>
+          {% if user.is_authenticated %}
+          <p class="text-center"><a class="btn btn-default" href="{% url "dataset_upload" %}" role="button">{% trans "Add datasets" %} &raquo;</a></p>
+          {% else %}
+          <p class="text-center"><a class="btn btn-default" href="/layers/?limit=5" role="button">{% trans "Explore datasets" %} &raquo;</a></p>
+          {% endif %}
         </div>
+        <div class="col-md-4">
+          <p><a href="/maps/?limit=5"><i class="fa fa-map-o fa-4x"></i></a></p>
+          <h2><a href="/maps/?limit=5">{{ facets.map|default:_("No") }} {% blocktrans count counter=facets.map %}Map{% plural %}Maps{% endblocktrans %}</a></h2>
+          <p>{% trans "Data is available for browsing, aggregating and styling to generate maps which can be saved, downloaded, shared publicly or restricted to specific users only." %}</p>
+          <p><a class="btn btn-default" href="/maps/?limit=5" role="button">{% trans "Explore maps" %} &raquo;</a></p>
+        </div>
+        <div class="col-md-4">
+          <p><a href="/documents/?limit=5"><i class="fa fa-newspaper-o fa-4x"></i></a></p>
+          <h2><a href="/documents/?limit=5">{{ facets.document|default:_("No") }} {% blocktrans count counter=facets.document %}Document{% plural %}Documents{% endblocktrans %}</a></h2>
+          <p>{% trans "As for the layers and maps GeoNode allows to publish tabular and text data, manage their metadata and associated documents." %}</p>
+          {% if user.is_authenticated %}
+          <p class="text-center"><a class="btn btn-default" href="/documents/?limit=5" role="button">{% trans "Add documents" %} &raquo;</a></p>
+          {% else %}
+          <p class="text-center"><a class="btn btn-default" href="/documents/?limit=5" role="button">{% trans "Explore documents" %} &raquo;</a></p>
+          {% endif %}
+        </div>
+      
+      {% endwith %}
       </div>
     </div>
-  </section>
+  </div>
+</section>
 {% endblock showcase %}
+
+{% block datasets %}
+{% endblock datasets %}
+
+{% block footer %}
+  <footer>
+    <div class="upper-footer">
+      <div class="container">
+          <div class="row">
+            <div class="col-md-8">
+              <div class="texto-footer">
+                Produzido por <a href="http://geonode.org">GeoNode</a> <em>versão 3.2.1</em> |
+                <a href="/developer/">Desenvolvedores</a> |
+                <a href="/about/">Sobre</a>
+              </div>
+            </div>
+
+            <div class="col-md-2 pull-right">
+              {% block contactus %}
+              {% endblock contactus %}
+                <div class="texto-footer">
+                  <label class="hidden">{% trans "Language" %}</label>
+                  {% if csrf_token != "NOTPROVIDED" %}
+                  {% get_current_language as LANGUAGE %}
+                  <form class="form-inline" action="/i18n/setlang/" method="post">
+                  {% csrf_token %}
+                    <select class="col-md-13 pull-right" name="language" onchange="javascript:form.submit()">
+                      {% for lang in LANGUAGES %}
+                      <option value="{{ lang.0 }}" {% ifequal LANGUAGE_CODE lang.0 %} selected="selected"{% endifequal %}>
+                        {{ lang.1 }}
+                      </option>
+                      {% endfor %}
+                    </select>
+                  </form>
+                  {% endif %}
+                </div>
+            </div>
+
+          </div>
+        </div>
+    
+    </div>
+  
+    <section class="footer-copyright">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-12 copyright ">
+            <div class="module">
+              <div class="texto-footer-copyright"><small>© Copyright 2016-2021 SGB-CPRM. Todos os direitos reservados.</small></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </footer>
+  {% endblock footer %}
