@@ -1,21 +1,16 @@
 {% extends "base.html" %}
 {% load i18n %}
+
+{% block title %} OpenGeoSGB {% endblock %}
+
 {% block extra_head %}
       <link href="{{ STATIC_URL }}css/site_base.css" rel="stylesheet"/>
 {% endblock %}
 
-{% block tabs %}
+{% block extra_tab %}
 
-      {% block extra_tab %}
-      <li><a href="/layers/?limit=5">{% trans "Layers" %}</a></li>
+{% endblock %}
 
-      <li id="nav_maps">
-            <a href="/documents/?limit=5">{% trans "Documents" %}</a>
-      </li>
-
-      <li id="nav_maps">
-            <a href="/maps/?limit=5">{% trans "Maps" %}</a>
-      </li>
-
-      {% endblock %}
+{% block footer %}
+{{ block.super }}
 {% endblock %}
