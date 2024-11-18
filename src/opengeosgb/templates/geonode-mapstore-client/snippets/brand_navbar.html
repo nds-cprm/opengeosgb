@@ -1,0 +1,12 @@
+{% extends "geonode-mapstore-client/snippets/brand_navbar.html" %}
+{% load static %}
+{% block extra_style %}
+<style>
+    .gn-card-grid {
+        background-image: url({% static 'img/opengeosgb/geosgb-background.jpg' %});
+    }
+</style>
+{% endblock %}
+{% block logo_src %}
+{% static 'img/opengeosgb/sgb-logo.png' %}
+{% endblock %}
