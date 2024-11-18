@@ -19,12 +19,9 @@
 #########################################################################
 
 from geonode.urls import urlpatterns
+from django.urls import path, include
 
-"""
-# You can register your own urlpatterns here
-urlpatterns = [
-    url(r'^/?$',
-        homepage,
-        name='home'),
- ] + urlpatterns
-"""
+urlpatterns += [
+    path("pages/", include("django.contrib.flatpages.urls")),
+    # path("about-us/", views.flatpage, {"url": "/about-us/"}, name="about"),
+]

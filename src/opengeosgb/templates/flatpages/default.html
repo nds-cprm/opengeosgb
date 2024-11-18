@@ -1,0 +1,13 @@
+{% extends "geonode_base.html" %}
+
+{% load i18n %}
+{% block title %} {{ flatpage.title }} — {{ block.super }} {% endblock %}
+
+{% block body_outer %}
+<div class="page-header">
+  <h2>{{ flatpage.title }}</h2>
+</div>
+<div>
+  {{ flatpage.content }}
+</div>
+{% endblock %}

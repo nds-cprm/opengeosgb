@@ -162,3 +162,15 @@ if LDAP_ENABLED and "geonode_ldap" not in INSTALLED_APPS:
 
 # Add your specific LDAP configuration after this comment:
 # https://docs.geonode.org/en/master/advanced/contrib/#configuration
+
+
+# Flatpages
+
+if SITE_ID and ("django.contrib.flatpages" not in INSTALLED_APPS):
+    if "django.contrib.sites" not in INSTALLED_APPS:
+        INSTALLED_APPS += ("django.contrib.sites")
+
+    INSTALLED_APPS += ("django.contrib.flatpages",)
+    MIDDLEWARE += ("django.contrib.flatpages.middleware.FlatpageFallbackMiddleware",)
+    
+
