@@ -18,10 +18,14 @@
 #
 #########################################################################
 
-from geonode.urls import urlpatterns
 from django.urls import path, include
+from django.contrib.flatpages.sitemaps import FlatPageSitemap
+from geonode.urls import urlpatterns, sitemaps
+
+sitemaps.update(page=FlatPageSitemap)
 
 urlpatterns += [
+    # flatpages
     path("pages/", include("django.contrib.flatpages.urls")),
     # path("about-us/", views.flatpage, {"url": "/about-us/"}, name="about"),
 ]
