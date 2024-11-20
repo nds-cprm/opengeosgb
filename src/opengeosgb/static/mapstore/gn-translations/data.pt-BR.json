@@ -297,6 +297,7 @@
             "filterNoMatchUploadDocument": "O filtro não corresponde a um carregamento",
             "uploadDocument": "Carregar um documento",
             "owner": "Proprietário",
+            "publication": "Publicado em",
             "created": "Criado em",
             "published": "Publicado",
             "lastModified": "Última modificação",
