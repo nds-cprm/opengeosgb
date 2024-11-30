@@ -156,6 +156,12 @@
             }
         },
         "gnviewer": {
+            "thisPage": "URL desta página",
+            "embeddataset": "Embarcar conjunto de dados",
+            "legend": "Legenda",     
+            "cannotPerfomAction": "Não é possível executar a ação",
+            "iso": "Metadado ISO 19115",
+            "dublinCore": "Metadado Dublin Core",
             "edit": "Alterar",
             "export": "Exportar",
             "editInfo": "Alterar Informações",
@@ -403,6 +409,14 @@
             "uploadCreated": "Criado em",
             "replaceDataset": "Substituir conjunto de dados",
             "replaceDatasetTitle": "Substituir conjunto de dados"
+        },
+        "print": {
+            "outputFormat": "Formato de Saída",
+            "projection": "Projeção",
+            "rotation": "Rotação",
+            "graticule": "Adicionar Grade",
+            "scale": "Escala",
+            "includeScale": "Incluir Escala"
         }
     }
 }
