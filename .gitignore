@@ -63,7 +63,8 @@ uploaded/
 static_root/
 development.db
 development.db-journal
-local_settings.py
+# Add custom settings for OpenGeoSGB
+# local_settings.py
 
 .idea/
 .vscode/
