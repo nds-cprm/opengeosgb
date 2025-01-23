@@ -44,5 +44,19 @@ SOCIALACCOUNT_PROVIDERS = {
         # Member API or Public API? Default: False (for the public API)
         'MEMBER_API': True,  # for the member API
     },
-    'openid_connect': {},
+    'openid_connect': {
+        "SCOPE": [
+            "openid",
+            "email",
+            "phone",
+            "profile",
+            # "govbr_empresa",
+            # "govbr_confiabilidades"
+        ],
+        "OAUTH_PKCE_ENABLED": True,
+    },
+}
+
+SOCIALACCOUNT_PROFILE_EXTRACTORS = {
+    "govbr": "opengeosgb.account.profileextractors.GovBRExtractor"
 }
