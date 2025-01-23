@@ -14,8 +14,10 @@ if SITE_ID and ("django.contrib.flatpages" not in INSTALLED_APPS):
 # LANGUAGES = ast.literal_eval(os.getenv("LANGUAGES", MAPSTORE_DEFAULT_LANGUAGES))
 
 # Recaptcha
-if RECAPTCHA_ENABLED:
-    ACCOUNT_FORMS = dict(login='opengeosgb.account.forms.RecaptchaLoginForm')
+# RECAPTCHA_ENABLED = True
+
+# if RECAPTCHA_ENABLED:
+#     ACCOUNT_FORMS = dict(login='opengeosgb.account.forms.RecaptchaLoginForm')
 
 # Social Accounts
 INSTALLED_APPS += (
