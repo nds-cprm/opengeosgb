@@ -45,6 +45,9 @@ RUN apt-get autoremove --purge &&\
     apt-get clean &&\
     rm -rf /var/lib/apt/lists/*
 
+RUN mkdir -p /mnt/volumes/statics /geoserver_data/data /backup_restore /data /var/log/geonode && \
+    chmod g+u /mnt/volumes/statics /geoserver_data/data /backup_restore /data /var/log/geonode
+
 # Export ports
 EXPOSE 8000
 

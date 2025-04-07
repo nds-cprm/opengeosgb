@@ -15,17 +15,20 @@ invoke () {
 }
 
 # Start cron service
-service cron restart
+# service cron restart
 
 echo $"\n\n\n"
 echo "-----------------------------------------------------"
 echo "STARTING DJANGO ENTRYPOINT $(date)"
 echo "-----------------------------------------------------"
 
+HOME=/tmp
+
 invoke update
 
-source $HOME/.bashrc
-source $HOME/.override_env
+
+# source $HOME/.bashrc
+# source $HOME/.override_env
 
 echo DOCKER_API_VERSION=$DOCKER_API_VERSION
 echo POSTGRES_USER=$POSTGRES_USER
