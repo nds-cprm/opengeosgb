@@ -1,0 +1,4 @@
+[submodule "docker"]
+	path = docker
+	url = https://github.com/nds-cprm/geonode-docker.git
+	branch = opengeosgb
