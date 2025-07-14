@@ -66,10 +66,10 @@ services:
     environment:
       - RESOLVER=127.0.0.11
     ports:
-      - "${HTTP_PORT}:80"
-      - "${HTTPS_PORT}:443"
+      - "${HTTP_PORT}:8080"
+      - "${HTTPS_PORT}:8443"
     volumes:
-      - nginx-confd:/etc/nginx
+      # - nginx-confd:/etc/nginx
       - nginx-certificates:/geonode-certificates
       - statics:/mnt/volumes/statics
     restart: unless-stopped
@@ -183,8 +183,8 @@ services:
 volumes:
   statics:
     name: ${COMPOSE_PROJECT_NAME}-statics
-  nginx-confd:
-    name: ${COMPOSE_PROJECT_NAME}-nginxconfd
+  # nginx-confd:
+  #   name: ${COMPOSE_PROJECT_NAME}-nginxconfd
   nginx-certificates:
     name: ${COMPOSE_PROJECT_NAME}-nginxcerts
   geoserver-data-dir:
