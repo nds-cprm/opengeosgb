@@ -57,3 +57,11 @@ services:
   db:
     ports:
      - "5432:5432"
+
+  mailserver:
+    image: python:3.10-alpine
+    container_name: mailserver4${COMPOSE_PROJECT_NAME}
+    command: >
+      sh -c "python -m smtpd -d -c DebuggingServer -n 0.0.0.0:1025"
+    ports:
+      - "1025:1025"
