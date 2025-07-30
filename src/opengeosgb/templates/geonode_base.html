@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block extra_head %}
+{{ block.super }}
+{% if form.media %}
+    {{ form.media.css }}
+{% endif %}
+{% endblock %}
+
+{% block extra_script %}
+{% if form.media %}
+    {{ form.media.js }}
+{% endif %}
+{% endblock extra_script %}

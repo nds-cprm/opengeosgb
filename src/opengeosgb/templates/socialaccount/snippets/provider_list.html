@@ -1,0 +1,29 @@
+{% load i18n %}
+{% load socialaccount %}
+{% load socialaccount_extra %}
+
+{# Copiado de:  geonode/templates/socialaccount/snippets/provider_list.html #}
+
+{% get_providers as socialaccount_providers %}
+
+{% for provider in socialaccount_providers %}
+        {% if provider.id == "openid" %}
+            {% for brand in provider.get_brands %}
+                <a class="list-group-item" title="{{brand.name}}" href="{% provider_login_url provider.id openid=brand.openid_url process=process %}">
+                    {{brand.name}}
+                </a>
+            {% endfor %}
+        {% endif %}
+        <li><a class="br-sign-in primary" title="{{provider.name}}" href="{% provider_login_url provider.id process=process scope=scope auth_params=auth_params %}">
+            <!-- <i class="fa fa-{{ provider.name|lower }}-square fa-2x" aria-hidden="true"></i>  -->
+            {% if process == "login" %}
+                {% trans "Sign in with" %}
+            {% elif process == "connect" %}
+                {% trans "Connect with" %}
+            {% else %}
+                {% trans "Sign up with" %}
+            {% endif %}
+            &nbsp;
+            <span class="text-black">{{provider.name}}</span>
+        </a></li>
+{% endfor %}

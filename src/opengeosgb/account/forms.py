@@ -1,11 +1,25 @@
-from django_recaptcha.fields import ReCaptchaField
-from allauth.account.forms import LoginForm
+from allauth.account.forms import LoginForm, SignupForm
+from geonode.people.forms.recaptcha import AllauthRecaptchaLoginForm, AllauthReCaptchaSignupForm
 
 
-class RecaptchaLoginForm(LoginForm):
-    captcha = ReCaptchaField(
-        label = ""
-    )
+class GovBRMixin:
+    class Media:
+        css = {
+            'all': ('opengeosgb/css/govbr.min.css',)
+        }
 
-    def login(self, *args, **kwargs):
-        return super(RecaptchaLoginForm, self).login(*args, **kwargs)
+# Sem recaptcha
+class GovBRLoginForm(GovBRMixin, LoginForm):
+    pass
+
+class GovBRSignupForm(GovBRMixin, SignupForm):
+    pass
+
+
+# Com recaptcha
+class GovBRReCaptchaLoginForm(GovBRMixin, AllauthRecaptchaLoginForm):
+    pass
+
+class GovBRReCaptchaSignupForm(GovBRMixin, AllauthReCaptchaSignupForm):
+    pass
+ 

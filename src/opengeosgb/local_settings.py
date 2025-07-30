@@ -11,13 +11,21 @@ if SITE_ID and ("django.contrib.flatpages" not in INSTALLED_APPS):
 
 # Internationalization
 # geonode.settings lines 1551-1565
-# LANGUAGES = ast.literal_eval(os.getenv("LANGUAGES", MAPSTORE_DEFAULT_LANGUAGES))
+LANGUAGES = ast.literal_eval(os.getenv("LANGUAGES", MAPSTORE_DEFAULT_LANGUAGES))
 
 # Recaptcha
-# RECAPTCHA_ENABLED = True
+# RECAPTCHA_ENABLED = ast.literal_eval(os.environ.get("RECAPTCHA_ENABLED", "False"))
 
-# if RECAPTCHA_ENABLED:
-#     ACCOUNT_FORMS = dict(login='opengeosgb.account.forms.RecaptchaLoginForm')
+if RECAPTCHA_ENABLED:
+    ACCOUNT_FORMS = {
+        'login': 'opengeosgb.account.forms.GovBRReCaptchaLoginForm',
+        'signup': 'opengeosgb.account.forms.GovBRReCaptchaSignupForm'
+    }
+else:
+    ACCOUNT_FORMS = {
+        'login': 'opengeosgb.account.forms.GovBRLoginForm',
+        'signup': 'opengeosgb.account.forms.GovBRSignupForm'
+    }
 
 # Social Accounts
 INSTALLED_APPS += (
@@ -45,14 +53,14 @@ SOCIALACCOUNT_PROVIDERS = {
         'MEMBER_API': True,  # for the member API
     },
     'openid_connect': {
-        "SCOPE": [
-            "openid",
-            "email",
-            "phone",
-            "profile",
-            # "govbr_empresa",
-            # "govbr_confiabilidades"
-        ],
+        # "SCOPE": [
+        #     "openid",
+        #     "email",
+        #     "phone",
+        #     "profile",
+        #     # "govbr_empresa",
+        #     # "govbr_confiabilidades"
+        # ],
         "OAUTH_PKCE_ENABLED": True,
     },
 }
@@ -60,3 +68,19 @@ SOCIALACCOUNT_PROVIDERS = {
 SOCIALACCOUNT_PROFILE_EXTRACTORS = {
     "govbr": "opengeosgb.account.profileextractors.GovBRExtractor"
 }
+
+# # Haystack Search
+# HAYSTACK_SEARCH = ast.literal_eval(os.getenv("HAYSTACK_SEARCH", "False"))
+
+# if HAYSTACK_SEARCH:    
+#     INSTALLED_APPS += (
+#         'haystack',
+#     )
+
+#     HAYSTACK_CONNECTIONS = {
+#     'default': {
+#         'ENGINE': 'haystack.backends.elasticsearch7_backend.Elasticsearch7SearchEngine',
+#         'URL': os.getenv("HAYSTACK_ENGINE_URL"),
+#         'INDEX_NAME': os.getenv("HAYSTACK_ENGINE_INDEX_NAME"),
+#     },
+# }
