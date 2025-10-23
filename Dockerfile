@@ -37,8 +37,8 @@ RUN chmod +x /usr/bin/celery-cmd
 # RUN cd /usr/src/geonode-contribs/geonode-logstash; pip install --upgrade  -e . \
 #     cd /usr/src/geonode-contribs/ldap; pip install --upgrade  -e .
 
-RUN yes w | pip install --src /usr/src -r requirements.txt &&\
-    yes w | pip install -e .
+RUN yes w | pip install --src /usr/src -r requirements.txt -c constraints.txt && \
+    yes w | pip install -c constraints.txt -e .
 
 # Cleanup apt update lists
 RUN apt-get autoremove --purge &&\
