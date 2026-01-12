@@ -1,7 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2024-11-19 19:11-0300\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-11-13 18:30+0000\n"
 "PO-Revision-Date: 2024-11-19 20:05-0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -12,6 +13,32 @@ msgstr ""
 "X-Generator: Poedit 3.4.2\n"
 "X-Poedit-Basepath: .\n"
 
-#: opengeosgb/templates/geonode-mapstore-client/snippets/hero.html:48
+#: opengeosgb/templates/account/signup.html:7
+#: opengeosgb/templates/account/signup.html:11
+#: opengeosgb/templates/account/signup.html:35
+msgid "Sign up"
+msgstr "Registrar-se com"
+
+#: opengeosgb/templates/account/signup.html:16
+msgid "Sign up with one of your existing third party accounts"
+msgstr "Cadastre-se com uma de suas contas de terceiros existentes"
+
+#: opengeosgb/templates/account/signup.html:26
+msgid "Create a new local account"
+msgstr "Criar uma conta local"
+
+#: opengeosgb/templates/socialaccount/snippets/provider_list.html:20
+msgid "Sign in with"
+msgstr "Registrar-se com"
+
+#: opengeosgb/templates/socialaccount/snippets/provider_list.html:22
+msgid "Connect with"
+msgstr "Conectar com"
+
+#: opengeosgb/templates/socialaccount/snippets/provider_list.html:24
+msgid "Sign up with"
+msgstr "Registrar-se com"
+
+# opengeosgb/templates/geonode-mapstore-client/snippets/hero.html
 msgid "Data, information and products from Geological Survey of Brazil."
 msgstr "Dados, informações e produtos do Serviço Geológico do Brasil."

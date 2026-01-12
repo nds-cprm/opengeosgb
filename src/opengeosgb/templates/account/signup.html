@@ -13,8 +13,7 @@
     <div class="row">
       {% get_providers as socialaccount_providers %}
       {% if socialaccount_providers %}
-          <p>{% blocktrans with site.name as site_name %}Sign up with one
-              of your existing third party accounts{% endblocktrans %}</p>
+          <p>{% blocktrans with site.name as site_name %}Sign up with one of your existing third party accounts{% endblocktrans %}</p>
           <ul class="socialaccount_providers">
           {% include "socialaccount/snippets/provider_list.html" with process="signup" %}
           </ul>
