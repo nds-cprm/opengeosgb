@@ -1,5 +1,9 @@
 FROM geonode/geonode-base:latest-ubuntu-22.04
-LABEL GeoNode development team
+
+# https://specs.opencontainers.org/image-spec/annotations/
+LABEL org.opencontainers.image.title="GeoNode" \
+    org.opencontainers.image.version="4.4.4" \
+    org.opencontainers.image.authors="GeoNode development team & NDS CPRM"    
 
 RUN mkdir -p /usr/src/opengeosgb
 
@@ -7,8 +11,9 @@ RUN apt-get update -y && apt-get install curl wget unzip gnupg2 locales -y
 
 RUN sed -i -e 's/# C.UTF-8 UTF-8/C.UTF-8 UTF-8/' /etc/locale.gen && \
     locale-gen
-ENV LC_ALL C.UTF-8
-ENV LANG C.UTF-8
+
+ENV LC_ALL=C.UTF-8 \
+    LANG=C.UTF-8
 
 # add bower and grunt command
 COPY src /usr/src/opengeosgb/
