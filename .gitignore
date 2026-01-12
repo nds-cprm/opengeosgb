@@ -71,3 +71,16 @@ development.db-journal
 .vagrant/
 Vagrantfile
 /.env
+
+draft/
+
+celerybeat-schedule
+
+
+# Project-specific
+src/fixtures/socialaccounts.json
+docker/nginx/certificates
+
+node_modules/
+
+secrets/
