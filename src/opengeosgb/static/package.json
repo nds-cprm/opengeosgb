@@ -4,8 +4,7 @@
   "author": "GeoNode Developers",
   "description": "Static code and assets for opengeosgb",
   "contributors": [
-    {
-    }
+    {}
   ],
   "scripts": {
     "test": "jshint **.js"
@@ -13,13 +12,16 @@
   "license": "BSD",
   "private": "false",
   "dependencies": {
+    "@govbr-ds/core": "^3.6.2",
+    "sass": "^1.89.2"
   },
   "devDependencies": {
     "del": "*",
     "gulp": "^3.9.0",
-    "gulp-util": "*",
     "gulp-concat": "*",
     "gulp-less": "*",
-    "path": "*"
+    "gulp-util": "*",
+    "path": "*",
+    "purgecss": "^6.0.0"
   }
 }
