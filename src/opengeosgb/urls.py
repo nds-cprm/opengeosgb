@@ -25,6 +25,8 @@ from geonode.urls import urlpatterns, sitemaps
 sitemaps.update(page=FlatPageSitemap)
 
 urlpatterns += [
+    # Grappelli for admin
+    path('grappelli/', include('grappelli.urls')),
     # flatpages
     path("pages/", include("django.contrib.flatpages.urls")),
     # path("about-us/", views.flatpage, {"url": "/about-us/"}, name="about"),
