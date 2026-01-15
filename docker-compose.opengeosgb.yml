@@ -1,7 +1,12 @@
 version: '3.9'
 
+x-common:
+  &default-common
+  platform: linux/amd64
+
 x-common-django:
   &default-common-django
+  <<: *default-common
   image: ${DOCKER_NAMESPACE:-$COMPOSE_PROJECT_NAME}/geonode:${GEONODE_BASE_IMAGE_VERSION}-rootless
   volumes:
     - './src:/usr/src/opengeosgb'
@@ -25,12 +30,14 @@ services:
     << : *default-common-django
   
   letsencrypt:
+    <<: *default-common
     build:
       context: ./docker/docker/letsencrypt
     deploy:
       replicas: 0
 
   geonode:
+    <<: *default-common
     image: ${DOCKER_NAMESPACE:-$COMPOSE_PROJECT_NAME}/nginx:${NGINX_BASE_IMAGE_VERSION}-geonode
     user: '1000'
     build:
@@ -45,6 +52,7 @@ services:
       # - /home/mota/_geonode/statics:/mnt/volumes/statics
 
   geoserver:
+    <<: *default-common
     image: ${DOCKER_NAMESPACE:-$COMPOSE_PROJECT_NAME}/geoserver:${GEOSERVER_BASE_IMAGE_VERSION}-geonode
     build:
       context: ./docker/docker/geoserver
@@ -68,6 +76,7 @@ services:
     user: '1000'
 
   data-dir-conf:
+    <<: *default-common
     image: ${DOCKER_NAMESPACE:-$COMPOSE_PROJECT_NAME}/geoserver_data:${GEOSERVER_BASE_IMAGE_VERSION}-geonode
     user: '1000'
     build:
@@ -77,6 +86,7 @@ services:
         - GEOSERVER_VERSION=${GEOSERVER_BASE_IMAGE_VERSION}
 
   db:
+    <<: *default-common
     build:
       context: ./docker/docker/postgis
       args:
@@ -90,6 +100,7 @@ services:
      - "5432:5432"
 
   mailserver:
+    <<: *default-common
     image: python:3.10-alpine
     container_name: mailserver4${COMPOSE_PROJECT_NAME}
     command: >
