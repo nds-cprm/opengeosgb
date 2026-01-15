@@ -2,4 +2,4 @@
 # django-allauth==0.63.6 -> 2025-10-23
 # force use v0.54.0
 # https://docs.allauth.org/en/dev/release-notes/2023.html#id23
-django-allauth<0.55.0
+django-allauth<0.64.0
