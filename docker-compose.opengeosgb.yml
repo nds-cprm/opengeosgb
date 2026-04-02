@@ -1,5 +1,3 @@
-version: '3.9'
-
 x-common:
   &default-common
   platform: linux/amd64
@@ -9,16 +7,16 @@ x-common-django:
   <<: *default-common
   image: ${DOCKER_NAMESPACE:-$COMPOSE_PROJECT_NAME}/geonode:${GEONODE_BASE_IMAGE_VERSION}-rootless
   volumes:
-    - './src:/usr/src/opengeosgb'
+    - './src:/usr/src/project'
     - statics:/mnt/volumes/statics
     # - /home/mota/_geonode/statics:/mnt/volumes/statics
     - geoserver-data-dir:/geoserver_data/data
     # - backup-restore:/backup_restore
-    # - ./draft/br:/backup_restore
+    - ./draft/br:/backup_restore
     - data:/data
     # - /home/mota/_geonode/data:/data
     - tmp:/tmp
-  user: '1000'
+  # user: '1000'
 
 services:
   django:
@@ -28,18 +26,11 @@ services:
 
   celery:
     << : *default-common-django
-  
-  letsencrypt:
-    <<: *default-common
-    build:
-      context: ./docker/docker/letsencrypt
-    deploy:
-      replicas: 0
 
   geonode:
     <<: *default-common
     image: ${DOCKER_NAMESPACE:-$COMPOSE_PROJECT_NAME}/nginx:${NGINX_BASE_IMAGE_VERSION}-geonode
-    user: '1000'
+    # user: '1000'
     build:
       context: ./docker/docker/nginx
       dockerfile: Dockerfile
@@ -50,6 +41,14 @@ services:
       - nginx-certificates:/geonode-certificates
       - statics:/mnt/volumes/statics
       # - /home/mota/_geonode/statics:/mnt/volumes/statics
+
+  letsencrypt:
+    <<: *default-common
+    image: ${DOCKER_NAMESPACE:-$COMPOSE_PROJECT_NAME}/letsencrypt:${LETSENCRYPT_BASE_IMAGE_VERSION}
+    build:
+      context: ./docker/docker/letsencrypt
+    deploy:
+      replicas: 0
 
   geoserver:
     <<: *default-common
@@ -64,8 +63,8 @@ services:
       - statics:/mnt/volumes/statics
       # - /home/mota/_geonode/statics:/mnt/volumes/statics
       - geoserver-data-dir:/geoserver_data/data
-      - backup-restore:/backup_restore
-      # - ./draft/br:/backup_restore
+      # - backup-restore:/backup_restore
+      - ./draft/br:/backup_restore
       - data:/data
       # - /home/mota/_geonode/data:/data
       - tmp:/tmp
@@ -73,12 +72,12 @@ services:
       - PROXY_BASE_URL=${NGINX_BASE_URL}/geoserver
     ports:
       - "8080:8080"
-    user: '1000'
+    # user: '1000'
 
   data-dir-conf:
     <<: *default-common
     image: ${DOCKER_NAMESPACE:-$COMPOSE_PROJECT_NAME}/geoserver_data:${GEOSERVER_BASE_IMAGE_VERSION}-geonode
-    user: '1000'
+    # user: '1000'
     build:
       context: ./docker/docker/geoserver_data
       dockerfile: Dockerfile
@@ -87,11 +86,11 @@ services:
 
   db:
     <<: *default-common
+    image: ${DOCKER_NAMESPACE:-$COMPOSE_PROJECT_NAME}/postgis:${POSTGRES_BASE_IMAGE_VERSION}-geonode
     build:
       context: ./docker/docker/postgis
       args:
-        - POSTGRES_VERSION=14
-        - POSTGIS_VERSION=3.4
+        - POSTGRES_BASE_IMAGE_VERSION=${POSTGRES_BASE_IMAGE_VERSION}
     volumes:
       - dbdata:/var/lib/postgresql/data
       # - /home/mota/_geonode/dbdata:/var/lib/postgresql/data
@@ -101,7 +100,7 @@ services:
 
   mailserver:
     <<: *default-common
-    image: python:3.10-alpine
+    image: python:3.11-alpine
     container_name: mailserver4${COMPOSE_PROJECT_NAME}
     command: >
       sh -c "python -m smtpd -d -c DebuggingServer -n 0.0.0.0:1025"
