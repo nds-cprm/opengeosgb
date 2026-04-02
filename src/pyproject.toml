@@ -1,0 +1,28 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "OpenGeoSGB"
+version = "0.0.1"
+description = "OpenGeoSGB"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "GPL-3.0-or-later" }
+keywords = ["OpenGeoSGB", "geonode", "django"]
+
+# Equivalent modern replacement for dependency_links:
+dependencies = [
+  # "GeoNode @ git+https://github.com/GeoNode/geonode.git"
+  "GeoNode == 5.0.2"
+]
+
+[project.urls]
+Homepage = "https://github.com/nds-cprm/opengeosgb"
+
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.packages.find]
+# Equivalent to find_packages()
+where = ["."]

@@ -1,7 +1,7 @@
 #!/bin/sh
 # ##########################################################
 # Run a backup
-#  SOURCE_URL=$SOURCE_URL TARGET_URL=$TARGET_URL ./opengeosgb/br/backup.sh $BKP_FOLDER_NAME
+#  SOURCE_URL=$SOURCE_URL TARGET_URL=$TARGET_URL ./project/br/backup.sh $BKP_FOLDER_NAME
 #   - BKP_FOLDER_NAME:
 #     Default value = backup_restore
 #     Shared Backup Folder name.
@@ -14,14 +14,14 @@
 #     Target Server URL, the one which must be synched.
 #
 # e.g.:
-#  docker exec -it django4opengeosgb sh -c 'SOURCE_URL=$SOURCE_URL TARGET_URL=$TARGET_URL ./opengeosgb/br/backup.sh $BKP_FOLDER_NAME'
+#  docker exec -it django4project sh -c 'SOURCE_URL=$SOURCE_URL TARGET_URL=$TARGET_URL ./project/br/backup.sh $BKP_FOLDER_NAME'
 # ##########################################################
 
 # Exit script in case of error
 set -e
 
 echo "-----------------------------------------------------"
-echo "STARTING opengeosgb BACKUP $(date)"
+echo "STARTING project BACKUP $(date)"
 echo "-----------------------------------------------------"
 
 if [ "$1" != "" ]; then
@@ -30,7 +30,7 @@ else
     BKP_FOLDER_NAME="backup_restore"
 fi
 
-cd /usr/src/opengeosgb/ 
+cd /usr/src/project/ 
 
 ./manage.sh backup -i -f -c $PWD/opengeosgb/br/settings_docker.ini --backup-dir /$BKP_FOLDER_NAME/
 

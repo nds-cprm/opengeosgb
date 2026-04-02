@@ -20,13 +20,5 @@
 
 import os
 
-__version__ = (4, 2, 0, "dev", 0)
-
 
 default_app_config = "opengeosgb.apps.AppConfig"
-
-
-def get_version():
-    import opengeosgb.version
-
-    return opengeosgb.version.get_version(__version__)
