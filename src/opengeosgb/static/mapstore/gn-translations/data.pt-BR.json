@@ -1,6 +1,16 @@
 {
     "locale": "pt-BR",
     "messages": {
+        "metadata": {
+            "error": {
+                "must match exactly one schema in oneOf": "Por favor, selecione um dos valores disponíveis.",
+                "must be string": "O valor deve ser uma string",
+                "must be object": "O valor deve ser um objeto",
+                "must NOT have fewer than 1 items": "Por favor, selecione pelo menos um item",
+                "must match format \"uri\"": "Por favor, insira um 'URI' válida",
+                "must have required property": "Esta propriedade é obrigatória"
+            }
+        },
         "geostory": {
             "geoNode": "GeoNode"
         },
@@ -51,6 +61,7 @@
             "groupsCategories": "Categorias de Grupo",
             "view": "Ver",
             "viewDataset": "Ver conjunto de dados",
+            "viewDatasets": "Ver conjuntos de dados",
             "viewMap": "Ver mapa",
             "viewGeoStory": "Ver GeoStory",
             "viewDocument": "Ver documento",
@@ -154,20 +165,22 @@
             },
             "errors": {
                 "noPermissions": "Você não tem permissão para adicionar um geostory"
+            },
+            "print": {
+                "author": "Autor",
+                "authorPlaceholder": "Digite o nome do autor...",
+                "copyright": "Direitos Autorais",
+                "copyrightPlaceholder": "Forneça os Direitos Autorais..."
             }
         },
         "gnviewer": {
-            "thisPage": "URL desta página",
-            "embeddataset": "Embarcar conjunto de dados",
-            "legend": "Legenda",     
-            "cannotPerfomAction": "Não é possível executar a ação",
-            "iso": "Metadado ISO 19115",
-            "dublinCore": "Metadado Dublin Core",
+            "legend": "Legenda",
             "edit": "Alterar",
             "export": "Exportar",
             "exportData": "Exportar Dados",
             "editInfo": "Alterar Informações",
             "editMetadata": "Alterar Metadados",
+            "fillMetadata": "Preencher Metadados",
             "editStyle": "Alterar Estilo",
             "editData": "Alterar Dados",
             "view": "Visualizar",
@@ -185,14 +198,20 @@
             "moreinfo": "Mais info",
             "setMapLikeThumbnail": "Definir miniatura do mapa",
             "thumbnailsaved": "Miniatura salva",
+            "thumbnailRemoved": "miniatura removida",
             "thumbnailnotsaved": "Erro: Miniatura não foi salva",
             "info": "Info",
             "attributeName": "Nome do atributo",
             "label": "Rótulo",
             "description": "Descrição",
+            "columnTitle": "Título",
+            "columnOwner": "Proprietário",
             "attributes": "Atributos",
+            "data": "Dados",
             "filterBy": "Filtrar...",
-            "addPermissionsEntry": "Adicionar Usuários / Grupos",
+            "addPermissionsEntry": "Adicionar Usuários / Grupos",            
+            "group": "Grupo",
+            "groupPlaceholder": "Selecione o grupo",
             "groups": "Grupos",
             "users": "Usuários",
             "nonePermission": "Nenhum",
@@ -260,21 +279,22 @@
             "deleteStyleMessage": "Tem certeza que deseja excluir este estilo?",
             "deleteStyleCancel": "Não, não exclua",
             "deleteStyleConfirm": "Sim, tenho certeza",
-            "syncErrorTitle": "Não é possível sincronizar o geostory atual",
+            "syncErrorgeostoryTitle": "Não é possível sincronizar o geostory atual",
+            "syncErrordashboardTitle": "Não é possível sincronizar o dashboard atual",
+            "syncErrorTitle": "Não é possível sincronizar",
             "syncErrorDefault": "Erro de Rede",
+            "syncSuccessgeostoryTitle": "Geostory sincronizado com sucesso",
+            "syncSuccessdashboardTitle": "Dashboard sincronizado com sucesso",
             "syncSuccessTitle": "Geostory sincronizado",
             "syncSuccessMessage": "Sincronizado com sucesso",
             "syncWarningTitle": "Não foi possível sincronizar alguns recursos",
             "syncErrorMessage": "Falha em sincronizar reecursos",
             "syncWarningMessage": "O processo de sincronização atualizou os seguintes recursos: {successTitles}. Os seguintes recursos não foram atualizados: {errorTitles}. Isto pode ocorrer porque os recursos foram excluídos do banco de dados",
-            "applyStyle": "Aplicar",
-            "addMainFiles": "Adicionar arquivos principais",
-            "cancelUpload": "Cancelar Upload",
+            "applyStyle": "Aplicar",            
             "resourceOrigin": {
                 "a": "a",
                 "from": "from"
             },
-            "syncSuccessdashboardTitle": "Painel sincronizado com sucesso",
             "styleEditorCloseTitle": "Alterações pendentes",
             "styleEditorCloseMessage": "Você tem certeza em fechar o editor de estilos, sem aplicar as mudanças??",
             "styleEditorCloseCancel": "Não, voltar para o editor de estilos",
@@ -293,6 +313,10 @@
             "supportedFiles": "Extensões de arquivo suportadas",
             "unsupportedFiles": "Arquivos não suportados para o carregamento",
             "upload": "Carregar",
+            "update": "Atualizar",
+            "replace": "Substituir",
+            "replaceDatasetConfirmTitle": "Tem certeza de que deseja substituir o conjunto de dados?",
+            "replaceDatasetConfirmMessage": "Esta ação não pode ser desfeita. O conjunto de dados atual será substituído pelo novo conteúdo.",
             "addFromUrl": "Adicionar de URL...",
             "invalidUrl": "Forneça uma URL absoluta válida",
             "unsupportedUrlServiceType": "Selecione o tipo de serviço",
@@ -307,8 +331,32 @@
             "filterPendingUploadDocument": "Filtrar carregamentos por nome...",
             "filterNoMatchUploadDocument": "O filtro não corresponde a um carregamento",
             "uploadDocument": "Carregar um documento",
+
+            "transferInProgress": "Transferência em progresso",
+            "fileExceeds": "O tamanho do arquivo excede {limit} MB. Tente novamente com um arquivo menor.",
+            "exceedingFileMsg": "Alguns dos seus arquivos excedem o limite de upload de {limit} MB. Por favor, remova-os da lista.",
+            "cannotPerfomAction": "Não é possível executar a ação neste recurso",
+            "cancelUpload": "Cancelar upload",
+            "parallelUploadLimit": "O número de arquivos selecionados excede o limite permitido de {limit} arquivo(s). Remova alguns arquivos da lista.",
+            "parallelLimitError": "O número de uploads paralelos ativos excede {limit}. Aguarde a conclusão dos uploads pendentes.",
+            "thisPage": "URL desta página",
+            "addMainFiles": "Adicionar arquivos principais",
+            "invalidBbox": "Extensão do conjunto de dados inválida",
+            "invalidBboxMsg": "A extensão do conjunto de dados excede o limite máximo da projeção WGS84 [-180, -90, 180, 90]",
+            "embedmap": "Embarcar este Mapa",
+            "embeddataset": "Embarcar este Conjunto de Dados",
+            "embedgeostory": "Embarcar este Geostory",
+            "embeddocument": "Embarcar este Documento",
+            "embeddashboard": "Embarcar este Dashboard",
+            "directLink": "Link Direto",
+            "iso": "Metadato ISO",
+            "dublinCore": "Metadado Dublin Core",
+
             "owner": "Proprietário",
+            "creation": "Criação",
             "publication": "Publicado em",
+            "revision": "Revisãon",
+            "date": "Data",
             "created": "Criado em",
             "published": "Publicado",
             "lastModified": "Última modificação",
@@ -422,6 +470,10 @@
             "graticule": "Adicionar Grade",
             "scale": "Escala",
             "includeScale": "Incluir Escala"
+        },
+        "resourcesCatalog": {
+            "anonymous": "Qualquer um",
+            "registered-members": "Membros registrados"
         }
     }
 }
