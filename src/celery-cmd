@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+
 # A configurable celery command.
 # Luca Pasquali <luca.pasquali@geosolutionsgroup.com>
 CELERY_BIN=${CELERY_BIN:-"$(which celery||echo celery)"}
@@ -15,8 +16,8 @@ CELERY__WORKER_NAME=${CELERY__WORKER_NAME:-"worker1@%h"}
 CELERY__WORKER_CONCURRENCY=${CELERY__WORKER_CONCURRENCY:-"4"}
 
 # Celery beat settings
-CELERY__BEAT_SCHEDULE=${CELERY__BEAT_SCHEDULE:-"celery.beat:PersistentScheduler"}
-# CELERY__BEAT_SCHEDULE_FILE=${CELERY__BEAT_SCHEDULE_FILE:-"/var/log/geonode/celerybeat-schedule"}
+CELERY__BEAT_SCHEDULER=${CELERY_BEAT_SCHEDULER:-"celery.beat:PersistentScheduler"}
+CELERY__BEAT_SCHEDULE_FILE=${CELERY__BEAT_SCHEDULE_FILE:-"/var/log/geonode/celerybeat-schedule"}
 CELERY__BEAT_LOG=${CELERY__BEAT_LOG:-"/var/log/geonode/celery_beat.log"}
 
 # Harvester settings
@@ -43,8 +44,14 @@ fi
 # --- END FIX ---
 
 echo "Starting Celery Beat..."
-$CELERY_BIN -A $CELERY_APP beat --scheduler=$CELERY__BEAT_SCHEDULE \
-    --loglevel=$CELERY__LOG_LEVEL -f $CELERY__BEAT_LOG --pidfile=/tmp/celerybeat.pid &
+PERSISTENT_SCHEDULER_ARGS="--scheduler=$CELERY_BEAT_SCHEDULER"
+
+if [[ -n "$CELERY__BEAT_SCHEDULE_FILE" ]]; then
+    PERSISTENT_SCHEDULER_ARGS="$PERSISTENT_SCHEDULER_ARGS --schedule=$CELERY__BEAT_SCHEDULE_FILE"
+fi
+
+$CELERY_BIN -A $CELERY_APP beat $PERSISTENT_SCHEDULER_ARGS \
+    --loglevel=$CELERY__LOG_LEVEL -f $CELERY__BEAT_LOG --pidfile=$BEAT_PIDFILE &
 
 echo "Starting Default Celery Worker..."
 $CELERY_BIN -A $CELERY_APP worker --autoscale=$CELERY__AUTOSCALE_VALUES \
