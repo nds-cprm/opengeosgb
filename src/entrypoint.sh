@@ -15,7 +15,7 @@ invoke () {
 }
 
 # Start cron service
-service cron restart
+# service cron restart
 
 echo $"\n\n\n"
 echo "-----------------------------------------------------"
