@@ -36,6 +36,10 @@ services:
       dockerfile: Dockerfile
       args:
         - NGINX_VERSION=${NGINX_BASE_IMAGE_VERSION}
+    # bind to container ports of 8080 and 8443 because of use of nginx-unprivileged 
+    ports:
+      - "${HTTP_PORT}:8080"
+      - "${HTTPS_PORT}:8443"
     volumes:
       # - nginx-confd:/etc/nginx
       - nginx-certificates:/geonode-certificates
