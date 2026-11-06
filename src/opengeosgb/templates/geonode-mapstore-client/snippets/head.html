@@ -4,3 +4,8 @@
 {%block favicon%}
     <link rel="shortcut icon" href="{% static 'opengeosgb/img/favicon.ico' %}" />
 {%endblock favicon%}
+
+{% block extras %}
+{{ block.super }}
+{% include "opengeosgb/snippets/google_tag_manager.html" %}
+{% endblock extras %}

@@ -140,3 +140,8 @@ PYCSW["CONFIGURATION"]["metadata"]["contact"] = {
 # ]
 
 # https://docs.geonode.org/en/master/basic/settings/index.html#ui-required-fields
+
+
+# Google Tag Manager
+GOOGLE_TAG_MANAGER_ID = os.getenv("GOOGLE_TAG_MANAGER_ID", "") 
+TEMPLATES[0]["OPTIONS"]["context_processors"].append("opengeosgb.context_processors.google_tag_manager_snippet")
