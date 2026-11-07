@@ -51,6 +51,41 @@ msgstr "Buscar..."
 # --- Traduções de strings do GeoNode e do geonode-mapstore-client sem tradução pt-BR upstream.
 # --- Atenção: `makemessages --no-obsolete` neste app remove estas entradas (não estão no código do opengeosgb).
 
+#: geonode/metadata/handlers/base.py:75
+msgid "Creation"
+msgstr "Criação"
+
+#: geonode/metadata/handlers/base.py:75
+msgid "Publication"
+msgstr "Publicação"
+
+#: geonode/metadata/handlers/base.py:75
+msgid "Revision"
+msgstr "Revisão"
+
+# Nomes de licença vêm do banco (base.License.name, fixtures do GeoNode) e são
+# traduzidos via _(record.name) no editor de metadados; não são extraídos pelo makemessages.
+# Nomes próprios (NextView, ODbL, Creative Commons) ficam sem tradução.
+#: geonode/metadata/api/views.py:225 geonode/metadata/handlers/base.py:118
+msgid "Not Specified"
+msgstr "Não especificada"
+
+#: geonode/metadata/api/views.py:225 geonode/metadata/handlers/base.py:118
+msgid "Public Domain"
+msgstr "Domínio público"
+
+#: geonode/metadata/api/views.py:225 geonode/metadata/handlers/base.py:118
+msgid "Public Domain / USG"
+msgstr "Domínio público / USG"
+
+#: geonode/metadata/api/views.py:225 geonode/metadata/handlers/base.py:118
+msgid "Varied / Derived"
+msgstr "Variada / Derivada"
+
+#: geonode/metadata/api/views.py:225 geonode/metadata/handlers/base.py:118
+msgid "Varied / Original"
+msgstr "Variada / Original"
+
 #: geonode/base/templatetags/base_tags.py:43
 msgid "Raster Dataset"
 msgstr "Conjunto de dados raster"
