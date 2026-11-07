@@ -3,6 +3,22 @@
 <script>
     window.__GEONODE_CONFIG__.overrideLocalConfig = function(localConfig, _) {
         // Here the localConfig can be overridden and/or extended
+
+        // Coluna "Descrição" da visualização em lista do catálogo: o localConfig do client
+        // (geonode-mapstore-client 5.0.3) lê o campo "description", que não existe na API de recursos
+        // do GeoNode; a descrição vem em "abstract" (HTML) e "raw_abstract" (texto puro).
+        var pages = (localConfig && localConfig.plugins) || {};
+        Object.keys(pages).forEach(function(page) {
+            (Array.isArray(pages[page]) ? pages[page] : []).forEach(function(plugin) {
+                var listColumns = plugin && plugin.cfg && plugin.cfg.metadata && plugin.cfg.metadata.list;
+                (Array.isArray(listColumns) ? listColumns : []).forEach(function(column) {
+                    if (column && column.path === 'description') {
+                        column.path = 'raw_abstract';
+                    }
+                });
+            });
+        });
+
         return localConfig;
     };
 </script>
