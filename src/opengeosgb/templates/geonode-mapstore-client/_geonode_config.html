@@ -4,18 +4,63 @@
     window.__GEONODE_CONFIG__.overrideLocalConfig = function(localConfig, _) {
         // Here the localConfig can be overridden and/or extended
 
-        // Coluna "Descrição" da visualização em lista do catálogo: o localConfig do client
-        // (geonode-mapstore-client 5.0.3) lê o campo "description", que não existe na API de recursos
-        // do GeoNode; a descrição vem em "abstract" (HTML) e "raw_abstract" (texto puro).
+        // Datas em formato numérico de acordo com o idioma (moment): "L" = data do idioma
+        // (06/11/2026 em pt, 11/06/2026 em en) + hora 24h, sem texto (ex.: sem "PM" ou nome do mês)
+        var DATE_FORMAT = 'L HH:mm';
+
+        // Abas padrão do painel de propriedades (ResourceDetails) do geonode-mapstore-client 5.0.3,
+        // copiadas de resource-details-plugin.*.chunk.js: o plugin não mescla configuração parcial,
+        // então, para mudar o formato das datas, é preciso fornecer as abas completas.
+        // Ao atualizar o client, compare com o padrão da nova versão.
+        var DEFAULT_RESOURCE_DETAILS_TABS = {% include "opengeosgb/resource_details_tabs.json" %};
+
+        function setDateFormats(node) {
+            if (Array.isArray(node)) {
+                node.forEach(setDateFormats);
+            } else if (node && typeof node === 'object') {
+                if (node.type === 'date' && node.format) {
+                    node.format = DATE_FORMAT;
+                }
+                Object.keys(node).forEach(function(key) {
+                    setDateFormats(node[key]);
+                });
+            }
+        }
+
         var pages = (localConfig && localConfig.plugins) || {};
         Object.keys(pages).forEach(function(page) {
-            (Array.isArray(pages[page]) ? pages[page] : []).forEach(function(plugin) {
-                var listColumns = plugin && plugin.cfg && plugin.cfg.metadata && plugin.cfg.metadata.list;
+            if (!Array.isArray(pages[page])) {
+                return;
+            }
+            pages[page] = pages[page].map(function(plugin) {
+                // plugins declarados só pelo nome viram objeto para receber configuração
+                if (plugin === 'ResourceDetails') {
+                    plugin = {name: 'ResourceDetails'};
+                }
+                if (!plugin || typeof plugin !== 'object') {
+                    return plugin;
+                }
+                var cfg = plugin.cfg || {};
+
+                // Colunas da visualização em lista do catálogo: o localConfig do client lê o campo
+                // "description", que não existe na API de recursos do GeoNode; a descrição vem em
+                // "abstract" (HTML) e "raw_abstract" (texto puro). Datas no formato numérico.
+                var listColumns = cfg.metadata && cfg.metadata.list;
                 (Array.isArray(listColumns) ? listColumns : []).forEach(function(column) {
                     if (column && column.path === 'description') {
                         column.path = 'raw_abstract';
                     }
                 });
+                setDateFormats(listColumns);
+
+                // Painel de propriedades: abas padrão (quando não configuradas) e datas no formato numérico
+                if (plugin.name === 'ResourceDetails' && !cfg.tabs) {
+                    cfg.tabs = JSON.parse(JSON.stringify(DEFAULT_RESOURCE_DETAILS_TABS));
+                }
+                setDateFormats(cfg.tabs);
+
+                plugin.cfg = cfg;
+                return plugin;
             });
         });
 
