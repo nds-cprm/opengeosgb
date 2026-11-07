@@ -3,10 +3,15 @@ from geonode.settings import *
 # Flatpages
 if SITE_ID and ("django.contrib.flatpages" not in INSTALLED_APPS):
     if "django.contrib.sites" not in INSTALLED_APPS:
-        INSTALLED_APPS += ("django.contrib.sites")
+        INSTALLED_APPS += ("django.contrib.sites",)
 
     INSTALLED_APPS += ("django.contrib.flatpages",)
     MIDDLEWARE += ("django.contrib.flatpages.middleware.FlatpageFallbackMiddleware",)
+
+# Editor de flatpages (TinyMCE, sanitização, imagens por página); precisa vir depois de
+# django.contrib.flatpages, pois substitui o admin dele
+if "django.contrib.flatpages" in INSTALLED_APPS:
+    INSTALLED_APPS += ("opengeosgb.flatpages_editor.apps.FlatpagesEditorConfig",)
     
 
 # Internationalization

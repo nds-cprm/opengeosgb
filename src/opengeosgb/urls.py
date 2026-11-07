@@ -48,6 +48,9 @@ urlpatterns += [
         RegionsI18nAutocomplete.as_view(),
         name="opengeosgb_metadata_autocomplete_regions",
     ),
+    # Editor de flatpages (app opengeosgb.flatpages_editor): upload de imagens
+    path("opengeosgb/flatpages/", include("opengeosgb.flatpages_editor.urls")),
+
     # Autocomplete do campo de escala (campo esparso do opengeosgb)
     path(
         "opengeosgb/metadata/autocomplete/scales",

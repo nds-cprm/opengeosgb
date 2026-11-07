@@ -1,5 +1,6 @@
 """
 Aprovação e publicação de recursos pelo admin do Django.
+(O admin das flatpages fica no app opengeosgb.flatpages_editor.)
 
 Enquanto as caixas "Publicado" e "Aprovado" não aparecem no painel do client (ver "Problemas
 conhecidos" no CLAUDE.md), o admin é o lugar dessas mudanças. Os admins do GeoNode salvam com

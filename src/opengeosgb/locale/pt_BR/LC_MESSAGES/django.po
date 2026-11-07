@@ -49,6 +49,27 @@ msgstr "Dados, informações e produtos do Serviço Geológico do Brasil."
 msgid "Search..."
 msgstr "Buscar..."
 
+# Upload de imagens do editor de flatpages (opengeosgb/flatpages_editor/views.py)
+#: opengeosgb/flatpages_editor/views.py
+msgid "Page not found."
+msgstr "Página não encontrada."
+
+#: opengeosgb/flatpages_editor/views.py
+msgid "No file was sent."
+msgstr "Nenhum arquivo foi enviado."
+
+#: opengeosgb/flatpages_editor/views.py
+msgid "The image exceeds the 5 MB limit."
+msgstr "A imagem excede o limite de 5 MB."
+
+#: opengeosgb/flatpages_editor/views.py
+msgid "The file is not a valid image."
+msgstr "O arquivo não é uma imagem válida."
+
+#: opengeosgb/flatpages_editor/views.py
+msgid "Image format not allowed (use PNG, JPEG, GIF or WebP)."
+msgstr "Formato de imagem não permitido (use PNG, JPEG, GIF ou WebP)."
+
 # Ações de aprovação e publicação no admin (opengeosgb/admin.py)
 #: opengeosgb/admin.py
 msgid "Approve selected resources"

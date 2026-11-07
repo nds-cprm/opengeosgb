@@ -1,6 +1,6 @@
 {% extends "geonode_base.html" %}
 
-{% load i18n %}
+{% load i18n flatpages_editor %}
 {% block title %} {{ flatpage.title }} — {{ block.super }} {% endblock %}
 
 {% block body_outer %}
@@ -8,6 +8,7 @@
   <h2>{{ flatpage.title }}</h2>
 </div>
 <div>
-  {{ flatpage.content }}
+  {# conteúdo já sanitizado no admin; sanitizado de novo aqui por segurança (opengeosgb/flatpages_editor/editor.py) #}
+  {{ flatpage.content|sanitize_flatpage }}
 </div>
 {% endblock %}
