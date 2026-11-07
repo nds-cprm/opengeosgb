@@ -528,13 +528,13 @@
         "title": "Conteúdos"
       },
       "dashboards": {
-        "newDashboard": "Novo Painel",
-        "title": "Painéis ({count})",
-        "titleNoCount": "Painéis",
-        "create": "Criar Painel",
-        "noDashboardAvailable": "Nenhum painel disponível",
+        "newDashboard": "Novo Dashboard",
+        "title": "Dashboards ({count})",
+        "titleNoCount": "Dashboards",
+        "create": "Criar Dashboard",
+        "noDashboardAvailable": "Nenhum dashboard disponível",
         "createANewOne": "Criar um novo",
-        "deleteError": "Ocorreu um erro ao remover este recurso",
+        "deleteError": "Ocorreu um erro ao remover este dashboard.",
         "errorLoadingDashboards": "Ocorreu um erro ao abrir os dashboards"
       },
       "maps": {
@@ -2648,17 +2648,17 @@
       }
     },
     "dashboard": {
-      "loadingSpinner": "Carregando Painel",
+      "loadingSpinner": "Carregando Dashboard",
       "importDialog": {
         "selectFiles": "Selecionar um arquivo",
-        "heading": "Arraste e solte um arquivo .json do painel de controle exportado anteriormente",
+        "heading": "Arraste e solte um arquivo .json do dashboard exportado anteriormente",
         "note": "Os dados do arquivo importado substituirão os dados do dashboard atual"
       },
       "exportDialog": {
         "heading": "Exportar dashboard como um arquivo .json"
       },
       "saveDialog": {
-        "title": "Editar propriedades do painel",
+        "title": "Editar propriedades do dashboard",
         "name": "Nome",
         "description": "Descrição",
         "createdAt": "Criado",
@@ -2669,31 +2669,31 @@
         "close": "Fechar",
         "cancel": "Cancelar",
         "saveSuccessTitle": "Sucesso",
-        "saveSuccessMessage": "Painel salvo com sucesso",
+        "saveSuccessMessage": "Dashboard salvo com sucesso",
         "unadvertised": "Não anunciado"
       },
       "errors": {
         "loading": {
-          "title": "Erro ao carregar o painel",
-          "dashboardNotAccessible": "Você não tem permissão para acessar este painel. Entre em contato com o proprietário do recurso",
-          "pleaseLogin": "Este painel não é público. Por favor, tente fazer login",
-          "dashboardDoesNotExist": "O painel que você está tentando acessar não existe",
-          "unknownError": "Ocorreu um erro ao carregar o painel. Entre em contato com o administrador",
-          "notFound": "Painel não encontrado",
-          "notAccessible": "Painel não acessível"
+          "title": "Erro ao carregar o dashboard",
+          "dashboardNotAccessible": "Você não tem permissão para acessar este dashboard. Entre em contato com o proprietário do recurso",
+          "pleaseLogin": "Este dashboard não é público. Por favor, tente fazer login",
+          "dashboardDoesNotExist": "O dashboard que você está tentando acessar não existe",
+          "unknownError": "Ocorreu um erro ao carregar o dashboard. Entre em contato com o administrador",
+          "notFound": "Dashboard não encontrado",
+          "notAccessible": "Dashboard não acessível"
         },
         "resourceAlreadyExists": "Já existe um recurso com esse nome",
         "forbidden": "Ocorreu um erro inesperado (403 Proibido). Entre em contato com o administrador",
         "forbidden405": "Ocorreu um erro inesperado (405 Proibido). Entre em contato com o administrador",
-        "multipleDashboardError": "Este painel contém várias visualizações, o que não é suportado. Selecione uma única visualização para continuar."
+        "multipleDashboardError": "Este dashboard contém várias visualizações, o que não é suportado. Selecione uma única visualização para continuar."
       },
       "editor": {
         "save": "Salvar o dashboard",
-        "addACardToTheDashboard": "Adicione um widget ao painel",
+        "addACardToTheDashboard": "Adicione um widget ao dashboard",
         "showConnections": "Mostrar conexões",
         "hideConnections": "Esconder conexões"
       },
-      "emptyTitle": "O painel está vazio",
+      "emptyTitle": "O dashboard está vazio",
       "delete": "Excluir dashboard",
       "view": {
         "delete": "Excluir",
@@ -2718,7 +2718,7 @@
           "title": "Erro ao carregar o dashboard",
           "dashboardNotAccessible": "Você não tem permissão para acessar este dashboard",
           "pleaseLogin": "Este dashboard não está público",
-          "dashboardDoesNotExist": "O painel que você está tentando acessar não existe",
+          "dashboardDoesNotExist": "O dashboard que você está tentando acessar não existe",
           "unknownError": "Ocorreu um erro ao carregar o dashboard",
           "notFound": "O dashboard não encontrado",
           "notAccessible": "O dashboard não está acessível"
@@ -4282,7 +4282,7 @@
       },
       "dashboardIntro": {
         "title": "Tutorial de Dashboard",
-        "text": "Visão geral das funcionalidades do painel"
+        "text": "Visão geral das funcionalidades do dashboard"
       },
       "dashboardNav": {
         "title": "Barra de Navegação",
@@ -4290,35 +4290,35 @@
       },
       "dashboardContainer": {
         "title": "Dashboard",
-        "text": "<p>Um Dashboard no MapStore fornece um conjunto de informações adequadamente coletadas para mostrar dados agregados em uma visualização única. Dados geoespaciais exibidos em um mapa podem ser colocados lado a lado com tabelas de atributos relacionadas, gráficos e outros, com o objetivo de conectar diferentes tipos de informação, mostrar detalhes estatísticos e descrições textuais relacionadas a um contexto específico.</p><p>Todos os usuários podem visualizar e interagir com painéis publicados, mas apenas usuários permitidos editar podem adicionar, organizar, redimensionar ou excluir todos os widgets dentro de um painel</p>"
+        "text": "<p>Um Dashboard no MapStore fornece um conjunto de informações adequadamente coletadas para mostrar dados agregados em uma visualização única. Dados geoespaciais exibidos em um mapa podem ser colocados lado a lado com tabelas de atributos relacionadas, gráficos e outros, com o objetivo de conectar diferentes tipos de informação, mostrar detalhes estatísticos e descrições textuais relacionadas a um contexto específico.</p><p>Todos os usuários podem visualizar e interagir com dashboards publicados, mas apenas usuários permitidos editar podem adicionar, organizar, redimensionar ou excluir todos os widgets dentro de um dashboard</p>"
       },
       "dashboardAddWidget": {
         "title": "Adicionar Widget",
-        "text": "Para adicionar um widget ao painel, você pode clicar no botão de adição"
+        "text": "Para adicionar um widget ao dashboard, você pode clicar no botão de adição"
       },
       "dashboardBuilder": {
         "title": "Criar um novo widget",
-        "text": "Você pode selecionar qual tipo de widget deseja e depois adicionar ao painel selecionando um dos itens na lista"
+        "text": "Você pode selecionar qual tipo de widget deseja e depois adicionar ao dashboard selecionando um dos itens na lista"
       },
       "dashboardAddChart": {
         "title": "Widget de Gráfico",
-        "text": "<p>É um widget que mostra e agrega dados em gráficos de pizza, linha ou barra.</p><p>Etapas:</p><p><ul><li>Selecione uma camada vetorial</li><li>Selecione o tipo de gráfico</li><li>Configure os dados do gráfico</li><li>Salve e adicione ao painel</li></ul></p>"
+        "text": "<p>É um widget que mostra e agrega dados em gráficos de pizza, linha ou barra.</p><p>Etapas:</p><p><ul><li>Selecione uma camada vetorial</li><li>Selecione o tipo de gráfico</li><li>Configure os dados do gráfico</li><li>Salve e adicione ao dashboard</li></ul></p>"
       },
       "dashboardAddText": {
         "title": "Widget de Texto",
-        "text": "<p>Adicione seu próprio texto ao painel.</p><p>Etapas:</p><p><ul><li>Edite o texto no editor</li><li>Salve e adicione ao painel</li></ul></p>"
+        "text": "<p>Adicione seu próprio texto ao dashboard.</p><p>Etapas:</p><p><ul><li>Edite o texto no editor</li><li>Salve e adicione ao dashboard</li></ul></p>"
       },
       "dashboardAddTable": {
         "title": "Widget de Tabela",
-        "text": "<p>Adicione uma tabela de atributos ao painel que contém dados de uma camada vetorial selecionada. Você também pode filtrar dados para personalizar sua tabela.</p><p>Etapas:</p><p><ul><li>Selecione uma camada vetorial</li><li>Configure os dados da tabela</li><li>Salve e adicione ao painel</li></ul></p>"
+        "text": "<p>Adicione uma tabela de atributos ao dashboard que contém dados de uma camada vetorial selecionada. Você também pode filtrar dados para personalizar sua tabela.</p><p>Etapas:</p><p><ul><li>Selecione uma camada vetorial</li><li>Configure os dados da tabela</li><li>Salve e adicione ao dashboard</li></ul></p>"
       },
       "dashboardAddCounter": {
         "title": "Widget de Contador",
-        "text": "<p>Adicione um novo contador ao painel. O contador mostrará um valor numérico agregando dados de uma camada vetorial selecionada.</p><p>Etapas:</p><p><ul><li>Selecione uma camada vetorial</li><li>Configure os dados do contador</li><li>Salve e adicione ao painel</li></ul></p>"
+        "text": "<p>Adicione um novo contador ao dashboard. O contador mostrará um valor numérico agregando dados de uma camada vetorial selecionada.</p><p>Etapas:</p><p><ul><li>Selecione uma camada vetorial</li><li>Configure os dados do contador</li><li>Salve e adicione ao dashboard</li></ul></p>"
       },
       "dashboardAddMap": {
         "title": "Widget de Mapa",
-        "text": "<p>Adicione um novo mapa interativo ao painel. Você pode adicionar mais de um mapa com a capacidade de conectar outros widgets a eles. Após salvar o primeiro mapa, o widget legenda será adicionado à lista. O Widget Legenda mostrará uma legenda relacionada ao mapa conectado.</p><p>Etapas:</p><p><ul><li>Selecione um mapa</li><li>Melhore o mapa adicionando novas camadas</li><li>Salve e adicione ao painel</li></ul></p>"
+        "text": "<p>Adicione um novo mapa interativo ao dashboard. Você pode adicionar mais de um mapa com a capacidade de conectar outros widgets a eles. Após salvar o primeiro mapa, o widget legenda será adicionado à lista. O Widget Legenda mostrará uma legenda relacionada ao mapa conectado.</p><p>Etapas:</p><p><ul><li>Selecione um mapa</li><li>Melhore o mapa adicionando novas camadas</li><li>Salve e adicione ao dashboard</li></ul></p>"
       },
       "contextCreator": {
         "generalSettings": {

@@ -17,7 +17,7 @@ msgstr ""
 #: opengeosgb/templates/account/signup.html:11
 #: opengeosgb/templates/account/signup.html:35
 msgid "Sign up"
-msgstr "Registrar-se com"
+msgstr "Cadastre-se"
 
 #: opengeosgb/templates/account/signup.html:16
 msgid "Sign up with one of your existing third party accounts"
@@ -29,7 +29,7 @@ msgstr "Criar uma conta local"
 
 #: opengeosgb/templates/socialaccount/snippets/provider_list.html:20
 msgid "Sign in with"
-msgstr "Registrar-se com"
+msgstr "Entrar com"
 
 #: opengeosgb/templates/socialaccount/snippets/provider_list.html:22
 msgid "Connect with"
@@ -37,8 +37,693 @@ msgstr "Conectar com"
 
 #: opengeosgb/templates/socialaccount/snippets/provider_list.html:24
 msgid "Sign up with"
-msgstr "Registrar-se com"
+msgstr "Cadastrar-se com"
 
-# opengeosgb/templates/geonode-mapstore-client/snippets/hero.html
-#~ msgid "Data, information and products from Geological Survey of Brazil."
-#~ msgstr "Dados, informações e produtos do Serviço Geológico do Brasil."
+# Texto padrão do hero, traduzido via {% trans variável %} (não é extraído pelo makemessages)
+#: opengeosgb/templates/geonode-mapstore-client/snippets/hero.html:48
+msgid "Data, information and products from Geological Survey of Brazil."
+msgstr "Dados, informações e produtos do Serviço Geológico do Brasil."
+
+#: opengeosgb/templates/geonode-mapstore-client/snippets/search_bar.html:18
+msgid "Search..."
+msgstr "Buscar..."
+
+# --- Traduções de strings do GeoNode e do geonode-mapstore-client sem tradução pt-BR upstream.
+# --- Atenção: `makemessages --no-obsolete` neste app remove estas entradas (não estão no código do opengeosgb).
+
+#: geonode/base/templatetags/base_tags.py:43
+msgid "Raster Dataset"
+msgstr "Conjunto de dados raster"
+
+#: geonode/base/templatetags/base_tags.py:44
+msgid "Vector Dataset"
+msgstr "Conjunto de dados vetorial"
+
+#: geonode/base/templatetags/base_tags.py:46
+msgid "Remote Dataset"
+msgstr "Conjunto de dados remoto"
+
+#: geonode/base/templatetags/base_tags.py:47
+msgid "WMS Cascade Dataset"
+msgstr "Conjunto de dados WMS em cascata"
+
+#: geonode/base/views.py:334
+msgid "You do not have permissions for this resource."
+msgstr "Você não tem permissões para este recurso."
+
+#: geonode/base/views.py:335
+msgid "You are not allowed to modify this resource's metadata."
+msgstr "Você não tem permissão para modificar os metadados deste recurso."
+
+#: geonode/base/views.py:336
+msgid "You are not allowed to view this resource."
+msgstr "Você não tem permissão para visualizar este recurso."
+
+#: geonode/catalogue/metadataxsl/views.py:53
+msgid "You are not permitted to view this resource"
+msgstr "Você não tem permissão para visualizar este recurso"
+
+#: geonode/groups/forms.py:93
+msgid "Select users..."
+msgstr "Selecione os usuários..."
+
+#: geonode/groups/forms.py:98
+msgid "Enter usernames separated by commas or select from dropdown"
+msgstr "Informe os nomes de usuário separados por vírgula ou selecione na lista"
+
+#: geonode/groups/forms.py:107
+msgid "Please select at least one user"
+msgstr "Selecione pelo menos um usuário"
+
+#: geonode/groups/forms.py:126
+msgid "The following are not valid usernames: %(errors)s"
+msgstr "Os seguintes nomes de usuário não são válidos: %(errors)s"
+
+#: geonode/layers/download_handler.py:86
+msgid "You do not have download permissions for this dataset."
+msgstr "Você não tem permissão de download para este conjunto de dados."
+
+#: geonode/metadata/handlers/contact.py:76
+#: geonode/metadata/handlers/contact.py:93
+msgid "User id"
+msgstr "ID do usuário"
+
+#: geonode/metadata/handlers/contact.py:80
+#: geonode/metadata/handlers/contact.py:98
+msgid "User name"
+msgstr "Nome do usuário"
+
+#: geonode/metadata/handlers/hkeyword.py:37
+msgid "Hierarchical keywords"
+msgstr "Palavras-chave hierárquicas"
+
+#: geonode/metadata/handlers/linkedresource.py:36
+msgid "Related resources"
+msgstr "Recursos relacionados"
+
+#: geonode/metadata/handlers/linkedresource.py:37
+msgid "Resources related to this one"
+msgstr "Recursos relacionados a este"
+
+#: geonode/people/password_validators.py:28
+msgid "The password must contain at least                     1 uppercase letter, A-Z."
+msgstr "A senha deve conter pelo menos                     1 letra maiúscula, A-Z."
+
+#: geonode/people/password_validators.py:35
+msgid "Your password must contain at least 1 uppercase letter, A-Z."
+msgstr "Sua senha deve conter pelo menos 1 letra maiúscula, A-Z."
+
+#: geonode/people/password_validators.py:43
+msgid "The password must contain at least                     1 lowercase letter, a-z."
+msgstr "A senha deve conter pelo menos                     1 letra minúscula, a-z."
+
+#: geonode/people/password_validators.py:50
+msgid "Your password must contain at least 1 lowercase letter, a-z."
+msgstr "Sua senha deve conter pelo menos 1 letra minúscula, a-z."
+
+#: geonode/people/password_validators.py:58
+msgid "The password must contain at least                     1 symbol, @#$%^&*()[]{}+=`:\";'<>?,./."
+msgstr "A senha deve conter pelo menos                     1 símbolo, @#$%^&*()[]{}+=`:\";'<>?,./."
+
+#: geonode/people/password_validators.py:66
+msgid "Your password must contain at least                 1 symbol, @#$%^&*()[]{}+=`:\";'<>?,./."
+msgstr "Sua senha deve conter pelo menos                 1 símbolo, @#$%^&*()[]{}+=`:\";'<>?,./."
+
+#: geonode/people/templates/people/avatar/add.html:6
+msgid "Add Avatar"
+msgstr "Adicionar avatar"
+
+#: geonode/people/templates/people/avatar/add.html:16
+#: geonode/people/templates/people/avatar/change.html:31
+msgid "Add new avatar"
+msgstr "Adicionar novo avatar"
+
+#: geonode/people/templates/people/avatar/add.html:22
+#: geonode/people/templates/people/avatar/change.html:26
+#: geonode/people/templates/people/avatar/change.html:37
+#: geonode/people/templates/people/avatar/confirm_delete.html:20
+msgid "Go back to Edit Your Profile"
+msgstr "Voltar para a edição do seu perfil"
+
+#: geonode/people/templates/people/avatar/change.html:7
+msgid "Change Avatar"
+msgstr "Alterar avatar"
+
+#: geonode/people/templates/people/avatar/change.html:17
+msgid "Select default avatar"
+msgstr "Selecionar avatar padrão"
+
+#: geonode/people/templates/people/avatar/change.html:25
+msgid "Delete avatar"
+msgstr "Excluir avatar"
+
+#: geonode/people/templates/people/avatar/confirm_delete.html:6
+msgid "Delete Avatar"
+msgstr "Excluir avatar"
+
+#: geonode/security/views.py:81
+msgid "User {username} has download permissions but cannot access the resource. Please update permission consistently!"
+msgstr "O usuário {username} tem permissão de download, mas não consegue acessar o recurso. Ajuste as permissões para que fiquem consistentes!"
+
+#: geonode/templates/500.html:8
+msgid ""
+"\n"
+"  Please contact your GeoNode administrator (they may have received an email automatically if they configured it properly).\n"
+"  If you are the site administrator, enable debug mode to see the actual error and fix it or file an issue in <a href=\"http://github.com/GeoNode/geonode/issues\">GeoNode's issue tracker</a>\n"
+"  "
+msgstr ""
+"\n"
+"  Entre em contato com o administrador do GeoNode (ele pode ter recebido um e-mail automaticamente, se estiver configurado corretamente).\n"
+"  Se você é o administrador do site, ative o modo de depuração para ver o erro real e corrigi-lo, ou registre um problema no <a href=\"http://github.com/GeoNode/geonode/issues\">rastreador de problemas do GeoNode</a>\n"
+"  "
+
+#: geonode/templates/account/admin_approval_needed.html:12
+msgid "The account email verification is enabled and the email associated with this account is invalid or not set.<br> We invite you to contact the administrator to reset the email."
+msgstr "A verificação de e-mail está ativada e o e-mail associado a esta conta é inválido ou não foi informado.<br> Entre em contato com o administrador para redefinir o e-mail."
+
+#: geonode/templates/account/email/email_confirmation_message.txt:1
+msgid ""
+"Hello from %(site_name|urlencode)s!\n"
+"\n"
+"You're receiving this e-mail because user %(user_display)s has given yours as an e-mail address to connect their account.\n"
+"\n"
+"To confirm this is correct, go to %(activate_url)s\n"
+msgstr ""
+"Olá, aqui é o %(site_name|urlencode)s!\n"
+"\n"
+"Você está recebendo este e-mail porque o usuário %(user_display)s informou o seu endereço de e-mail para vincular à conta dele.\n"
+"\n"
+"Para confirmar que está correto, acesse %(activate_url)s\n"
+
+#: geonode/templates/account/email/email_confirmation_message.txt:7
+msgid ""
+"Thank you from %(site_name|urlencode)s!\n"
+"%(site_domain)s"
+msgstr ""
+"Agradecemos, equipe %(site_name|urlencode)s!\n"
+"%(site_domain)s"
+
+#: geonode/templates/account/email/email_confirmation_subject.txt:1
+msgid "Please confirm email address for %(site_name|urlencode)s"
+msgstr "Confirme o endereço de e-mail para %(site_name|urlencode)s"
+
+#: geonode/templates/account/email/invite_user.txt:1
+msgid "You have been invited to sign up at %(site_name|urlencode)s."
+msgstr "Você foi convidado a se cadastrar em %(site_name|urlencode)s."
+
+#: geonode/templates/account/email/invite_user_subject.txt:1
+msgid "Create an account on %(site_name|urlencode)s"
+msgstr "Crie uma conta em %(site_name|urlencode)s"
+
+#: geonode/templates/account/email/password_reset_key.txt:1
+msgid ""
+"Hello from %(site_name|urlencode)s!\n"
+"\n"
+"You're receiving this e-mail because you or someone else has requested a password for your user account.\n"
+"It can be safely ignored if you did not request a password reset. Click the link below to reset your password."
+msgstr ""
+"Olá, aqui é o %(site_name|urlencode)s!\n"
+"\n"
+"Você está recebendo este e-mail porque você ou outra pessoa solicitou uma senha para a sua conta de usuário.\n"
+"Se você não solicitou a redefinição de senha, pode ignorar esta mensagem. Clique no link abaixo para redefinir sua senha."
+
+#: geonode/templates/account/email/password_reset_key.txt:10
+msgid ""
+"Thank you for using %(site_name|urlencode)s!\n"
+"%(site_domain)s"
+msgstr ""
+"Obrigado por usar o %(site_name|urlencode)s!\n"
+"%(site_domain)s"
+
+#: geonode/templates/account/email/password_reset_key_subject.txt:1
+msgid " Password reset"
+msgstr " Redefinição de senha"
+
+#: geonode/templates/invitations/email/email_invite_message.html:3
+msgid "is inviting you to join (%(site_name|urlencode)s)."
+msgstr "está convidando você para participar de (%(site_name|urlencode)s)."
+
+#: geonode/templates/invitations/email/email_invite_message.html:5
+msgid "To do so, please register at <a href=\"%(invite_url)s\">%(site_name|urlencode)s Registration</a>."
+msgstr "Para isso, cadastre-se em <a href=\"%(invite_url)s\">Cadastro no %(site_name|urlencode)s</a>."
+
+#: geonode/templates/owner_rights_request.html:6
+msgid "Request permission"
+msgstr "Solicitar permissão"
+
+#: geonode/templates/pinax/notifications/account_approve/full.txt:6
+msgid "has created an account and has access to the site."
+msgstr "criou uma conta e tem acesso ao site."
+
+#: geonode/templates/pinax/notifications/dataset_approved/full.txt:2
+msgid "The following dataset was approved"
+msgstr "O seguinte conjunto de dados foi aprovado"
+
+#: geonode/templates/pinax/notifications/dataset_approved/full.txt:4
+#: geonode/templates/pinax/notifications/dataset_created/full.txt:4
+#: geonode/templates/pinax/notifications/dataset_published/full.txt:4
+#: geonode/templates/pinax/notifications/dataset_rated/full.txt:6
+#: geonode/templates/pinax/notifications/dataset_updated/full.txt:4
+#: geonode/templates/pinax/notifications/document_rated/full.txt:6
+msgid "You can visit the dataset's detail page here"
+msgstr "Você pode acessar a página de detalhes do conjunto de dados aqui"
+
+#: geonode/templates/pinax/notifications/dataset_approved/short.txt:3
+msgid "A dataset has been approved"
+msgstr "Um conjunto de dados foi aprovado"
+
+#: geonode/templates/pinax/notifications/dataset_created/full.txt:2
+msgid "uploaded the following dataset"
+msgstr "enviou o seguinte conjunto de dados"
+
+#: geonode/templates/pinax/notifications/dataset_created/short.txt:3
+msgid "A new dataset has been uploaded"
+msgstr "Um novo conjunto de dados foi enviado"
+
+#: geonode/templates/pinax/notifications/dataset_deleted/full.txt:2
+msgid "The following dataset was deleted"
+msgstr "O seguinte conjunto de dados foi excluído"
+
+#: geonode/templates/pinax/notifications/dataset_deleted/short.txt:3
+msgid "A dataset has been deleted"
+msgstr "Um conjunto de dados foi excluído"
+
+#: geonode/templates/pinax/notifications/dataset_published/full.txt:2
+msgid "The following dataset was published"
+msgstr "O seguinte conjunto de dados foi publicado"
+
+#: geonode/templates/pinax/notifications/dataset_published/short.txt:3
+msgid "A dataset has been published"
+msgstr "Um conjunto de dados foi publicado"
+
+#: geonode/templates/pinax/notifications/dataset_rated/full.txt:4
+msgid "the following dataset"
+msgstr "o seguinte conjunto de dados"
+
+#: geonode/templates/pinax/notifications/dataset_rated/short.txt:3
+msgid "A dataset has been rated"
+msgstr "Um conjunto de dados foi avaliado"
+
+#: geonode/templates/pinax/notifications/dataset_updated/full.txt:2
+msgid "The following dataset was updated"
+msgstr "O seguinte conjunto de dados foi atualizado"
+
+#: geonode/templates/pinax/notifications/dataset_updated/short.txt:3
+msgid "A dataset has been updated"
+msgstr "Um conjunto de dados foi atualizado"
+
+#: geonode/templates/pinax/notifications/request_download_resourcebase/full.txt:5
+msgid "Dataset"
+msgstr "Conjunto de dados"
+
+#: geonode/upload/api/exceptions.py:33
+msgid "Total upload size exceeded. Please try again with smaller files."
+msgstr "O tamanho total do envio foi excedido. Tente novamente com arquivos menores."
+
+#: geonode/upload/api/exceptions.py:40
+msgid "The number of active parallel uploads exceeds. Wait for the pending ones to finish."
+msgstr "O número de envios simultâneos foi excedido. Aguarde a conclusão dos envios pendentes."
+
+#: templates/geonode-mapstore-client/pages/all.html:6
+msgid "All Resources"
+msgstr "Todos os recursos"
+
+#: templates/geonode-mapstore-client/pages/dashboards.html:6
+#: templates/geonode-mapstore-client/snippets/brand_navbar_default_left_menu_items.html:31
+msgid "Dashboards"
+msgstr "Dashboards"
+
+#: templates/geonode-mapstore-client/pages/geostories.html:6
+#: templates/geonode-mapstore-client/snippets/brand_navbar_default_left_menu_items.html:26
+msgid "GeoStories"
+msgstr "GeoStories"
+
+#: templates/geonode-mapstore-client/snippets/brand_navbar_default_left_menu_items.html:5
+msgid "All resources"
+msgstr "Todos os recursos"
+
+#: templates/geonode-mapstore-client/snippets/brand_navbar_default_right_menu_items.html:34
+msgid "Invite users"
+msgstr "Convidar usuários"
+
+#: templates/geonode-mapstore-client/snippets/brand_navbar_default_right_menu_items.html:35
+msgid "Add user"
+msgstr "Adicionar usuário"
+
+#: templates/geonode-mapstore-client/snippets/brand_navbar_default_right_menu_items.html:36
+msgid "Create group"
+msgstr "Criar grupo"
+
+#: geonode/people/__init__.py (Roles, via MetadataHandler._localize_label)
+msgid "Processor"
+msgstr "Processador"
+
+#: geonode/people/__init__.py
+msgid "Publisher"
+msgstr "Publicador"
+
+#: geonode/people/__init__.py
+msgid "Custodian"
+msgstr "Custodiante"
+
+#: geonode/people/__init__.py
+msgid "Distributor"
+msgstr "Distribuidor"
+
+#: geonode/people/__init__.py
+msgid "Resource User"
+msgstr "Usuário do recurso"
+
+#: geonode/people/__init__.py
+msgid "Resource Provider"
+msgstr "Provedor do recurso"
+
+#: geonode/people/__init__.py
+msgid "Originator"
+msgstr "Originador"
+
+#: geonode/people/__init__.py
+msgid "Principal Investigator"
+msgstr "Pesquisador principal"
+
+# ======================================================================
+# allauth — strings sem tradução efetiva no catálogo pt_BR do allauth
+# (entradas fuzzy, que ficam fora do .mo, ou não traduzidas upstream).
+# Cada entrada abaixo está marcada com o comentário `# allauth`.
+# ======================================================================
+
+# allauth (fuzzy upstream)
+#: allauth/account/forms.py:136
+msgid "Forgot your password?"
+msgstr "Esqueceu sua senha?"
+
+# allauth (fuzzy upstream)
+#: allauth/account/adapter.py:60
+msgid "You cannot remove your primary email address."
+msgstr "Você não pode remover o seu endereço de e-mail principal."
+
+# allauth (fuzzy upstream)
+#: allauth/account/adapter.py:72
+msgid "Invalid or expired key."
+msgstr "Chave inválida ou expirada."
+
+# allauth (fuzzy upstream)
+#: allauth/socialaccount/adapter.py:36
+msgid "An account already exists with this email address. Please sign in to that account first, then connect your %s account."
+msgstr "Já existe uma conta com este endereço de e-mail. Entre primeiro nessa conta e depois conecte sua conta %s."
+
+# allauth (fuzzy upstream)
+#: allauth/socialaccount/adapter.py:44
+msgid "You cannot disconnect your last remaining third-party account."
+msgstr "Você não pode desconectar sua última conta externa."
+
+# allauth (fuzzy upstream)
+#: allauth/templates/account/base_reauthenticate.html:5
+#: allauth/templates/account/base_reauthenticate.html:9
+msgid "Confirm Access"
+msgstr "Confirmar acesso"
+
+# allauth (fuzzy upstream)
+#: allauth/templates/account/email/email_changed_subject.txt:3
+msgid "Email Changed"
+msgstr "E-mail alterado"
+
+# allauth (fuzzy upstream)
+#: allauth/templates/account/email/email_confirm_message.txt:4
+msgid "Your email has been confirmed."
+msgstr "Seu e-mail foi confirmado."
+
+# allauth (fuzzy upstream)
+#: allauth/templates/account/email/email_confirm_subject.txt:3
+msgid "Email Confirmation"
+msgstr "Confirmação de e-mail"
+
+# allauth (fuzzy upstream)
+#: allauth/templates/account/email/email_deleted_subject.txt:3
+msgid "Email Removed"
+msgstr "E-mail removido"
+
+# allauth (fuzzy upstream)
+#: allauth/templates/account/email/login_code_subject.txt:3
+msgid "Sign-In Code"
+msgstr "Código de acesso"
+
+# allauth (fuzzy upstream)
+#: allauth/templates/account/email/password_changed_message.txt:4
+msgid "Your password has been changed."
+msgstr "Sua senha foi alterada."
+
+# allauth (fuzzy upstream)
+#: allauth/templates/account/email/password_changed_subject.txt:3
+msgid "Password Changed"
+msgstr "Senha alterada"
+
+# allauth (fuzzy upstream)
+#: allauth/templates/account/email/password_reset_key_message.txt:4
+msgid ""
+"You're receiving this email because you or someone else has requested a password reset for your user account.\n"
+"It can be safely ignored if you did not request a password reset. Click the link below to reset your password."
+msgstr ""
+"Você está recebendo este e-mail porque você ou outra pessoa solicitou a redefinição de senha da sua conta de usuário.\n"
+"Se você não solicitou a redefinição de senha, pode ignorar esta mensagem. Clique no link abaixo para redefinir sua senha."
+
+# allauth (fuzzy upstream)
+#: allauth/templates/account/email/password_reset_message.txt:4
+msgid "Your password has been reset."
+msgstr "Sua senha foi redefinida."
+
+# allauth (fuzzy upstream)
+#: allauth/templates/account/email/password_set_message.txt:4
+msgid "Your password has been set."
+msgstr "Sua senha foi definida."
+
+# allauth (fuzzy upstream)
+#: allauth/templates/account/email/unknown_account_subject.txt:3
+msgid "Unknown Account"
+msgstr "Conta desconhecida"
+
+# allauth (fuzzy upstream)
+#: allauth/templates/account/email_change.html:21
+#: allauth/templates/account/email_change.html:29
+msgid "Current email"
+msgstr "E-mail atual"
+
+# allauth (fuzzy upstream)
+#: allauth/templates/account/email_change.html:35
+msgid "Your email address is still pending verification."
+msgstr "Seu endereço de e-mail ainda aguarda verificação."
+
+# allauth (fuzzy upstream)
+#: allauth/templates/account/email_change.html:49
+msgid "Change to"
+msgstr "Alterar para"
+
+# allauth (fuzzy upstream)
+#: allauth/templates/account/email_change.html:55
+#: allauth/templates/allauth/layouts/base.html:31
+msgid "Change Email"
+msgstr "Alterar e-mail"
+
+# allauth (fuzzy upstream)
+#: allauth/templates/account/email_confirm.html:30
+#: allauth/templates/account/messages/email_confirmation_failed.txt:2
+msgid "Unable to confirm %(email)s because it is already confirmed by a different account."
+msgstr "Não foi possível confirmar %(email)s porque ele já foi confirmado por outra conta."
+
+# allauth (fuzzy upstream)
+#: allauth/templates/account/reauthenticate.html:6
+msgid "Enter your password:"
+msgstr "Digite sua senha:"
+
+# allauth (fuzzy upstream)
+#: allauth/templates/account/snippets/warn_no_email.html:3
+msgid "You currently do not have any email address set up. You should really add an email address so you can receive notifications, reset your password, etc."
+msgstr "Você ainda não tem nenhum endereço de e-mail cadastrado. Cadastre um endereço de e-mail para receber notificações, redefinir sua senha etc."
+
+# allauth (fuzzy upstream)
+#: allauth/templates/socialaccount/email/account_connected_subject.txt:3
+msgid "Third-Party Account Connected"
+msgstr "Conta externa conectada"
+
+# allauth (fuzzy upstream)
+#: allauth/templates/socialaccount/email/account_disconnected_subject.txt:3
+msgid "Third-Party Account Disconnected"
+msgstr "Conta externa desconectada"
+
+# allauth (fuzzy upstream)
+#: allauth/templates/socialaccount/login.html:13
+msgid "You are about to connect a new third-party account from %(provider)s."
+msgstr "Você está prestes a conectar uma nova conta externa de %(provider)s."
+
+# allauth (fuzzy upstream)
+#: allauth/templates/socialaccount/login.html:20
+msgid "You are about to sign in using a third-party account from %(provider)s."
+msgstr "Você está prestes a entrar usando uma conta externa de %(provider)s."
+
+# allauth (fuzzy upstream)
+#: allauth/templates/socialaccount/messages/account_connected.txt:2
+msgid "The third-party account has been connected."
+msgstr "A conta externa foi conectada."
+
+# allauth (fuzzy upstream)
+#: allauth/templates/socialaccount/messages/account_connected_other.txt:2
+msgid "The third-party account is already connected to a different account."
+msgstr "A conta externa já está conectada a outra conta."
+
+# allauth (fuzzy upstream)
+#: allauth/templates/socialaccount/messages/account_disconnected.txt:2
+msgid "The third-party account has been disconnected."
+msgstr "A conta externa foi desconectada."
+
+# allauth (sem tradução upstream)
+#: allauth/templates/account/base_reauthenticate.html:12
+msgid "Please reauthenticate to safeguard your account."
+msgstr "Autentique-se novamente para proteger sua conta."
+
+# allauth (sem tradução upstream)
+#: allauth/templates/account/base_reauthenticate.html:19
+msgid "Alternative options"
+msgstr "Outras opções"
+
+# allauth (sem tradução upstream)
+#: allauth/templates/account/confirm_login_code.html:9
+msgid "Enter Sign-In Code"
+msgstr "Digite o código de acesso"
+
+# allauth (sem tradução upstream)
+#: allauth/templates/account/confirm_login_code.html:15
+msgid "We’ve sent a code to %(email_link)s. The code expires shortly, so please enter it soon."
+msgstr "Enviamos um código para %(email_link)s. O código expira em pouco tempo, então digite-o logo."
+
+# allauth (sem tradução upstream)
+#: allauth/templates/account/confirm_login_code.html:34
+#: allauth/templates/account/request_login_code.html:31
+msgid "Other sign-in options"
+msgstr "Outras formas de entrar"
+
+# allauth (sem tradução upstream)
+#: allauth/templates/account/email/account_already_exists_message.txt:4
+msgid ""
+"You are receiving this email because you or someone else tried to signup for an\n"
+"account using email address:\n"
+"\n"
+"%(email)s\n"
+"\n"
+"However, an account using that email address already exists.  In case you have\n"
+"forgotten about this, please use the password forgotten procedure to recover\n"
+"your account:\n"
+"\n"
+"%(password_reset_url)s"
+msgstr ""
+"Você está recebendo este e-mail porque você ou outra pessoa tentou criar uma\n"
+"conta usando o endereço de e-mail:\n"
+"\n"
+"%(email)s\n"
+"\n"
+"Porém, já existe uma conta com esse endereço de e-mail. Caso tenha\n"
+"esquecido, use o procedimento de recuperação de senha para recuperar\n"
+"sua conta:\n"
+"\n"
+"%(password_reset_url)s"
+
+# allauth (sem tradução upstream)
+#: allauth/templates/account/email/account_already_exists_subject.txt:3
+msgid "Account Already Exists"
+msgstr "Conta já existente"
+
+# allauth (sem tradução upstream)
+#: allauth/templates/account/email/base_notification.txt:5
+msgid "You are receiving this mail because the following change was made to your account:"
+msgstr "Você está recebendo este e-mail porque a seguinte alteração foi feita na sua conta:"
+
+# allauth (sem tradução upstream)
+#: allauth/templates/account/email/base_notification.txt:10
+msgid ""
+"If you do not recognize this change then please take proper security precautions immediately. The change to your account originates from:\n"
+"\n"
+"- IP address: %(ip)s\n"
+"- Browser: %(user_agent)s\n"
+"- Date: %(timestamp)s"
+msgstr ""
+"Se você não reconhece esta alteração, tome imediatamente as medidas de segurança adequadas. A alteração na sua conta foi feita a partir de:\n"
+"\n"
+"- Endereço IP: %(ip)s\n"
+"- Navegador: %(user_agent)s\n"
+"- Data: %(timestamp)s"
+
+# allauth (sem tradução upstream)
+#: allauth/templates/account/email/email_changed_message.txt:4
+msgid "Your email has been changed from %(from_email)s to %(to_email)s."
+msgstr "Seu e-mail foi alterado de %(from_email)s para %(to_email)s."
+
+# allauth (sem tradução upstream)
+#: allauth/templates/account/email/email_deleted_message.txt:4
+msgid "Email address %(deleted_email)s has been removed from your account."
+msgstr "O endereço de e-mail %(deleted_email)s foi removido da sua conta."
+
+# allauth (sem tradução upstream)
+#: allauth/templates/account/email/login_code_message.txt:5
+msgid "Your sign-in code is listed below. Please enter it in your open browser window."
+msgstr "Seu código de acesso está abaixo. Digite-o na janela do navegador que está aberta."
+
+# allauth (sem tradução upstream)
+#: allauth/templates/account/email/login_code_message.txt:9
+#: allauth/templates/account/email/unknown_account_message.txt:6
+msgid "This mail can be safely ignored if you did not initiate this action."
+msgstr "Se você não iniciou esta ação, pode ignorar este e-mail."
+
+# allauth (sem tradução upstream)
+#: allauth/templates/account/email/unknown_account_message.txt:4
+msgid "You are receiving this email because you, or someone else, tried to access an account with email %(email)s. However, we do not have any record of such an account in our database."
+msgstr "Você está recebendo este e-mail porque você, ou outra pessoa, tentou acessar uma conta com o e-mail %(email)s. Porém, não temos registro dessa conta em nosso banco de dados."
+
+# allauth (sem tradução upstream)
+#: allauth/templates/account/email/unknown_account_message.txt:8
+msgid "If it was you, you can sign up for an account using the link below."
+msgstr "Se foi você, pode criar uma conta usando o link abaixo."
+
+# allauth (sem tradução upstream)
+#: allauth/templates/account/email_change.html:31
+msgid "Changing to"
+msgstr "Alterando para"
+
+# allauth (sem tradução upstream)
+#: allauth/templates/account/email_change.html:41
+msgid "Cancel Change"
+msgstr "Cancelar alteração"
+
+# allauth (sem tradução upstream)
+#: allauth/templates/account/login.html:41
+#: allauth/templates/account/request_login_code.html:9
+msgid "Mail me a sign-in code"
+msgstr "Enviar um código de acesso por e-mail"
+
+# allauth (sem tradução upstream)
+#: allauth/templates/account/messages/login_code_sent.txt:2
+msgid "A sign-in code has been mailed to %(email)s."
+msgstr "Um código de acesso foi enviado para %(email)s."
+
+# allauth (sem tradução upstream)
+#: allauth/templates/account/request_login_code.html:12
+msgid "You will receive an email containing a special code for a password-free sign-in."
+msgstr "Você receberá um e-mail com um código especial para entrar sem senha."
+
+# allauth (sem tradução upstream)
+#: allauth/templates/account/request_login_code.html:24
+msgid "Request Code"
+msgstr "Solicitar código"
+
+# allauth (sem tradução upstream)
+#: allauth/templates/allauth/layouts/base.html:18
+msgid "Messages:"
+msgstr "Mensagens:"
+
+# allauth (sem tradução upstream)
+#: allauth/templates/allauth/layouts/base.html:25
+msgid "Menu:"
+msgstr "Menu:"
+
+# allauth (sem tradução upstream)
+#: allauth/templates/socialaccount/snippets/login.html:10
+msgid "Or use a third-party"
+msgstr "Ou use uma conta externa"

@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Tesauro "labels-i18n" do OpenGeoSGB: rótulos em português do editor de metadados do GeoNode.
+  Carregar/atualizar com o comando "thesaurus load" do GeoNode, ação "update" (ver CLAUDE.md).
+-->
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+         xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:dcterms="http://purl.org/dc/terms/">
+  <skos:ConceptScheme rdf:about="http://automatically/added/uri/labels-i18n">
+    <dc:title xml:lang="en">Metadata editor labels</dc:title>
+    <dc:title xml:lang="pt">Rótulos do editor de metadados</dc:title>
+    <dc:description>Labels used by the GeoNode metadata editor (identifier: labels-i18n).</dc:description>
+    <dcterms:issued>2026-11-06</dcterms:issued>
+  </skos:ConceptScheme>
+  <!-- ===== Campos do editor de metadados (sobrescritas de título e descrição) ===== -->
+  <skos:Concept rdf:about="http://automatically/added/uri/uuid__ovr">
+    <skos:inScheme rdf:resource="http://automatically/added/uri/labels-i18n"/>
+    <skos:prefLabel xml:lang="pt">UUID</skos:prefLabel>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://automatically/added/uri/title__ovr">
+    <skos:inScheme rdf:resource="http://automatically/added/uri/labels-i18n"/>
+    <skos:prefLabel xml:lang="pt">Título</skos:prefLabel>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://automatically/added/uri/title__descr__ovr">
+    <skos:inScheme rdf:resource="http://automatically/added/uri/labels-i18n"/>
+    <skos:prefLabel xml:lang="pt">Nome pelo qual o recurso citado é conhecido.</skos:prefLabel>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://automatically/added/uri/abstract__ovr">
+    <skos:inScheme rdf:resource="http://automatically/added/uri/labels-i18n"/>
+    <skos:prefLabel xml:lang="pt">Resumo</skos:prefLabel>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://automatically/added/uri/abstract__descr__ovr">
+    <skos:inScheme rdf:resource="http://automatically/added/uri/labels-i18n"/>
+    <skos:prefLabel xml:lang="pt">Breve resumo narrativo do conteúdo do(s) recurso(s).</skos:prefLabel>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://automatically/added/uri/date__ovr">
+    <skos:inScheme rdf:resource="http://automatically/added/uri/labels-i18n"/>
+    <skos:prefLabel xml:lang="pt">Data</skos:prefLabel>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://automatically/added/uri/date_type__ovr">
+    <skos:inScheme rdf:resource="http://automatically/added/uri/labels-i18n"/>
+    <skos:prefLabel xml:lang="pt">Tipo de data</skos:prefLabel>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://automatically/added/uri/category__ovr">
+    <skos:inScheme rdf:resource="http://automatically/added/uri/labels-i18n"/>
+    <skos:prefLabel xml:lang="pt">Categoria</skos:prefLabel>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://automatically/added/uri/category__descr__ovr">
+    <skos:inScheme rdf:resource="http://automatically/added/uri/labels-i18n"/>
+    <skos:prefLabel xml:lang="pt">Classificação temática de alto nível dos dados geográficos, para auxiliar no agrupamento e na busca dos conjuntos de dados disponíveis.</skos:prefLabel>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://automatically/added/uri/tkeywords__ovr">
+    <skos:inScheme rdf:resource="http://automatically/added/uri/labels-i18n"/>
+    <skos:prefLabel xml:lang="pt">Palavras-chave de tesauro</skos:prefLabel>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://automatically/added/uri/tkeywords__descr__ovr">
+    <skos:inScheme rdf:resource="http://automatically/added/uri/labels-i18n"/>
+    <skos:prefLabel xml:lang="pt">Lista de palavras-chave de tesauros controlados.</skos:prefLabel>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://automatically/added/uri/hkeywords__ovr">
+    <skos:inScheme rdf:resource="http://automatically/added/uri/labels-i18n"/>
+    <skos:prefLabel xml:lang="pt">Palavras-chave</skos:prefLabel>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://automatically/added/uri/hkeywords__descr__ovr">
+    <skos:inScheme rdf:resource="http://automatically/added/uri/labels-i18n"/>
+    <skos:prefLabel xml:lang="pt">Palavras-chave hierárquicas.</skos:prefLabel>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://automatically/added/uri/language__ovr">
+    <skos:inScheme rdf:resource="http://automatically/added/uri/labels-i18n"/>
+    <skos:prefLabel xml:lang="pt">Idioma</skos:prefLabel>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://automatically/added/uri/language__descr__ovr">
+    <skos:inScheme rdf:resource="http://automatically/added/uri/labels-i18n"/>
+    <skos:prefLabel xml:lang="pt">Idioma usado no conjunto de dados.</skos:prefLabel>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://automatically/added/uri/license__ovr">
+    <skos:inScheme rdf:resource="http://automatically/added/uri/labels-i18n"/>
+    <skos:prefLabel xml:lang="pt">Licença</skos:prefLabel>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://automatically/added/uri/license__descr__ovr">
+    <skos:inScheme rdf:resource="http://automatically/added/uri/labels-i18n"/>
+    <skos:prefLabel xml:lang="pt">Licença do conjunto de dados.</skos:prefLabel>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://automatically/added/uri/attribution__ovr">
+    <skos:inScheme rdf:resource="http://automatically/added/uri/labels-i18n"/>
+    <skos:prefLabel xml:lang="pt">Atribuição</skos:prefLabel>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://automatically/added/uri/attribution__descr__ovr">
+    <skos:inScheme rdf:resource="http://automatically/added/uri/labels-i18n"/>
+    <skos:prefLabel xml:lang="pt">Autoridade ou função atribuída, como a um governante, assembleia legislativa, delegado ou semelhante.</skos:prefLabel>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://automatically/added/uri/regions__ovr">
+    <skos:inScheme rdf:resource="http://automatically/added/uri/labels-i18n"/>
+    <skos:prefLabel xml:lang="pt">Regiões</skos:prefLabel>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://automatically/added/uri/regions__descr__ovr">
+    <skos:inScheme rdf:resource="http://automatically/added/uri/labels-i18n"/>
+    <skos:prefLabel xml:lang="pt">Palavra-chave que identifica uma localização.</skos:prefLabel>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://automatically/added/uri/data_quality_statement__ovr">
+    <skos:inScheme rdf:resource="http://automatically/added/uri/labels-i18n"/>
+    <skos:prefLabel xml:lang="pt">Declaração de qualidade dos dados</skos:prefLabel>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://automatically/added/uri/data_quality_statement__descr__ovr">
+    <skos:inScheme rdf:resource="http://automatically/added/uri/labels-i18n"/>
+    <skos:prefLabel xml:lang="pt">Explicação geral do conhecimento do produtor dos dados sobre a linhagem do conjunto de dados.</skos:prefLabel>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://automatically/added/uri/restriction_code_type__ovr">
+    <skos:inScheme rdf:resource="http://automatically/added/uri/labels-i18n"/>
+    <skos:prefLabel xml:lang="pt">Restrições</skos:prefLabel>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://automatically/added/uri/restriction_code_type__descr__ovr">
+    <skos:inScheme rdf:resource="http://automatically/added/uri/labels-i18n"/>
+    <skos:prefLabel xml:lang="pt">Limitações impostas ao acesso ou ao uso dos dados.</skos:prefLabel>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://automatically/added/uri/constraints_other__ovr">
+    <skos:inScheme rdf:resource="http://automatically/added/uri/labels-i18n"/>
+    <skos:prefLabel xml:lang="pt">Outras restrições</skos:prefLabel>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://automatically/added/uri/constraints_other__descr__ovr">
+    <skos:inScheme rdf:resource="http://automatically/added/uri/labels-i18n"/>
+    <skos:prefLabel xml:lang="pt">Outras restrições e pré-requisitos legais para o acesso e o uso do recurso ou dos metadados.</skos:prefLabel>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://automatically/added/uri/edition__ovr">
+    <skos:inScheme rdf:resource="http://automatically/added/uri/labels-i18n"/>
+    <skos:prefLabel xml:lang="pt">Edição</skos:prefLabel>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://automatically/added/uri/edition__descr__ovr">
+    <skos:inScheme rdf:resource="http://automatically/added/uri/labels-i18n"/>
+    <skos:prefLabel xml:lang="pt">Versão do recurso citado.</skos:prefLabel>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://automatically/added/uri/doi__ovr">
+    <skos:inScheme rdf:resource="http://automatically/added/uri/labels-i18n"/>
+    <skos:prefLabel xml:lang="pt">DOI</skos:prefLabel>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://automatically/added/uri/doi__descr__ovr">
+    <skos:inScheme rdf:resource="http://automatically/added/uri/labels-i18n"/>
+    <skos:prefLabel xml:lang="pt">Um DOI será adicionado pelo administrador antes da publicação.</skos:prefLabel>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://automatically/added/uri/purpose__ovr">
+    <skos:inScheme rdf:resource="http://automatically/added/uri/labels-i18n"/>
+    <skos:prefLabel xml:lang="pt">Finalidade</skos:prefLabel>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://automatically/added/uri/purpose__descr__ovr">
+    <skos:inScheme rdf:resource="http://automatically/added/uri/labels-i18n"/>
+    <skos:prefLabel xml:lang="pt">Resumo das intenções com que o(s) recurso(s) foi(ram) desenvolvido(s).</skos:prefLabel>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://automatically/added/uri/supplemental_information__ovr">
+    <skos:inScheme rdf:resource="http://automatically/added/uri/labels-i18n"/>
+    <skos:prefLabel xml:lang="pt">Informações complementares</skos:prefLabel>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://automatically/added/uri/supplemental_information__descr__ovr">
+    <skos:inScheme rdf:resource="http://automatically/added/uri/labels-i18n"/>
+    <skos:prefLabel xml:lang="pt">Qualquer outra informação descritiva sobre o conjunto de dados.</skos:prefLabel>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://automatically/added/uri/temporal_extent_start__ovr">
+    <skos:inScheme rdf:resource="http://automatically/added/uri/labels-i18n"/>
+    <skos:prefLabel xml:lang="pt">Início da extensão temporal</skos:prefLabel>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://automatically/added/uri/temporal_extent_start__descr__ovr">
+    <skos:inScheme rdf:resource="http://automatically/added/uri/labels-i18n"/>
+    <skos:prefLabel xml:lang="pt">Período de tempo coberto pelo conteúdo do conjunto de dados (início).</skos:prefLabel>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://automatically/added/uri/temporal_extent_end__ovr">
+    <skos:inScheme rdf:resource="http://automatically/added/uri/labels-i18n"/>
+    <skos:prefLabel xml:lang="pt">Fim da extensão temporal</skos:prefLabel>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://automatically/added/uri/temporal_extent_end__descr__ovr">
+    <skos:inScheme rdf:resource="http://automatically/added/uri/labels-i18n"/>
+    <skos:prefLabel xml:lang="pt">Período de tempo coberto pelo conteúdo do conjunto de dados (fim).</skos:prefLabel>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://automatically/added/uri/maintenance_frequency__ovr">
+    <skos:inScheme rdf:resource="http://automatically/added/uri/labels-i18n"/>
+    <skos:prefLabel xml:lang="pt">Frequência de manutenção</skos:prefLabel>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://automatically/added/uri/maintenance_frequency__descr__ovr">
+    <skos:inScheme rdf:resource="http://automatically/added/uri/labels-i18n"/>
+    <skos:prefLabel xml:lang="pt">Frequência com que modificações e exclusões são feitas nos dados após sua produção inicial.</skos:prefLabel>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://automatically/added/uri/spatial_representation_type__ovr">
+    <skos:inScheme rdf:resource="http://automatically/added/uri/labels-i18n"/>
+    <skos:prefLabel xml:lang="pt">Tipo de representação espacial</skos:prefLabel>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://automatically/added/uri/spatial_representation_type__descr__ovr">
+    <skos:inScheme rdf:resource="http://automatically/added/uri/labels-i18n"/>
+    <skos:prefLabel xml:lang="pt">Método usado para representar a informação geográfica no conjunto de dados.</skos:prefLabel>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://automatically/added/uri/linkedresources__ovr">
+    <skos:inScheme rdf:resource="http://automatically/added/uri/labels-i18n"/>
+    <skos:prefLabel xml:lang="pt">Recursos relacionados</skos:prefLabel>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://automatically/added/uri/linkedresources__descr__ovr">
+    <skos:inScheme rdf:resource="http://automatically/added/uri/labels-i18n"/>
+    <skos:prefLabel xml:lang="pt">Recursos relacionados a este.</skos:prefLabel>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://automatically/added/uri/contacts__ovr">
+    <skos:inScheme rdf:resource="http://automatically/added/uri/labels-i18n"/>
+    <skos:prefLabel xml:lang="pt">Contatos</skos:prefLabel>
+  </skos:Concept>
+  <!-- ===== Mensagens do editor (altLabel = texto padrão para os demais idiomas) ===== -->
+  <skos:Concept rdf:about="http://automatically/added/uri/metadata_contact_error_missing_role">
+    <skos:inScheme rdf:resource="http://automatically/added/uri/labels-i18n"/>
+    <skos:altLabel>Missing required contact role '{role}'.</skos:altLabel>
+    <skos:prefLabel xml:lang="pt">O papel de contato obrigatório '{role}' não foi informado.</skos:prefLabel>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://automatically/added/uri/metadata_error_empty_field">
+    <skos:inScheme rdf:resource="http://automatically/added/uri/labels-i18n"/>
+    <skos:altLabel>Field '{fieldname}' cannot be empty.</skos:altLabel>
+    <skos:prefLabel xml:lang="pt">O campo '{fieldname}' não pode ficar vazio.</skos:prefLabel>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://automatically/added/uri/metadata_error_pre_save">
+    <skos:inScheme rdf:resource="http://automatically/added/uri/labels-i18n"/>
+    <skos:altLabel>Error before saving metadata ({handler}): {exc}</skos:altLabel>
+    <skos:prefLabel xml:lang="pt">Erro antes de salvar os metadados ({handler}): {exc}</skos:prefLabel>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://automatically/added/uri/metadata_error_post_save">
+    <skos:inScheme rdf:resource="http://automatically/added/uri/labels-i18n"/>
+    <skos:altLabel>Error after saving metadata ({handler}): {exc}</skos:altLabel>
+    <skos:prefLabel xml:lang="pt">Erro após salvar os metadados ({handler}): {exc}</skos:prefLabel>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://automatically/added/uri/metadata_error_save">
+    <skos:inScheme rdf:resource="http://automatically/added/uri/labels-i18n"/>
+    <skos:altLabel>Error saving metadata: {exc}</skos:altLabel>
+    <skos:prefLabel xml:lang="pt">Erro ao salvar os metadados: {exc}</skos:prefLabel>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://automatically/added/uri/metadata_error_store">
+    <skos:inScheme rdf:resource="http://automatically/added/uri/labels-i18n"/>
+    <skos:altLabel>Error storing field '{fieldname}': {exc}</skos:altLabel>
+    <skos:prefLabel xml:lang="pt">Erro ao gravar o campo '{fieldname}': {exc}</skos:prefLabel>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://automatically/added/uri/metadata_error_update">
+    <skos:inScheme rdf:resource="http://automatically/added/uri/labels-i18n"/>
+    <skos:altLabel>Error updating field '{fieldname}' ({handler}): {exc}</skos:altLabel>
+    <skos:prefLabel xml:lang="pt">Erro ao atualizar o campo '{fieldname}' ({handler}): {exc}</skos:prefLabel>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://automatically/added/uri/metadata_sparse_error_parse">
+    <skos:inScheme rdf:resource="http://automatically/added/uri/labels-i18n"/>
+    <skos:altLabel>Value '{value}' of field '{fieldname}' is not a valid {type}.</skos:altLabel>
+    <skos:prefLabel xml:lang="pt">O valor '{value}' do campo '{fieldname}' é inválido (tipo esperado: {type}).</skos:prefLabel>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://automatically/added/uri/metadata_sparse_error_type">
+    <skos:inScheme rdf:resource="http://automatically/added/uri/labels-i18n"/>
+    <skos:altLabel>Unsupported type '{type}' for field '{fieldname}'.</skos:altLabel>
+    <skos:prefLabel xml:lang="pt">Tipo '{type}' não suportado no campo '{fieldname}'.</skos:prefLabel>
+  </skos:Concept>
+</rdf:RDF>
