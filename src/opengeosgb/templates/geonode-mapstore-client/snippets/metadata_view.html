@@ -107,7 +107,9 @@ contatos, dicionário de dados, citação e distribuição. Sem ele, mantém o l
                             {% endif %}
                             {% if page.distribution.assets %}
                             <dt><label class="control-label">{% trans "Original files" %}</label></dt>
-                            <dd class="ogs-md-links">{% for link in page.distribution.assets %}<a href="{{ link.url }}" target="_blank" rel="noopener noreferrer">{{ link.text }}</a>{% endfor %}</dd>
+                            <dd><ul>{% for link in page.distribution.assets %}
+                                <li><a href="{{ link.url }}" target="_blank" rel="noopener noreferrer">{{ link.text }}</a></li>
+                            {% endfor %}</ul></dd>
                             {% endif %}
                             {% if page.distribution.downloads %}
                             <dt><label class="control-label">{% trans "Downloads" %}</label></dt>
