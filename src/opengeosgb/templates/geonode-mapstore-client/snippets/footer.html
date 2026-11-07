@@ -1,0 +1,57 @@
+{% load i18n %}
+{% comment %}
+Cópia de geonode_mapstore_client 5.0.3 (geonode-mapstore-client/snippets/footer.html).
+Alterações: "About" aponta para a flatpage "Sobre" do opengeosgb (ABOUT_PAGE_URL) e entram os links
+da política de cookies (COOKIE_POLICY_URL) e das preferências de cookies (reabre o aviso de cookies).
+Os endereços vêm do context processor opengeosgb.context_processors.site_pages, no idioma da página.
+{% endcomment %}
+
+<div class="gn-footer-placeholder"></div>
+<footer class="gn-footer">
+    <ul>
+        <li>
+            <a href="https://geonode.org/" class="nav-link">
+                <span>geonode.org</span>
+            </a>
+        </li>
+        <li>
+            <a href="/developer/" class="nav-link">
+                <span>{% trans "Developers" %}</span>
+            </a>
+        </li>
+        {% if ABOUT_PAGE_URL %}
+        <li>
+            <a href="{{ ABOUT_PAGE_URL }}" class="nav-link">
+                <span>{% trans "About" %}</span>
+            </a>
+        </li>
+        {% endif %}
+        {% if COOKIE_POLICY_URL %}
+        <li>
+            <a href="{{ COOKIE_POLICY_URL }}" class="nav-link">
+                <span>{% trans "Cookie policy" %}</span>
+            </a>
+        </li>
+        {% endif %}
+        <li>
+            <a href="#preferencias-de-cookies" class="nav-link">
+                <span>{% trans "Cookie preferences" %}</span>
+            </a>
+        </li>
+    </ul>
+</footer>
+
+<script>
+    (function () {
+        const footer = document.querySelector('.gn-footer');
+        const footerPlaceholder = document.querySelector('.gn-footer-placeholder');
+        function resize() {
+            if (footerPlaceholder && footer) {
+                footerPlaceholder.style.height = footer.clientHeight + 'px';
+            }
+        }
+        window.addEventListener('resize', resize);
+        window.addEventListener('DOMContentLoaded', resize);
+        resize();
+    })();
+</script>

@@ -1,0 +1,143 @@
+{% load i18n %}
+{% comment %}
+Aviso de cookies (LGPD) e carregamento condicionado do Google Tag Manager.
+
+- Incluído no <head> das páginas do Django (base.html) e do client (geonode-mapstore-client/snippets/head.html);
+  roda uma única vez por página, mesmo que seja incluído nos dois.
+- A escolha fica no cookie "opengeosgb_cookie_consent" ("accepted" ou "rejected", 1 ano).
+- O GTM (GOOGLE_TAG_MANAGER_ID) só é carregado depois do aceite; ao recusar, os cookies do
+  Google Analytics (_ga, _gid, _gat...) são apagados.
+- Qualquer link para "#preferencias-de-cookies" (ex.: na página de política e no rodapé) reabre o aviso.
+- COOKIE_POLICY_URL vem do context processor opengeosgb.context_processors.site_pages, no idioma da página.
+{% endcomment %}
+<style>
+    /* os botões usam as classes do tema da página (btn btn-primary / btn btn-default): o tema do
+       MapStore (body.msgapi) nas páginas do client e o Bootstrap do GeoNode (body.gn-legacy) nas do Django */
+    .ogs-cookie-banner { position: fixed; left: 0; right: 0; bottom: 0; z-index: 100000; background: #ffffff; color: #333333;
+        border-top: 1px solid rgba(0,0,0,.15); box-shadow: 0 -2px 12px rgba(0,0,0,.12); padding: 1rem; font-family: inherit; }
+    .ogs-cookie-banner__content { max-width: 1140px; margin: 0 auto; display: flex; flex-wrap: wrap; gap: .75rem 1.5rem; align-items: center; }
+    .ogs-cookie-banner__text { flex: 1 1 420px; margin: 0; line-height: 1.4; }
+    .ogs-cookie-banner__actions { display: flex; flex-wrap: wrap; gap: .5rem; }
+</style>
+<template id="ogs-cookie-banner-template">
+    <div class="ogs-cookie-banner" role="region" aria-label="{% trans 'Cookie notice' %}">
+        <div class="ogs-cookie-banner__content">
+            <p class="ogs-cookie-banner__text">
+                {% trans "We use essential cookies to make this portal work and, with your permission, analytics cookies to understand how the site is used." %}
+                {% if COOKIE_POLICY_URL %}<a href="{{ COOKIE_POLICY_URL }}">{% trans "Cookie policy" %}</a>{% endif %}
+            </p>
+            <div class="ogs-cookie-banner__actions">
+                <button type="button" class="btn btn-default" data-ogs-cookie="reject">{% trans "Reject optional cookies" %}</button>
+                <button type="button" class="btn btn-primary" data-ogs-cookie="accept">{% trans "Accept cookies" %}</button>
+            </div>
+        </div>
+    </div>
+</template>
+<script>
+    (function () {
+        if (window.ogsCookieConsent) {
+            return;
+        }
+        var COOKIE_NAME = 'opengeosgb_cookie_consent';
+        var MAX_AGE = 365 * 24 * 60 * 60;
+        var GTM_ID = '{{ GOOGLE_TAG_MANAGER_ID|escapejs }}';
+
+        function getConsent() {
+            var match = document.cookie.match(new RegExp('(?:^|; )' + COOKIE_NAME + '=([^;]*)'));
+            return match ? match[1] : null;
+        }
+
+        function setConsent(value) {
+            document.cookie = COOKIE_NAME + '=' + value + '; Max-Age=' + MAX_AGE + '; Path=/; SameSite=Lax'
+                + (window.location.protocol === 'https:' ? '; Secure' : '');
+        }
+
+        function loadTagManager() {
+            if (!GTM_ID || window.ogsTagManagerLoaded) {
+                return;
+            }
+            window.ogsTagManagerLoaded = true;
+            /* Google Tag Manager */
+            (function (w, d, s, l, i) {
+                w[l] = w[l] || []; w[l].push({'gtm.start': new Date().getTime(), event: 'gtm.js'});
+                var f = d.getElementsByTagName(s)[0], j = d.createElement(s), dl = l !== 'dataLayer' ? '&l=' + l : '';
+                j.async = true; j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
+            })(window, document, 'script', 'dataLayer', GTM_ID);
+        }
+
+        function removeAnalyticsCookies() {
+            var host = window.location.hostname;
+            var domains = ['', host, '.' + host, '.' + host.split('.').slice(-2).join('.')];
+            document.cookie.split(';').forEach(function (cookie) {
+                var name = cookie.split('=')[0].trim();
+                if (/^(_ga|_gid|_gat|_gcl)/.test(name)) {
+                    domains.forEach(function (domain) {
+                        document.cookie = name + '=; Max-Age=0; Path=/' + (domain ? '; Domain=' + domain : '');
+                    });
+                }
+            });
+        }
+
+        function hide() {
+            var banner = document.querySelector('.ogs-cookie-banner');
+            if (banner) {
+                banner.parentNode.removeChild(banner);
+            }
+        }
+
+        function show() {
+            var template = document.getElementById('ogs-cookie-banner-template');
+            if (!template || document.querySelector('.ogs-cookie-banner')) {
+                return;
+            }
+            document.body.appendChild(template.content.cloneNode(true));
+            var banner = document.querySelector('.ogs-cookie-banner');
+            banner.addEventListener('click', function (event) {
+                var action = event.target.getAttribute('data-ogs-cookie');
+                if (action === 'accept') {
+                    accept();
+                } else if (action === 'reject') {
+                    reject();
+                }
+            });
+        }
+
+        function accept() {
+            setConsent('accepted');
+            hide();
+            loadTagManager();
+        }
+
+        function reject() {
+            setConsent('rejected');
+            hide();
+            removeAnalyticsCookies();
+        }
+
+        window.ogsCookieConsent = {show: show, accept: accept, reject: reject, get: getConsent};
+
+        if (getConsent() === 'accepted') {
+            loadTagManager();
+        }
+
+        function onReady() {
+            if (!getConsent()) {
+                show();
+            }
+            // links para "#preferencias-de-cookies" reabrem o aviso
+            document.addEventListener('click', function (event) {
+                var link = event.target.closest && event.target.closest('a[href$="#preferencias-de-cookies"]');
+                if (link) {
+                    event.preventDefault();
+                    show();
+                }
+            });
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', onReady);
+        } else {
+            onReady();
+        }
+    })();
+</script>

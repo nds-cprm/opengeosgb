@@ -11,3 +11,22 @@ def google_tag_manager_snippet(request):
     return {
         "GOOGLE_TAG_MANAGER_ID": gtag if GTM_REGEX.match(gtag) else ""
     }
+
+
+def _localized_url(request, urls_setting, default_setting):
+    """Endereço no idioma da requisição: o dicionário urls_setting mapeia o idioma ("pt", "en")
+    para o endereço; sem correspondência, usa default_setting."""
+    language = (getattr(request, "LANGUAGE_CODE", "") or "").split("-")[0]
+    urls = getattr(settings, urls_setting, {}) or {}
+    return urls.get(language) or getattr(settings, default_setting, "")
+
+
+def site_pages(request):
+    """
+    Endereços das páginas institucionais (flatpages) no idioma da requisição, usados no aviso de
+    cookies (opengeosgb/snippets/cookie_consent.html) e no rodapé (snippets/footer.html).
+    """
+    return {
+        "COOKIE_POLICY_URL": _localized_url(request, "COOKIE_POLICY_URLS", "COOKIE_POLICY_URL"),
+        "ABOUT_PAGE_URL": _localized_url(request, "ABOUT_PAGE_URLS", "ABOUT_PAGE_URL"),
+    }

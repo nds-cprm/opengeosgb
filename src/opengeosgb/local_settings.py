@@ -150,3 +150,21 @@ PYCSW["CONFIGURATION"]["metadata"]["contact"] = {
 # Google Tag Manager
 GOOGLE_TAG_MANAGER_ID = os.getenv("GOOGLE_TAG_MANAGER_ID", "") 
 TEMPLATES[0]["OPTIONS"]["context_processors"].append("opengeosgb.context_processors.google_tag_manager_snippet")
+
+# Páginas institucionais (flatpages) por idioma, usadas no aviso de cookies
+# (opengeosgb/snippets/cookie_consent.html, que carrega o Google Tag Manager só depois do aceite)
+# e no rodapé (geonode-mapstore-client/snippets/footer.html)
+COOKIE_POLICY_URL = os.getenv("COOKIE_POLICY_URL", "/pages/politica-de-cookies/")
+# versão da política por idioma da interface (flatpages separadas)
+COOKIE_POLICY_URLS = {
+    "pt": COOKIE_POLICY_URL,
+    "en": os.getenv("COOKIE_POLICY_URL_EN", "/pages/cookie-policy/"),
+}
+
+# Página "Sobre" (flatpage) por idioma, usada no rodapé
+ABOUT_PAGE_URL = os.getenv("ABOUT_PAGE_URL", "/pages/sobre/")
+ABOUT_PAGE_URLS = {
+    "pt": ABOUT_PAGE_URL,
+    "en": os.getenv("ABOUT_PAGE_URL_EN", "/pages/about/"),
+}
+TEMPLATES[0]["OPTIONS"]["context_processors"].append("opengeosgb.context_processors.site_pages")

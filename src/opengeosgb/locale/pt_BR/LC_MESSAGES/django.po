@@ -49,6 +49,31 @@ msgstr "Dados, informações e produtos do Serviço Geológico do Brasil."
 msgid "Search..."
 msgstr "Buscar..."
 
+# Aviso de cookies (templates/opengeosgb/snippets/cookie_consent.html)
+#: opengeosgb/templates/opengeosgb/snippets/cookie_consent.html
+msgid "Cookie notice"
+msgstr "Aviso de cookies"
+
+#: opengeosgb/templates/opengeosgb/snippets/cookie_consent.html
+msgid "We use essential cookies to make this portal work and, with your permission, analytics cookies to understand how the site is used."
+msgstr "Utilizamos cookies essenciais para o funcionamento do portal e, com a sua permissão, cookies de análise para entender como o site é usado."
+
+#: opengeosgb/templates/opengeosgb/snippets/cookie_consent.html
+msgid "Cookie policy"
+msgstr "Política de cookies"
+
+#: opengeosgb/templates/geonode-mapstore-client/snippets/footer.html
+msgid "Cookie preferences"
+msgstr "Preferências de cookies"
+
+#: opengeosgb/templates/opengeosgb/snippets/cookie_consent.html
+msgid "Reject optional cookies"
+msgstr "Rejeitar cookies opcionais"
+
+#: opengeosgb/templates/opengeosgb/snippets/cookie_consent.html
+msgid "Accept cookies"
+msgstr "Aceitar cookies"
+
 # Upload de imagens do editor de flatpages (opengeosgb/flatpages_editor/views.py)
 #: opengeosgb/flatpages_editor/views.py
 msgid "Page not found."

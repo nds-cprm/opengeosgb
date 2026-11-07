@@ -2,5 +2,6 @@
 
 {% block extra_head %}
 {{ block.super }}
-{% include "opengeosgb/snippets/google_tag_manager.html" %}
+{# aviso de cookies; carrega o Google Tag Manager só depois do aceite #}
+{% include "opengeosgb/snippets/cookie_consent.html" %}
 {% endblock extra_head %}
