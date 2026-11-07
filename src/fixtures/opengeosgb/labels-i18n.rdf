@@ -194,6 +194,14 @@
     <skos:inScheme rdf:resource="http://automatically/added/uri/labels-i18n"/>
     <skos:prefLabel xml:lang="pt">Recursos relacionados a este.</skos:prefLabel>
   </skos:Concept>
+  <skos:Concept rdf:about="http://automatically/added/uri/scale__ovr">
+    <skos:inScheme rdf:resource="http://automatically/added/uri/labels-i18n"/>
+    <skos:prefLabel xml:lang="pt">Escala</skos:prefLabel>
+  </skos:Concept>
+  <skos:Concept rdf:about="http://automatically/added/uri/scale__descr__ovr">
+    <skos:inScheme rdf:resource="http://automatically/added/uri/labels-i18n"/>
+    <skos:prefLabel xml:lang="pt">Escolha uma escala da lista ou digite o denominador (ex.: 250000 ou 1:250.000).</skos:prefLabel>
+  </skos:Concept>
   <skos:Concept rdf:about="http://automatically/added/uri/contacts__ovr">
     <skos:inScheme rdf:resource="http://automatically/added/uri/labels-i18n"/>
     <skos:prefLabel xml:lang="pt">Contatos</skos:prefLabel>

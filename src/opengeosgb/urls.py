@@ -23,6 +23,7 @@ from django.contrib.flatpages.sitemaps import FlatPageSitemap
 from geonode.urls import urlpatterns, sitemaps
 
 from . import views
+from .metadata.views import RegionsI18nAutocomplete, scales_autocomplete
 
 sitemaps.update(page=FlatPageSitemap)
 
@@ -33,4 +34,17 @@ urlpatterns += [
 
     # Rota legada do GeoNode 4 (P3M)
     re_path(r"^datasets/(?P<layername>[^/]*)/metadata_detail$", views.legacy_metadata_detail, name='dataset_metadata_detail'),
+
+    # Autocomplete de regiões do editor de metadados com nomes traduzidos
+    path(
+        "opengeosgb/metadata/autocomplete/regions",
+        RegionsI18nAutocomplete.as_view(),
+        name="opengeosgb_metadata_autocomplete_regions",
+    ),
+    # Autocomplete do campo de escala (campo esparso do opengeosgb)
+    path(
+        "opengeosgb/metadata/autocomplete/scales",
+        scales_autocomplete,
+        name="opengeosgb_metadata_autocomplete_scales",
+    ),
 ]

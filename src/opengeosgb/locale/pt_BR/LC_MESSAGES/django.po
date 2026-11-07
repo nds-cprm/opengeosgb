@@ -762,3 +762,1595 @@ msgstr "Menu:"
 #: allauth/templates/socialaccount/snippets/login.html:10
 msgid "Or use a third-party"
 msgstr "Ou use uma conta externa"
+
+# ======================================================================
+# Opções do editor de metadados traduzidas pelo handler
+# opengeosgb/metadata/handlers.py (pgettext com msgctxt por campo).
+# Os textos vêm do GeoNode (ALL_LANGUAGES) e do banco (RestrictionCodeType,
+# SpatialRepresentationType); não são extraídos pelo makemessages.
+# ======================================================================
+
+# --- metadata language: geonode/base/enumerations.py (ALL_LANGUAGES)
+
+msgctxt "metadata language"
+msgid "Abkhazian"
+msgstr "Abcázio"
+
+msgctxt "metadata language"
+msgid "Afar"
+msgstr "Afar"
+
+msgctxt "metadata language"
+msgid "Afrikaans"
+msgstr "Africâner"
+
+msgctxt "metadata language"
+msgid "Amharic"
+msgstr "Amárico"
+
+msgctxt "metadata language"
+msgid "Arabic"
+msgstr "Árabe"
+
+msgctxt "metadata language"
+msgid "Assamese"
+msgstr "Assamês"
+
+msgctxt "metadata language"
+msgid "Aymara"
+msgstr "Aimará"
+
+msgctxt "metadata language"
+msgid "Azerbaijani"
+msgstr "Azerbaijano"
+
+msgctxt "metadata language"
+msgid "Bashkir"
+msgstr "Bashkir"
+
+msgctxt "metadata language"
+msgid "Bengali"
+msgstr "Bengali"
+
+msgctxt "metadata language"
+msgid "Bihari"
+msgstr "Biari"
+
+msgctxt "metadata language"
+msgid "Bislama"
+msgstr "Bislamá"
+
+msgctxt "metadata language"
+msgid "Breton"
+msgstr "Bretão"
+
+msgctxt "metadata language"
+msgid "Bulgarian"
+msgstr "Búlgaro"
+
+msgctxt "metadata language"
+msgid "Byelorussian"
+msgstr "Bielorrusso"
+
+msgctxt "metadata language"
+msgid "Catalan"
+msgstr "Catalão"
+
+msgctxt "metadata language"
+msgid "Chinese"
+msgstr "Chinês"
+
+msgctxt "metadata language"
+msgid "Corsican"
+msgstr "Corso"
+
+msgctxt "metadata language"
+msgid "Danish"
+msgstr "Dinamarquês"
+
+msgctxt "metadata language"
+msgid "Dzongkha"
+msgstr "Dzongkha"
+
+msgctxt "metadata language"
+msgid "English"
+msgstr "Inglês"
+
+msgctxt "metadata language"
+msgid "French"
+msgstr "Francês"
+
+msgctxt "metadata language"
+msgid "Esperanto"
+msgstr "Esperanto"
+
+msgctxt "metadata language"
+msgid "Estonian"
+msgstr "Estoniano"
+
+msgctxt "metadata language"
+msgid "Faroese"
+msgstr "Feroês"
+
+msgctxt "metadata language"
+msgid "Fijian"
+msgstr "Fijiano"
+
+msgctxt "metadata language"
+msgid "Finnish"
+msgstr "Finlandês"
+
+msgctxt "metadata language"
+msgid "Frisian"
+msgstr "Frísio"
+
+msgctxt "metadata language"
+msgid "Gallegan"
+msgstr "Galego"
+
+msgctxt "metadata language"
+msgid "German"
+msgstr "Alemão"
+
+msgctxt "metadata language"
+msgid "Greek"
+msgstr "Grego"
+
+msgctxt "metadata language"
+msgid "Greenlandic"
+msgstr "Groenlandês"
+
+msgctxt "metadata language"
+msgid "Guarani"
+msgstr "Guarani"
+
+msgctxt "metadata language"
+msgid "Gujarati"
+msgstr "Guzerate"
+
+msgctxt "metadata language"
+msgid "Hausa"
+msgstr "Hauçá"
+
+msgctxt "metadata language"
+msgid "Hebrew"
+msgstr "Hebraico"
+
+msgctxt "metadata language"
+msgid "Hindi"
+msgstr "Hindi"
+
+msgctxt "metadata language"
+msgid "Hungarian"
+msgstr "Húngaro"
+
+msgctxt "metadata language"
+msgid "Indonesian"
+msgstr "Indonésio"
+
+msgctxt "metadata language"
+msgid "Interlingua (International Auxiliary language Association)"
+msgstr "Interlíngua (Associação Internacional de Língua Auxiliar)"
+
+msgctxt "metadata language"
+msgid "Inuktitut"
+msgstr "Inuktitut"
+
+msgctxt "metadata language"
+msgid "Inupiak"
+msgstr "Inupiaque"
+
+msgctxt "metadata language"
+msgid "Italian"
+msgstr "Italiano"
+
+msgctxt "metadata language"
+msgid "Japanese"
+msgstr "Japonês"
+
+msgctxt "metadata language"
+msgid "Kannada"
+msgstr "Canarês"
+
+msgctxt "metadata language"
+msgid "Kashmiri"
+msgstr "Caxemiri"
+
+msgctxt "metadata language"
+msgid "Kazakh"
+msgstr "Cazaque"
+
+msgctxt "metadata language"
+msgid "Khmer"
+msgstr "Khmer"
+
+msgctxt "metadata language"
+msgid "Kinyarwanda"
+msgstr "Quiniaruanda"
+
+msgctxt "metadata language"
+msgid "Kirghiz"
+msgstr "Quirguiz"
+
+msgctxt "metadata language"
+msgid "Korean"
+msgstr "Coreano"
+
+msgctxt "metadata language"
+msgid "Kurdish"
+msgstr "Curdo"
+
+msgctxt "metadata language"
+msgid "Langue d 'Oc (post 1500)"
+msgstr "Occitano (pós-1500)"
+
+msgctxt "metadata language"
+msgid "Lao"
+msgstr "Laosiano"
+
+msgctxt "metadata language"
+msgid "Latin"
+msgstr "Latim"
+
+msgctxt "metadata language"
+msgid "Latvian"
+msgstr "Letão"
+
+msgctxt "metadata language"
+msgid "Lingala"
+msgstr "Lingala"
+
+msgctxt "metadata language"
+msgid "Lithuanian"
+msgstr "Lituano"
+
+msgctxt "metadata language"
+msgid "Malagasy"
+msgstr "Malgaxe"
+
+msgctxt "metadata language"
+msgid "Maltese"
+msgstr "Maltês"
+
+msgctxt "metadata language"
+msgid "Marathi"
+msgstr "Marati"
+
+msgctxt "metadata language"
+msgid "Moldavian"
+msgstr "Moldávio"
+
+msgctxt "metadata language"
+msgid "Mongolian"
+msgstr "Mongol"
+
+msgctxt "metadata language"
+msgid "Nauru"
+msgstr "Nauruano"
+
+msgctxt "metadata language"
+msgid "Nepali"
+msgstr "Nepalês"
+
+msgctxt "metadata language"
+msgid "Norwegian"
+msgstr "Norueguês"
+
+msgctxt "metadata language"
+msgid "Oriya"
+msgstr "Oriá"
+
+msgctxt "metadata language"
+msgid "Oromo"
+msgstr "Oromo"
+
+msgctxt "metadata language"
+msgid "Panjabi"
+msgstr "Panjabi"
+
+msgctxt "metadata language"
+msgid "Polish"
+msgstr "Polonês"
+
+msgctxt "metadata language"
+msgid "Portuguese"
+msgstr "Português"
+
+msgctxt "metadata language"
+msgid "Pushto"
+msgstr "Pashto"
+
+msgctxt "metadata language"
+msgid "Quechua"
+msgstr "Quíchua"
+
+msgctxt "metadata language"
+msgid "Rhaeto-Romance"
+msgstr "Reto-romano"
+
+msgctxt "metadata language"
+msgid "Rundi"
+msgstr "Kirundi"
+
+msgctxt "metadata language"
+msgid "Russian"
+msgstr "Russo"
+
+msgctxt "metadata language"
+msgid "Samoan"
+msgstr "Samoano"
+
+msgctxt "metadata language"
+msgid "Sango"
+msgstr "Sango"
+
+msgctxt "metadata language"
+msgid "Sanskrit"
+msgstr "Sânscrito"
+
+msgctxt "metadata language"
+msgid "Serbo-Croatian"
+msgstr "Servo-croata"
+
+msgctxt "metadata language"
+msgid "Shona"
+msgstr "Xona"
+
+msgctxt "metadata language"
+msgid "Sindhi"
+msgstr "Sindi"
+
+msgctxt "metadata language"
+msgid "Singhalese"
+msgstr "Cingalês"
+
+msgctxt "metadata language"
+msgid "Siswant"
+msgstr "Suázi"
+
+msgctxt "metadata language"
+msgid "Slovenian"
+msgstr "Esloveno"
+
+msgctxt "metadata language"
+msgid "Somali"
+msgstr "Somali"
+
+msgctxt "metadata language"
+msgid "Sotho"
+msgstr "Soto"
+
+msgctxt "metadata language"
+msgid "Spanish"
+msgstr "Espanhol"
+
+msgctxt "metadata language"
+msgid "Sudanese"
+msgstr "Sundanês"
+
+msgctxt "metadata language"
+msgid "Swahili"
+msgstr "Suaíli"
+
+msgctxt "metadata language"
+msgid "Tagalog"
+msgstr "Tagalo"
+
+msgctxt "metadata language"
+msgid "Tajik"
+msgstr "Tadjique"
+
+msgctxt "metadata language"
+msgid "Tamil"
+msgstr "Tâmil"
+
+msgctxt "metadata language"
+msgid "Tatar"
+msgstr "Tártaro"
+
+msgctxt "metadata language"
+msgid "Telugu"
+msgstr "Telugo"
+
+msgctxt "metadata language"
+msgid "Thai"
+msgstr "Tailandês"
+
+msgctxt "metadata language"
+msgid "Tigrinya"
+msgstr "Tigrínia"
+
+msgctxt "metadata language"
+msgid "Tonga (Nyasa)"
+msgstr "Tonga (Niassa)"
+
+msgctxt "metadata language"
+msgid "Tsonga"
+msgstr "Tsonga"
+
+msgctxt "metadata language"
+msgid "Tswana"
+msgstr "Tswana"
+
+msgctxt "metadata language"
+msgid "Turkish"
+msgstr "Turco"
+
+msgctxt "metadata language"
+msgid "Turkmen"
+msgstr "Turcomano"
+
+msgctxt "metadata language"
+msgid "Twi"
+msgstr "Twi"
+
+msgctxt "metadata language"
+msgid "Uighur"
+msgstr "Uigur"
+
+msgctxt "metadata language"
+msgid "Ukrainian"
+msgstr "Ucraniano"
+
+msgctxt "metadata language"
+msgid "Urdu"
+msgstr "Urdu"
+
+msgctxt "metadata language"
+msgid "Uzbek"
+msgstr "Uzbeque"
+
+msgctxt "metadata language"
+msgid "Vietnamese"
+msgstr "Vietnamita"
+
+msgctxt "metadata language"
+msgid "Volapük"
+msgstr "Volapuque"
+
+msgctxt "metadata language"
+msgid "Wolof"
+msgstr "Uolofe"
+
+msgctxt "metadata language"
+msgid "Xhosa"
+msgstr "Xhosa"
+
+msgctxt "metadata language"
+msgid "Yiddish"
+msgstr "Iídiche"
+
+msgctxt "metadata language"
+msgid "Yoruba"
+msgstr "Iorubá"
+
+msgctxt "metadata language"
+msgid "Zhuang"
+msgstr "Zhuang"
+
+msgctxt "metadata language"
+msgid "Zulu"
+msgstr "Zulu"
+
+# --- metadata restriction code: base.RestrictionCodeType (identifier, description)
+
+msgctxt "metadata restriction code"
+msgid "copyright"
+msgstr "Direitos autorais"
+
+msgctxt "metadata restriction code"
+msgid "exclusive right to the publication, production, or sale of the rights to a literary, dramatic, musical, or artistic work, or to the use of a commercial print or label, granted by law for a specified period of time to an author, composer, artist, distributor"
+msgstr "Direito exclusivo de publicação, produção ou venda dos direitos sobre uma obra literária, dramática, musical ou artística, ou de uso de uma marca ou rótulo comercial, concedido por lei por um período determinado a um autor, compositor, artista ou distribuidor"
+
+msgctxt "metadata restriction code"
+msgid "intellectualPropertyRights"
+msgstr "Direitos de propriedade intelectual"
+
+msgctxt "metadata restriction code"
+msgid "rights to financial benefit from and control of distribution of non-tangible property that is a result of creativity"
+msgstr "Direitos ao benefício financeiro e ao controle da distribuição de bens intangíveis resultantes de criatividade"
+
+msgctxt "metadata restriction code"
+msgid "license"
+msgstr "Licença"
+
+msgctxt "metadata restriction code"
+msgid "formal permission to do something"
+msgstr "Permissão formal para fazer algo"
+
+msgctxt "metadata restriction code"
+msgid "otherRestrictions"
+msgstr "Outras restrições"
+
+msgctxt "metadata restriction code"
+msgid "limitation not listed"
+msgstr "Limitação não listada"
+
+msgctxt "metadata restriction code"
+msgid "patent"
+msgstr "Patente"
+
+msgctxt "metadata restriction code"
+msgid "government has granted exclusive right to make, sell, use or license an invention or discovery"
+msgstr "O governo concedeu o direito exclusivo de fabricar, vender, usar ou licenciar uma invenção ou descoberta"
+
+msgctxt "metadata restriction code"
+msgid "patentPending"
+msgstr "Patente pendente"
+
+msgctxt "metadata restriction code"
+msgid "produced or sold information awaiting a patent"
+msgstr "Informação produzida ou vendida que aguarda uma patente"
+
+msgctxt "metadata restriction code"
+msgid "restricted"
+msgstr "Restrito"
+
+msgctxt "metadata restriction code"
+msgid "withheld from general circulation or disclosure"
+msgstr "Retido da circulação ou divulgação geral"
+
+msgctxt "metadata restriction code"
+msgid "trademark"
+msgstr "Marca registrada"
+
+msgctxt "metadata restriction code"
+msgid "a name, symbol, or other device identifying a product, officially registered and legally restricted to the use of the owner or manufacturer"
+msgstr "Nome, símbolo ou outro elemento que identifica um produto, registrado oficialmente e com uso legalmente restrito ao proprietário ou fabricante"
+
+# --- metadata spatial representation type: base.SpatialRepresentationType (identifier, description)
+
+msgctxt "metadata spatial representation type"
+msgid "grid"
+msgstr "Matricial (grade)"
+
+msgctxt "metadata spatial representation type"
+msgid "grid data is used to represent geographic data"
+msgstr "Dados em grade são usados para representar os dados geográficos"
+
+msgctxt "metadata spatial representation type"
+msgid "stereoModel"
+msgstr "Modelo estereoscópico"
+
+msgctxt "metadata spatial representation type"
+msgid "three-dimensional view formed by the intersecting homologous rays of an overlapping pair of images"
+msgstr "Visão tridimensional formada pela interseção de raios homólogos de um par de imagens sobrepostas"
+
+msgctxt "metadata spatial representation type"
+msgid "textTable"
+msgstr "Tabela de texto"
+
+msgctxt "metadata spatial representation type"
+msgid "textual or tabular data is used to represent geographic data"
+msgstr "Dados textuais ou tabulares são usados para representar os dados geográficos"
+
+msgctxt "metadata spatial representation type"
+msgid "tin"
+msgstr "TIN (rede irregular triangulada)"
+
+msgctxt "metadata spatial representation type"
+msgid "triangulated irregular network"
+msgstr "Rede irregular triangulada"
+
+msgctxt "metadata spatial representation type"
+msgid "vector"
+msgstr "Vetorial"
+
+msgctxt "metadata spatial representation type"
+msgid "vector data is used to represent geographic data"
+msgstr "Dados vetoriais são usados para representar os dados geográficos"
+
+msgctxt "metadata spatial representation type"
+msgid "video"
+msgstr "Vídeo"
+
+msgctxt "metadata spatial representation type"
+msgid "scene from a video recording"
+msgstr "Cena de uma gravação de vídeo"
+
+# ======================================================================
+# Nomes de regiões de nível 0 a 3 (global, continentes, sub-regiões e países),
+# traduzidos por opengeosgb/metadata/i18n.py:region_label (pgettext).
+# Estados e municípios brasileiros (níveis 4 e 5) já estão em português e
+# não entram aqui. Não são extraídos pelo makemessages.
+# ======================================================================
+
+# AFR (nível 1)
+msgctxt "metadata region"
+msgid "Africa"
+msgstr "África"
+
+# AME (nível 1)
+msgctxt "metadata region"
+msgid "Americas"
+msgstr "Américas"
+
+# ANT (nível 1)
+msgctxt "metadata region"
+msgid "Antarctica"
+msgstr "Antártida"
+
+# ASI (nível 1)
+msgctxt "metadata region"
+msgid "Asia"
+msgstr "Ásia"
+
+# EUR (nível 1)
+msgctxt "metadata region"
+msgid "Europe"
+msgstr "Europa"
+
+# MES (nível 1)
+msgctxt "metadata region"
+msgid "Middle East"
+msgstr "Oriente Médio"
+
+# PAC (nível 1)
+msgctxt "metadata region"
+msgid "Pacific"
+msgstr "Pacífico"
+
+# ALA (nível 2)
+msgctxt "metadata region"
+msgid "Aland Islands"
+msgstr "Ilhas Åland"
+
+# ALB (nível 2)
+msgctxt "metadata region"
+msgid "Albania"
+msgstr "Albânia"
+
+# ARE (nível 2)
+msgctxt "metadata region"
+msgid "United Arab Emirates"
+msgstr "Emirados Árabes Unidos"
+
+# ARM (nível 2)
+msgctxt "metadata region"
+msgid "Armenia"
+msgstr "Armênia"
+
+# ASM (nível 2)
+msgctxt "metadata region"
+msgid "American Samoa"
+msgstr "Samoa Americana"
+
+# AUS (nível 2)
+msgctxt "metadata region"
+msgid "Australia"
+msgstr "Austrália"
+
+# AUT (nível 2)
+msgctxt "metadata region"
+msgid "Austria"
+msgstr "Áustria"
+
+# AZE (nível 2)
+msgctxt "metadata region"
+msgid "Azerbaijan"
+msgstr "Azerbaijão"
+
+# BEL (nível 2)
+msgctxt "metadata region"
+msgid "Belgium"
+msgstr "Bélgica"
+
+# BGR (nível 2)
+msgctxt "metadata region"
+msgid "Bulgaria"
+msgstr "Bulgária"
+
+# BHR (nível 2)
+msgctxt "metadata region"
+msgid "Bahrain"
+msgstr "Bahrein"
+
+# BIH (nível 2)
+msgctxt "metadata region"
+msgid "Bosnia and Herzegovina"
+msgstr "Bósnia e Herzegovina"
+
+# BLR (nível 2)
+msgctxt "metadata region"
+msgid "Belarus"
+msgstr "Bielorrússia"
+
+# CAM (nível 2)
+msgctxt "metadata region"
+msgid "Central America"
+msgstr "América Central"
+
+# CFR (nível 2)
+msgctxt "metadata region"
+msgid "Central Africa"
+msgstr "África Central"
+
+# CHE (nível 2)
+msgctxt "metadata region"
+msgid "Switzerland"
+msgstr "Suíça"
+
+# CIL (nível 2)
+msgctxt "metadata region"
+msgid "Channel Islands"
+msgstr "Ilhas do Canal"
+
+# COK (nível 2)
+msgctxt "metadata region"
+msgid "Cook Islands"
+msgstr "Ilhas Cook"
+
+# CRB (nível 2)
+msgctxt "metadata region"
+msgid "Caribbean"
+msgstr "Caribe"
+
+# CTA (nível 2)
+msgctxt "metadata region"
+msgid "Central Asia"
+msgstr "Ásia Central"
+
+# CYP (nível 2)
+msgctxt "metadata region"
+msgid "Cyprus"
+msgstr "Chipre"
+
+# CZE (nível 2)
+msgctxt "metadata region"
+msgid "Czech Republic"
+msgstr "República Tcheca"
+
+# DEU (nível 2)
+msgctxt "metadata region"
+msgid "Germany"
+msgstr "Alemanha"
+
+# DNK (nível 2)
+msgctxt "metadata region"
+msgid "Denmark"
+msgstr "Dinamarca"
+
+# EAF (nível 2)
+msgctxt "metadata region"
+msgid "East Africa"
+msgstr "África Oriental"
+
+# EAS (nível 2)
+msgctxt "metadata region"
+msgid "East Asia"
+msgstr "Ásia Oriental"
+
+# ESP (nível 2)
+msgctxt "metadata region"
+msgid "Spain"
+msgstr "Espanha"
+
+# EST (nível 2)
+msgctxt "metadata region"
+msgid "Estonia"
+msgstr "Estônia"
+
+# FIN (nível 2)
+msgctxt "metadata region"
+msgid "Finland"
+msgstr "Finlândia"
+
+# FRA (nível 2)
+msgctxt "metadata region"
+msgid "France"
+msgstr "França"
+
+# FRO (nível 2)
+msgctxt "metadata region"
+msgid "Faeroe Islands"
+msgstr "Ilhas Faroé"
+
+# FSM (nível 2)
+msgctxt "metadata region"
+msgid "Micronesia, Federated States of"
+msgstr "Micronésia, Estados Federados da"
+
+# GBR (nível 2)
+msgctxt "metadata region"
+msgid "United Kingdom"
+msgstr "Reino Unido"
+
+# GEO (nível 2)
+msgctxt "metadata region"
+msgid "Georgia"
+msgstr "Geórgia"
+
+# GRC (nível 2)
+msgctxt "metadata region"
+msgid "Greece"
+msgstr "Grécia"
+
+# HRV (nível 2)
+msgctxt "metadata region"
+msgid "Croatia"
+msgstr "Croácia"
+
+# HUN (nível 2)
+msgctxt "metadata region"
+msgid "Hungary"
+msgstr "Hungria"
+
+# IMN (nível 2)
+msgctxt "metadata region"
+msgid "Isle of Man"
+msgstr "Ilha de Man"
+
+# IRL (nível 2)
+msgctxt "metadata region"
+msgid "Ireland"
+msgstr "Irlanda"
+
+# IRN (nível 2)
+msgctxt "metadata region"
+msgid "Iran"
+msgstr "Irã"
+
+# IRQ (nível 2)
+msgctxt "metadata region"
+msgid "Iraq"
+msgstr "Iraque"
+
+# ISL (nível 2)
+msgctxt "metadata region"
+msgid "Iceland"
+msgstr "Islândia"
+
+# ITA (nível 2)
+msgctxt "metadata region"
+msgid "Italy"
+msgstr "Itália"
+
+# JOR (nível 2)
+msgctxt "metadata region"
+msgid "Jordan"
+msgstr "Jordânia"
+
+# LBN (nível 2)
+msgctxt "metadata region"
+msgid "Lebanon"
+msgstr "Líbano"
+
+# LTU (nível 2)
+msgctxt "metadata region"
+msgid "Lithuania"
+msgstr "Lituânia"
+
+# LUX (nível 2)
+msgctxt "metadata region"
+msgid "Luxembourg"
+msgstr "Luxemburgo"
+
+# LVA (nível 2)
+msgctxt "metadata region"
+msgid "Latvia"
+msgstr "Letônia"
+
+# MCO (nível 2)
+msgctxt "metadata region"
+msgid "Monaco"
+msgstr "Mônaco"
+
+# MDA (nível 2)
+msgctxt "metadata region"
+msgid "Republic of Moldova"
+msgstr "República da Moldávia"
+
+# MHL (nível 2)
+msgctxt "metadata region"
+msgid "Marshall Islands"
+msgstr "Ilhas Marshall"
+
+# MKD (nível 2)
+msgctxt "metadata region"
+msgid "Macedonia"
+msgstr "Macedônia"
+
+# MNP (nível 2)
+msgctxt "metadata region"
+msgid "Northern Mariana Islands"
+msgstr "Ilhas Marianas do Norte"
+
+# NAF (nível 2)
+msgctxt "metadata region"
+msgid "North Africa"
+msgstr "Norte da África"
+
+# NAM (nível 2)
+msgctxt "metadata region"
+msgid "North America"
+msgstr "América do Norte"
+
+# NCL (nível 2)
+msgctxt "metadata region"
+msgid "New Caledonia"
+msgstr "Nova Caledônia"
+
+# NFK (nível 2)
+msgctxt "metadata region"
+msgid "Norfolk Island"
+msgstr "Ilha Norfolk"
+
+# NLD (nível 2)
+msgctxt "metadata region"
+msgid "Netherlands"
+msgstr "Países Baixos"
+
+# NOR (nível 2)
+msgctxt "metadata region"
+msgid "Norway"
+msgstr "Noruega"
+
+# NZL (nível 2)
+msgctxt "metadata region"
+msgid "New Zealand"
+msgstr "Nova Zelândia"
+
+# OMN (nível 2)
+msgctxt "metadata region"
+msgid "Oman"
+msgstr "Omã"
+
+# PNG (nível 2)
+msgctxt "metadata region"
+msgid "Papua New Guinea"
+msgstr "Papua-Nova Guiné"
+
+# POL (nível 2)
+msgctxt "metadata region"
+msgid "Poland"
+msgstr "Polônia"
+
+# PSE (nível 2)
+msgctxt "metadata region"
+msgid "Occupied Palestinian Territory"
+msgstr "Território Palestino Ocupado"
+
+# PYF (nível 2)
+msgctxt "metadata region"
+msgid "French Polynesia"
+msgstr "Polinésia Francesa"
+
+# QAT (nível 2)
+msgctxt "metadata region"
+msgid "Qatar"
+msgstr "Catar"
+
+# ROU (nível 2)
+msgctxt "metadata region"
+msgid "Romania"
+msgstr "Romênia"
+
+# RUS (nível 2)
+msgctxt "metadata region"
+msgid "Russian Federation"
+msgstr "Federação Russa"
+
+# SAF (nível 2)
+msgctxt "metadata region"
+msgid "Southern Africa"
+msgstr "África Austral"
+
+# SAM (nível 2)
+msgctxt "metadata region"
+msgid "South America"
+msgstr "América do Sul"
+
+# SAS (nível 2)
+msgctxt "metadata region"
+msgid "South Asia"
+msgstr "Ásia Meridional"
+
+# SAU (nível 2)
+msgctxt "metadata region"
+msgid "Saudi Arabia"
+msgstr "Arábia Saudita"
+
+# SEA (nível 2)
+msgctxt "metadata region"
+msgid "Southeast Asia"
+msgstr "Sudeste Asiático"
+
+# SJM (nível 2)
+msgctxt "metadata region"
+msgid "Svalbard and Jan Mayen Islands"
+msgstr "Svalbard e Jan Mayen"
+
+# SLB (nível 2)
+msgctxt "metadata region"
+msgid "Solomon Islands"
+msgstr "Ilhas Salomão"
+
+# SRB (nível 2)
+msgctxt "metadata region"
+msgid "Serbia"
+msgstr "Sérvia"
+
+# SVK (nível 2)
+msgctxt "metadata region"
+msgid "Slovakia"
+msgstr "Eslováquia"
+
+# SVN (nível 2)
+msgctxt "metadata region"
+msgid "Slovenia"
+msgstr "Eslovênia"
+
+# SWE (nível 2)
+msgctxt "metadata region"
+msgid "Sweden"
+msgstr "Suécia"
+
+# SYR (nível 2)
+msgctxt "metadata region"
+msgid "Syrian Arab Republic"
+msgstr "República Árabe Síria"
+
+# TUR (nível 2)
+msgctxt "metadata region"
+msgid "Turkey"
+msgstr "Turquia"
+
+# UKR (nível 2)
+msgctxt "metadata region"
+msgid "Ukraine"
+msgstr "Ucrânia"
+
+# VAT (nível 2)
+msgctxt "metadata region"
+msgid "Holy See (Vatican City)"
+msgstr "Santa Sé (Cidade do Vaticano)"
+
+# WAF (nível 2)
+msgctxt "metadata region"
+msgid "West Africa"
+msgstr "África Ocidental"
+
+# WLF (nível 2)
+msgctxt "metadata region"
+msgid "Wallis and Futuna Islands"
+msgstr "Wallis e Futuna"
+
+# YEM (nível 2)
+msgctxt "metadata region"
+msgid "Yemen"
+msgstr "Iêmen"
+
+# AFG (nível 3)
+msgctxt "metadata region"
+msgid "Afghanistan"
+msgstr "Afeganistão"
+
+# AIA (nível 3)
+msgctxt "metadata region"
+msgid "Anguilla"
+msgstr "Anguila"
+
+# ATG (nível 3)
+msgctxt "metadata region"
+msgid "Antigua and Barbuda"
+msgstr "Antígua e Barbuda"
+
+# BLM (nível 3)
+msgctxt "metadata region"
+msgid "Saint-Barthelemy"
+msgstr "São Bartolomeu"
+
+# BMU (nível 3)
+msgctxt "metadata region"
+msgid "Bermuda"
+msgstr "Bermudas"
+
+# BOL (nível 3)
+msgctxt "metadata region"
+msgid "Bolivia"
+msgstr "Bolívia"
+
+# BRA (nível 3)
+msgctxt "metadata region"
+msgid "Brazil"
+msgstr "Brasil"
+
+# BRN (nível 3)
+msgctxt "metadata region"
+msgid "Brunei Darussalam"
+msgstr "Brunei"
+
+# BTN (nível 3)
+msgctxt "metadata region"
+msgid "Bhutan"
+msgstr "Butão"
+
+# BWA (nível 3)
+msgctxt "metadata region"
+msgid "Botswana"
+msgstr "Botsuana"
+
+# CAF (nível 3)
+msgctxt "metadata region"
+msgid "Central African Republic"
+msgstr "República Centro-Africana"
+
+# CAN (nível 3)
+msgctxt "metadata region"
+msgid "Canada"
+msgstr "Canadá"
+
+# CIV (nível 3)
+msgctxt "metadata region"
+msgid "Cote d'Ivoire"
+msgstr "Costa do Marfim"
+
+# CMR (nível 3)
+msgctxt "metadata region"
+msgid "Cameroon"
+msgstr "Camarões"
+
+# COD (nível 3)
+msgctxt "metadata region"
+msgid "Democratic Republic of the Congo"
+msgstr "República Democrática do Congo"
+
+# COL (nível 3)
+msgctxt "metadata region"
+msgid "Colombia"
+msgstr "Colômbia"
+
+# COM (nível 3)
+msgctxt "metadata region"
+msgid "Comoros"
+msgstr "Comores"
+
+# CPV (nível 3)
+msgctxt "metadata region"
+msgid "Cape Verde"
+msgstr "Cabo Verde"
+
+# CYM (nível 3)
+msgctxt "metadata region"
+msgid "Cayman Islands"
+msgstr "Ilhas Cayman"
+
+# DJI (nível 3)
+msgctxt "metadata region"
+msgid "Djibouti"
+msgstr "Djibuti"
+
+# DOM (nível 3)
+msgctxt "metadata region"
+msgid "Dominican Republic"
+msgstr "República Dominicana"
+
+# DZA (nível 3)
+msgctxt "metadata region"
+msgid "Algeria"
+msgstr "Argélia"
+
+# ECU (nível 3)
+msgctxt "metadata region"
+msgid "Ecuador"
+msgstr "Equador"
+
+# EGY (nível 3)
+msgctxt "metadata region"
+msgid "Egypt"
+msgstr "Egito"
+
+# ERI (nível 3)
+msgctxt "metadata region"
+msgid "Eritrea"
+msgstr "Eritreia"
+
+# ESH (nível 3)
+msgctxt "metadata region"
+msgid "Western Sahara"
+msgstr "Saara Ocidental"
+
+# ETH (nível 3)
+msgctxt "metadata region"
+msgid "Ethiopia"
+msgstr "Etiópia"
+
+# FLK (nível 3)
+msgctxt "metadata region"
+msgid "Falkland Islands (Malvinas)"
+msgstr "Ilhas Malvinas (Falkland)"
+
+# GAB (nível 3)
+msgctxt "metadata region"
+msgid "Gabon"
+msgstr "Gabão"
+
+# GHA (nível 3)
+msgctxt "metadata region"
+msgid "Ghana"
+msgstr "Gana"
+
+# GIN (nível 3)
+msgctxt "metadata region"
+msgid "Guinea"
+msgstr "Guiné"
+
+# GLP (nível 3)
+msgctxt "metadata region"
+msgid "Guadeloupe"
+msgstr "Guadalupe"
+
+# GMB (nível 3)
+msgctxt "metadata region"
+msgid "Gambia"
+msgstr "Gâmbia"
+
+# GNB (nível 3)
+msgctxt "metadata region"
+msgid "Guinea-Bissau"
+msgstr "Guiné-Bissau"
+
+# GNQ (nível 3)
+msgctxt "metadata region"
+msgid "Equatorial Guinea"
+msgstr "Guiné Equatorial"
+
+# GRD (nível 3)
+msgctxt "metadata region"
+msgid "Grenada"
+msgstr "Granada"
+
+# GRL (nível 3)
+msgctxt "metadata region"
+msgid "Greenland"
+msgstr "Groenlândia"
+
+# GUF (nível 3)
+msgctxt "metadata region"
+msgid "French Guiana"
+msgstr "Guiana Francesa"
+
+# GUY (nível 3)
+msgctxt "metadata region"
+msgid "Guyana"
+msgstr "Guiana"
+
+# IDN (nível 3)
+msgctxt "metadata region"
+msgid "Indonesia"
+msgstr "Indonésia"
+
+# IND (nível 3)
+msgctxt "metadata region"
+msgid "India"
+msgstr "Índia"
+
+# JPN (nível 3)
+msgctxt "metadata region"
+msgid "Japan"
+msgstr "Japão"
+
+# KAZ (nível 3)
+msgctxt "metadata region"
+msgid "Kazakhstan"
+msgstr "Cazaquistão"
+
+# KEN (nível 3)
+msgctxt "metadata region"
+msgid "Kenya"
+msgstr "Quênia"
+
+# KGZ (nível 3)
+msgctxt "metadata region"
+msgid "Kyrgyzstan"
+msgstr "Quirguistão"
+
+# KHM (nível 3)
+msgctxt "metadata region"
+msgid "Cambodia"
+msgstr "Camboja"
+
+# KNA (nível 3)
+msgctxt "metadata region"
+msgid "Saint Kitts and Nevis"
+msgstr "São Cristóvão e Névis"
+
+# KOR (nível 3)
+msgctxt "metadata region"
+msgid "Republic of Korea"
+msgstr "República da Coreia"
+
+# LAO (nível 3)
+msgctxt "metadata region"
+msgid "Lao People's Democratic Republic"
+msgstr "República Democrática Popular do Laos"
+
+# LBR (nível 3)
+msgctxt "metadata region"
+msgid "Liberia"
+msgstr "Libéria"
+
+# LBY (nível 3)
+msgctxt "metadata region"
+msgid "Libyan Arab Jamahiriya"
+msgstr "Líbia"
+
+# LCA (nível 3)
+msgctxt "metadata region"
+msgid "Saint Lucia"
+msgstr "Santa Lúcia"
+
+# LSO (nível 3)
+msgctxt "metadata region"
+msgid "Lesotho"
+msgstr "Lesoto"
+
+# MAC (nível 3)
+msgctxt "metadata region"
+msgid "China - Macao"
+msgstr "China - Macau"
+
+# MAF (nível 3)
+msgctxt "metadata region"
+msgid "Saint-Martin (French part)"
+msgstr "São Martinho (parte francesa)"
+
+# MAR (nível 3)
+msgctxt "metadata region"
+msgid "Morocco"
+msgstr "Marrocos"
+
+# MDV (nível 3)
+msgctxt "metadata region"
+msgid "Maldives"
+msgstr "Maldivas"
+
+# MEX (nível 3)
+msgctxt "metadata region"
+msgid "Mexico"
+msgstr "México"
+
+# MMR (nível 3)
+msgctxt "metadata region"
+msgid "Myanmar"
+msgstr "Mianmar"
+
+# MNG (nível 3)
+msgctxt "metadata region"
+msgid "Mongolia"
+msgstr "Mongólia"
+
+# MOZ (nível 3)
+msgctxt "metadata region"
+msgid "Mozambique"
+msgstr "Moçambique"
+
+# MRT (nível 3)
+msgctxt "metadata region"
+msgid "Mauritania"
+msgstr "Mauritânia"
+
+# MTQ (nível 3)
+msgctxt "metadata region"
+msgid "Martinique"
+msgstr "Martinica"
+
+# MUS (nível 3)
+msgctxt "metadata region"
+msgid "Mauritius"
+msgstr "Maurício"
+
+# MYS (nível 3)
+msgctxt "metadata region"
+msgid "Malaysia"
+msgstr "Malásia"
+
+# NAN (nível 3)
+msgctxt "metadata region"
+msgid "Netherlands Antilles"
+msgstr "Antilhas Holandesas"
+
+# NER (nível 3)
+msgctxt "metadata region"
+msgid "Niger"
+msgstr "Níger"
+
+# NGA (nível 3)
+msgctxt "metadata region"
+msgid "Nigeria"
+msgstr "Nigéria"
+
+# NIC (nível 3)
+msgctxt "metadata region"
+msgid "Nicaragua"
+msgstr "Nicarágua"
+
+# NMB (nível 3)
+msgctxt "metadata region"
+msgid "Namibia"
+msgstr "Namíbia"
+
+# PAK (nível 3)
+msgctxt "metadata region"
+msgid "Pakistan"
+msgstr "Paquistão"
+
+# PAN (nível 3)
+msgctxt "metadata region"
+msgid "Panama"
+msgstr "Panamá"
+
+# PHL (nível 3)
+msgctxt "metadata region"
+msgid "Philippines"
+msgstr "Filipinas"
+
+# PRI (nível 3)
+msgctxt "metadata region"
+msgid "Puerto Rico"
+msgstr "Porto Rico"
+
+# PRK (nível 3)
+msgctxt "metadata region"
+msgid "Democratic People's Republic of Korea"
+msgstr "República Popular Democrática da Coreia"
+
+# PRY (nível 3)
+msgctxt "metadata region"
+msgid "Paraguay"
+msgstr "Paraguai"
+
+# REU (nível 3)
+msgctxt "metadata region"
+msgid "Reunion"
+msgstr "Reunião"
+
+# RWA (nível 3)
+msgctxt "metadata region"
+msgid "Rwanda"
+msgstr "Ruanda"
+
+# SDN (nível 3)
+msgctxt "metadata region"
+msgid "Sudan"
+msgstr "Sudão"
+
+# SGP (nível 3)
+msgctxt "metadata region"
+msgid "Singapore"
+msgstr "Singapura"
+
+# SHN (nível 3)
+msgctxt "metadata region"
+msgid "Saint Helena"
+msgstr "Santa Helena"
+
+# SLE (nível 3)
+msgctxt "metadata region"
+msgid "Sierra Leone"
+msgstr "Serra Leoa"
+
+# SOM (nível 3)
+msgctxt "metadata region"
+msgid "Somalia"
+msgstr "Somália"
+
+# SPM (nível 3)
+msgctxt "metadata region"
+msgid "Saint Pierre and Miquelon"
+msgstr "São Pedro e Miquelão"
+
+# SSD (nível 3)
+msgctxt "metadata region"
+msgid "South Sudan"
+msgstr "Sudão do Sul"
+
+# STP (nível 3)
+msgctxt "metadata region"
+msgid "Sao Tome and Principe"
+msgstr "São Tomé e Príncipe"
+
+# SWZ (nível 3)
+msgctxt "metadata region"
+msgid "Swaziland"
+msgstr "Suazilândia"
+
+# SYC (nível 3)
+msgctxt "metadata region"
+msgid "Seychelles"
+msgstr "Seicheles"
+
+# TCA (nível 3)
+msgctxt "metadata region"
+msgid "Turks and Caicos Islands"
+msgstr "Ilhas Turcas e Caicos"
+
+# TCD (nível 3)
+msgctxt "metadata region"
+msgid "Chad"
+msgstr "Chade"
+
+# THA (nível 3)
+msgctxt "metadata region"
+msgid "Thailand"
+msgstr "Tailândia"
+
+# TJK (nível 3)
+msgctxt "metadata region"
+msgid "Tajikistan"
+msgstr "Tadjiquistão"
+
+# TKM (nível 3)
+msgctxt "metadata region"
+msgid "Turkmenistan"
+msgstr "Turcomenistão"
+
+# TTO (nível 3)
+msgctxt "metadata region"
+msgid "Trinidad and Tobago"
+msgstr "Trinidad e Tobago"
+
+# TUN (nível 3)
+msgctxt "metadata region"
+msgid "Tunisia"
+msgstr "Tunísia"
+
+# TZA (nível 3)
+msgctxt "metadata region"
+msgid "United Republic of Tanzania"
+msgstr "República Unida da Tanzânia"
+
+# URY (nível 3)
+msgctxt "metadata region"
+msgid "Uruguay"
+msgstr "Uruguai"
+
+# USA (nível 3)
+msgctxt "metadata region"
+msgid "United States of America"
+msgstr "Estados Unidos da América"
+
+# UZB (nível 3)
+msgctxt "metadata region"
+msgid "Uzbekistan"
+msgstr "Uzbequistão"
+
+# VCT (nível 3)
+msgctxt "metadata region"
+msgid "Saint Vincent and the Grenadines"
+msgstr "São Vicente e Granadinas"
+
+# VEN (nível 3)
+msgctxt "metadata region"
+msgid "Venezuela (Bolivarian Republic of)"
+msgstr "Venezuela (República Bolivariana da)"
+
+# VGB (nível 3)
+msgctxt "metadata region"
+msgid "British Virgin Islands"
+msgstr "Ilhas Virgens Britânicas"
+
+# VIR (nível 3)
+msgctxt "metadata region"
+msgid "United States Virgin Islands"
+msgstr "Ilhas Virgens Americanas"
+
+# VNM (nível 3)
+msgctxt "metadata region"
+msgid "Viet Nam"
+msgstr "Vietnã"
+
+# ZAF (nível 3)
+msgctxt "metadata region"
+msgid "South Africa"
+msgstr "África do Sul"
+
+# ZMB (nível 3)
+msgctxt "metadata region"
+msgid "Zambia"
+msgstr "Zâmbia"
+
+# ZWE (nível 3)
+msgctxt "metadata region"
+msgid "Zimbabwe"
+msgstr "Zimbábue"

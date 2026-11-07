@@ -31,6 +31,30 @@ def run_setup_hooks(*args, **kwargs):
     if celeryapp not in settings.INSTALLED_APPS:
         settings.INSTALLED_APPS += (celeryapp,)
 
+    # Tradução das opções do editor de metadados; registrado por último para rodar
+    # depois dos handlers do GeoNode
+    from geonode.metadata.manager import metadata_manager
+    from .metadata.handlers import BaseFormHandler, OptionsI18nHandler, RegionsI18nHandler, SparseFieldsUiHandler
+
+    metadata_manager.add_handler("opengeosgb_i18n", OptionsI18nHandler)
+    metadata_manager.add_handler("opengeosgb_sparse_ui", SparseFieldsUiHandler)
+    # substituem os handlers do GeoNode (mantêm a mesma posição na ordem)
+    metadata_manager.add_handler("base", BaseFormHandler)
+    metadata_manager.add_handler("region", RegionsI18nHandler)
+
+    # Campos extras do editor de metadados (campos esparsos)
+    from geonode.metadata.handlers.sparse import sparse_field_registry
+    from .metadata.fields import SPARSE_FIELDS
+
+    for field_name, info in SPARSE_FIELDS.items():
+        sparse_field_registry.register(field_name, info["schema"], after=info["after"])
+
+    # Padrões do opengeosgb na criação de recursos (informações complementares)
+    from django.db.models.signals import pre_save
+    from .signals import set_resource_defaults
+
+    pre_save.connect(set_resource_defaults, dispatch_uid="opengeosgb_set_resource_defaults")
+
 
 class AppConfig(BaseAppConfig):
     name = "opengeosgb"
