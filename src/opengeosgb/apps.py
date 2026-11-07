@@ -49,6 +49,24 @@ def run_setup_hooks(*args, **kwargs):
     for field_name, info in SPARSE_FIELDS.items():
         sparse_field_registry.register(field_name, info["schema"], after=info["after"])
 
+    # Escala na API de recursos (campo diferido) e no preset do painel de propriedades do client
+    # (viewer_common, definido no ready() do geonode_mapstore_client, que é carregado antes)
+    from .metadata.fields import SCALE_FIELD
+    from .metadata.serializers import add_sparse_fields_to_api
+
+    add_sparse_fields_to_api()
+    viewer_common = settings.REST_API_PRESETS.get("viewer_common", {}).get("include[]")
+    if isinstance(viewer_common, list) and SCALE_FIELD not in viewer_common:
+        viewer_common.append(SCALE_FIELD)
+
+    # Filtro por escala na API de recursos (?scale=<denominador>), usado pela barra de filtros do
+    # catálogo; a API de facets usa os filtros do ResourceBaseViewSet para as contagens
+    from geonode.base.api.views import ResourceBaseViewSet
+    from .metadata.facets import ScaleFilter
+
+    if ScaleFilter not in ResourceBaseViewSet.filter_backends:
+        ResourceBaseViewSet.filter_backends = list(ResourceBaseViewSet.filter_backends) + [ScaleFilter]
+
     # Padrões do opengeosgb na criação de recursos (informações complementares)
     from django.db.models.signals import pre_save
     from .signals import set_resource_defaults

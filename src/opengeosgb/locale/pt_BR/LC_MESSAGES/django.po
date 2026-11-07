@@ -95,6 +95,11 @@ msgstr "O arquivo não é uma imagem válida."
 msgid "Image format not allowed (use PNG, JPEG, GIF or WebP)."
 msgstr "Formato de imagem não permitido (use PNG, JPEG, GIF ou WebP)."
 
+# Facet de escala da barra de filtros (opengeosgb/metadata/facets.py)
+#: opengeosgb/metadata/facets.py
+msgid "Scale"
+msgstr "Escala"
+
 # Ações de aprovação e publicação no admin (opengeosgb/admin.py)
 #: opengeosgb/admin.py
 msgid "Approve selected resources"

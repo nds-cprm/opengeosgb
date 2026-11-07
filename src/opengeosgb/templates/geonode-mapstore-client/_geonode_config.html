@@ -27,6 +27,24 @@
             }
         }
 
+        // Linha "Escala" na aba de informações, depois de "Regiões"; só aparece se o recurso tiver
+        // escala (campo esparso "scale", incluído na API pelo preset viewer_common - ver apps.py)
+        var SCALE_ITEM = {
+            type: 'text',
+            labelId: 'opengeosgb.scale',
+            value: "{get(state('gnResourceData'), 'scale.label')}",
+            disableIf: "{not get(state('gnResourceData'), 'scale.label')}"
+        };
+
+        function addScaleItem(tabs) {
+            var info = (Array.isArray(tabs) ? tabs : []).filter(function(tab) { return tab && tab.id === 'info'; })[0];
+            if (!info || !Array.isArray(info.items) || info.items.some(function(item) { return item && item.labelId === SCALE_ITEM.labelId; })) {
+                return;
+            }
+            var regions = info.items.findIndex(function(item) { return item && item.labelId === 'gnviewer.regions'; });
+            info.items.splice(regions >= 0 ? regions + 1 : info.items.length, 0, Object.assign({}, SCALE_ITEM));
+        }
+
         var pages = (localConfig && localConfig.plugins) || {};
         Object.keys(pages).forEach(function(page) {
             if (!Array.isArray(pages[page])) {
@@ -58,6 +76,19 @@
                     cfg.tabs = JSON.parse(JSON.stringify(DEFAULT_RESOURCE_DETAILS_TABS));
                 }
                 setDateFormats(cfg.tabs);
+                if (plugin.name === 'ResourceDetails') {
+                    addScaleItem(cfg.tabs);
+                }
+
+                // Barra de filtros: filtro por escala depois do de regiões (facet "scale" da API de
+                // facets, fornecida por opengeosgb.metadata.facets.ScaleFacetProvider)
+                if (Array.isArray(cfg.fields)) {
+                    var place = cfg.fields.findIndex(function(field) { return field && field.facet === 'place'; });
+                    var hasScale = cfg.fields.some(function(field) { return field && field.facet === 'scale'; });
+                    if (place >= 0 && !hasScale) {
+                        cfg.fields.splice(place + 1, 0, {type: 'select', facet: 'scale'});
+                    }
+                }
 
                 plugin.cfg = cfg;
                 return plugin;

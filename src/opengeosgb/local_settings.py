@@ -147,6 +147,18 @@ PYCSW["CONFIGURATION"]["metadata"]["contact"] = {
 # https://docs.geonode.org/en/master/basic/settings/index.html#ui-required-fields
 
 
+# Facet de escala (campo esparso "scale") para a barra de filtros do catálogo
+FACET_PROVIDERS = list(FACET_PROVIDERS) + [
+    {"class": "opengeosgb.metadata.facets.ScaleFacetProvider", "config": {"order": 8, "type": "select"}},
+]
+
+# Traduções do client (MapStore): além das do client, as do opengeosgb (textos próprios, como
+# o rótulo "Escala" do painel de propriedades), em static/opengeosgb/translations/data.<locale>.json
+_translations_path = MAPSTORE_TRANSLATIONS_PATH
+if isinstance(_translations_path, str):  # pode vir como texto da variável de ambiente
+    _translations_path = ast.literal_eval(_translations_path) if _translations_path.startswith("[") else [_translations_path]
+MAPSTORE_TRANSLATIONS_PATH = list(_translations_path) + ["/static/opengeosgb/translations"]
+
 # Google Tag Manager
 GOOGLE_TAG_MANAGER_ID = os.getenv("GOOGLE_TAG_MANAGER_ID", "") 
 TEMPLATES[0]["OPTIONS"]["context_processors"].append("opengeosgb.context_processors.google_tag_manager_snippet")
