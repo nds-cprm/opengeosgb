@@ -1,5 +1,5 @@
 {% extends "geonode-mapstore-client/snippets/head.html" %}
-{% load static %}
+{% load static i18n %}
 
 {%block favicon%}
     <link rel="shortcut icon" href="{% static 'opengeosgb/img/favicon.ico' %}" />
@@ -7,6 +7,11 @@
 
 {% block extras %}
 {{ block.super }}
+{# os templates do client não declaram o idioma em <html>; a hifenização (CSS hyphens) e os leitores de tela dependem dele #}
+{% get_current_language as CURRENT_LANGUAGE %}
+<script>document.documentElement.lang = '{{ CURRENT_LANGUAGE|escapejs }}';</script>
+{# ajustes visuais do opengeosgb sobre o tema do client #}
+<link rel="stylesheet" href="{% static 'opengeosgb/css/opengeosgb.css' %}" />
 {# aviso de cookies; carrega o Google Tag Manager só depois do aceite #}
 {% include "opengeosgb/snippets/cookie_consent.html" %}
 {% endblock extras %}
