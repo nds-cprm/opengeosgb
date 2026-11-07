@@ -48,8 +48,125 @@ msgstr "Dados, informações e produtos do Serviço Geológico do Brasil."
 msgid "Search..."
 msgstr "Buscar..."
 
+# Página de visualização de metadados (opengeosgb/metadata/page.py e
+# templates/geonode-mapstore-client/snippets/metadata_view.html)
+#: opengeosgb/metadata/page.py
+msgid "Constraints and license"
+msgstr "Restrições e licença"
+
+#: opengeosgb/metadata/page.py
+msgid "Data quality"
+msgstr "Qualidade dos dados"
+
+#: opengeosgb/metadata/page.py
+msgid "ISO 19139 (HTML view)"
+msgstr "ISO 19139 (visualização HTML)"
+
+#: opengeosgb/metadata/page.py
+msgid "Boolean"
+msgstr "Booleano"
+
+#: opengeosgb/metadata/page.py
+msgid "Time of day"
+msgstr "Hora"
+
+#: opengeosgb/metadata/page.py
+msgid "Geographic extent"
+msgstr "Extensão geográfica"
+
+#: opengeosgb/metadata/page.py
+msgid "West"
+msgstr "Oeste"
+
+#: opengeosgb/metadata/page.py
+msgid "East"
+msgstr "Leste"
+
+#: opengeosgb/metadata/page.py
+msgid "South"
+msgstr "Sul"
+
+#: opengeosgb/metadata/page.py
+msgid "North"
+msgstr "Norte"
+
+#: opengeosgb/metadata/page.py
+msgid "Reference system"
+msgstr "Sistema de referência"
+
+#: opengeosgb/metadata/page.py
+msgid "Geometry"
+msgstr "Geometria"
+
+#: opengeosgb/metadata/page.py
+msgid "Other information"
+msgstr "Outras informações"
+
+#: opengeosgb/metadata/page.py
+#, python-format
+msgid "%(authors)s. %(title)s. %(publisher)s, %(year)s. Available at: %(url)s. Accessed on: %(accessed)s."
+msgstr "%(authors)s. %(title)s. %(publisher)s, %(year)s. Disponível em: %(url)s. Acesso em: %(accessed)s."
+
+#: opengeosgb/metadata/page.py
+msgid "Identifier"
+msgstr "Identificador"
+
+#: opengeosgb/metadata/page.py
+msgid "Last updated"
+msgstr "Última atualização"
+
+#: opengeosgb/templates/geonode-mapstore-client/snippets/metadata_view.html
+msgid "Contacts"
+msgstr "Contatos"
+
+#: opengeosgb/templates/geonode-mapstore-client/snippets/metadata_view.html
+msgid "Data dictionary"
+msgstr "Dicionário de dados"
+
+#: opengeosgb/templates/geonode-mapstore-client/snippets/metadata_view.html
+msgid "Distribution"
+msgstr "Distribuição"
+
+#: opengeosgb/templates/geonode-mapstore-client/snippets/metadata_view.html
+msgid "Resource page"
+msgstr "Página do recurso"
+
+#: opengeosgb/templates/geonode-mapstore-client/snippets/metadata_view.html
+msgid "OGC services"
+msgstr "Serviços OGC"
+
+#: opengeosgb/templates/geonode-mapstore-client/snippets/metadata_view.html
+msgid "Original files"
+msgstr "Arquivos originais"
+
+#: opengeosgb/templates/geonode-mapstore-client/snippets/metadata_view.html
+msgid "How to cite"
+msgstr "Como citar"
+
+#: opengeosgb/metadata/page.py
+#, python-format
+msgid "Accessed on: %(date)s"
+msgstr "Acesso em: %(date)s"
+
+#: opengeosgb/templates/geonode-mapstore-client/snippets/metadata_view.html
+msgid "Copy"
+msgstr "Copiar"
+
+#: opengeosgb/templates/geonode-mapstore-client/snippets/metadata_view.html
+msgid "Copied!"
+msgstr "Copiado!"
+
+#: opengeosgb/templates/geonode-mapstore-client/snippets/metadata_view.html
+msgid "Metadata record"
+msgstr "Registro de metadados"
+
 # --- Traduções de strings do GeoNode e do geonode-mapstore-client sem tradução pt-BR upstream.
 # --- Atenção: `makemessages --no-obsolete` neste app remove estas entradas (não estão no código do opengeosgb).
+
+# Categoria (base.TopicCategory.gn_description): corrige "Fenônemos" do catálogo pt do GeoNode
+#: geonode/base/fixtures/initial_data.json
+msgid "Climatology Meteorology Atmosphere"
+msgstr "Climatologia e Fenômenos Atmosféricos"
 
 #: geonode/metadata/handlers/base.py:75
 msgid "Creation"

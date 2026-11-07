@@ -1,11 +1,37 @@
 from django.db.models import Q
 from django.http import JsonResponse
+from django.shortcuts import render
+from django.utils.translation import get_language_from_request
+from django.utils.translation import gettext as _
 
-from geonode.base.models import Region
+from geonode.base.models import Region, ResourceBase
 from geonode.metadata.api.views import MetadataRegionsAutocomplete
+from geonode.utils import resolve_object
 
 from .i18n import REGION_MAX_TRANSLATED_LEVEL, normalize_text, region_label
+from .page import build_metadata_page
 from .scales import scale_suggestions
+
+
+def metadata_page(request, pk, template="geonode-mapstore-client/metadata.html"):
+    """
+    Página de visualização de metadados. Substitui a view do geonode-mapstore-client
+    (mesmas rotas e templates), verificando a permissão de leitura do recurso.
+    """
+    resource = resolve_object(
+        request,
+        ResourceBase,
+        {"pk": pk},
+        permission="base.view_resourcebase",
+        permission_msg=_("You are not permitted to view this resource"),
+    ).get_real_instance()
+    lang = get_language_from_request(request)[:2]
+    context = {"resource": resource, "metadata_groups": {}, "page": build_metadata_page(resource, lang, request.user)}
+    return render(request, template, context=context)
+
+
+def metadata_page_embed(request, pk):
+    return metadata_page(request, pk, template="geonode-mapstore-client/metadata_embed.html")
 
 
 def scales_autocomplete(request):

@@ -23,9 +23,16 @@ from django.contrib.flatpages.sitemaps import FlatPageSitemap
 from geonode.urls import urlpatterns, sitemaps
 
 from . import views
-from .metadata.views import RegionsI18nAutocomplete, scales_autocomplete
+from .metadata.views import RegionsI18nAutocomplete, metadata_page, metadata_page_embed, scales_autocomplete
 
 sitemaps.update(page=FlatPageSitemap)
+
+# Página de visualização de metadados do opengeosgb: inserida no início para ter
+# prioridade sobre as rotas de mesmo nome do geonode-mapstore-client
+urlpatterns[0:0] = [
+    re_path(r"^metadata/(?P<pk>[^/]*)$", metadata_page, name="metadata"),
+    re_path(r"^metadata/(?P<pk>[^/]*)/embed$", metadata_page_embed, name="metadata_embed"),
+]
 
 urlpatterns += [
     # flatpages

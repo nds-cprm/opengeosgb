@@ -1,0 +1,200 @@
+{% load i18n %}
+{% comment %}
+Sobrescreve geonode-mapstore-client/snippets/metadata_view.html (geonode_mapstore_client 5.0.3).
+Com o contexto "page" (view opengeosgb.metadata.views.metadata_page), exibe seções fixas,
+contatos, dicionário de dados, citação e distribuição. Sem ele, mantém o layout original.
+{% endcomment %}
+<style>
+    .gn-metadata-view .ogs-md-header { display: flex; gap: 1.5rem; padding: 0 .75rem 1rem; align-items: flex-start; }
+    .gn-metadata-view .ogs-md-header img { max-width: 220px; max-height: 160px; object-fit: contain; border: 1px solid rgba(0,0,0,.1); border-radius: 4px; }
+    .gn-metadata-view .ogs-md-eyebrow { font-size: .8rem; text-transform: uppercase; letter-spacing: .05em; opacity: .7; }
+    .gn-metadata-view .ogs-md-header .gn-metadata-title { padding: .25rem 0 .5rem; }
+    .gn-metadata-view .ogs-md-meta { font-size: .875rem; opacity: .85; }
+    .gn-metadata-view .ogs-md-abstract { margin-top: .75rem; white-space: pre-line; }
+    .gn-metadata-view .gn-metadata-group { margin-bottom: 1.25rem; }
+    .gn-metadata-view dd ul { margin: 0; padding-left: 1.1rem; }
+    .gn-metadata-view .ogs-md-block { padding: 0 .75rem; }
+    .gn-metadata-view .ogs-md-contacts { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: .75rem; }
+    .gn-metadata-view .ogs-md-contact { border: 1px solid rgba(0,0,0,.12); border-radius: 4px; padding: .5rem .75rem; }
+    .gn-metadata-view .ogs-md-contact .ogs-md-roles { font-size: .8rem; opacity: .75; }
+    .gn-metadata-view .ogs-md-table { width: 100%; border-collapse: collapse; font-size: .875rem; }
+    .gn-metadata-view .ogs-md-table th, .gn-metadata-view .ogs-md-table td { border-bottom: 1px solid rgba(0,0,0,.1); padding: .3rem .5rem; text-align: left; vertical-align: top; }
+    .gn-metadata-view .ogs-md-citation { border-left: 3px solid rgba(0,0,0,.2); padding: .5rem .75rem; font-size: .9rem; }
+    .gn-metadata-view .ogs-md-code { font-family: monospace; font-size: .85rem; word-break: break-all; }
+    .gn-metadata-view .ogs-md-links a + a { margin-left: .4rem; padding-left: .5rem; border-left: 1px solid rgba(0,0,0,.25); }
+    .gn-metadata-view .ogs-md-bibtex { margin-top: .75rem; }
+    .gn-metadata-view .ogs-md-bibtex-header { display: flex; justify-content: space-between; align-items: center; font-size: .8rem; font-weight: bold; margin-bottom: .25rem; }
+    .gn-metadata-view .ogs-md-bibtex pre { margin: 0; font-size: .8rem; white-space: pre; overflow-x: auto; }
+</style>
+<div class="gn-metadata-view">
+    <div class="gn-metadata">
+        <div class="gn-metadata-container">
+            <div class="gn-metadata-layout">
+                <div class="gn-metadata-groups">
+{% if page %}
+                    <div class="ogs-md-header">
+                        {% if page.thumbnail_url %}<img src="{{ page.thumbnail_url }}" alt="{{ resource.title }}">{% endif %}
+                        <div>
+                            <div class="ogs-md-eyebrow">{% trans "Metadata" %} · {{ page.type_label }}</div>
+                            <div id="gn-metadata-title" class="gn-metadata-title">{{ resource.title }}</div>
+                            {% if page.date %}<div class="ogs-md-meta">{{ page.date_label }}: {{ page.date }}</div>{% endif %}
+                            {% if page.abstract %}<div class="ogs-md-abstract">{{ page.abstract }}</div>{% endif %}
+                        </div>
+                    </div>
+
+                    {% for section in page.sections %}
+                    <div class="gn-metadata-group gn-metadata-group-view" id="metadata_{{ section.key|default:'other' }}">
+                        <div class="gn-metadata-group-title">{{ section.title }}</div>
+                        <hr>
+                        <dl>
+                        {% for row in section.rows %}
+                            <dt><label class="control-label">{{ row.label }}</label></dt>
+                            <dd>
+                                {% if row.items|length > 1 %}<ul>{% for item in row.items %}<li>{% include "opengeosgb/snippets/metadata_item.html" %}</li>{% endfor %}</ul>
+                                {% else %}{% with item=row.items.0 %}{% include "opengeosgb/snippets/metadata_item.html" %}{% endwith %}{% endif %}
+                            </dd>
+                        {% endfor %}
+                        </dl>
+                    </div>
+                    {% endfor %}
+
+                    {% if page.contacts %}
+                    <div class="gn-metadata-group gn-metadata-group-view" id="metadata_contacts">
+                        <div class="gn-metadata-group-title">{% trans "Contacts" %}</div>
+                        <hr>
+                        <div class="ogs-md-block ogs-md-contacts">
+                        {% for contact in page.contacts %}
+                            <div class="ogs-md-contact">
+                                <strong>{{ contact.name }}</strong>
+                                {% if contact.position %}<div>{{ contact.position }}</div>{% endif %}
+                                {% if contact.organization %}<div>{{ contact.organization }}</div>{% endif %}
+                                {% if contact.email %}<div><a href="mailto:{{ contact.email }}">{{ contact.email }}</a></div>{% endif %}
+                                <div class="ogs-md-roles">{{ contact.roles|join:", " }}</div>
+                            </div>
+                        {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    {% if page.data_dictionary %}
+                    <div class="gn-metadata-group gn-metadata-group-view" id="metadata_data_dictionary">
+                        <div class="gn-metadata-group-title">{% trans "Data dictionary" %}</div>
+                        <hr>
+                        <div class="ogs-md-block">
+                            <table class="ogs-md-table">
+                                <thead><tr><th>{% trans "Attribute" %}</th><th>{% trans "Type" %}</th><th>{% trans "Description" %}</th></tr></thead>
+                                <tbody>
+                                {% for attribute in page.data_dictionary %}
+                                    <tr><td class="ogs-md-code">{{ attribute.name }}</td><td>{{ attribute.type }}</td><td>{{ attribute.description }}</td></tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <div class="gn-metadata-group gn-metadata-group-view" id="metadata_distribution">
+                        <div class="gn-metadata-group-title">{% trans "Distribution" %}</div>
+                        <hr>
+                        <dl>
+                            <dt><label class="control-label">{% trans "Resource page" %}</label></dt>
+                            <dd><a href="{{ page.resource_url }}" target="_blank" rel="noopener noreferrer">{{ page.resource_url }}</a></dd>
+                            {% if page.distribution.services %}
+                            <dt><label class="control-label">{% trans "OGC services" %}</label></dt>
+                            <dd><ul>{% for link in page.distribution.services %}
+                                <li><strong>{{ link.text }}</strong>: <a href="{{ link.url }}" target="_blank" rel="noopener noreferrer" class="ogs-md-code">{{ link.url }}</a>{% if link.layer %} · {% trans "Layer" %}: <span class="ogs-md-code">{{ link.layer }}</span>{% endif %}</li>
+                            {% endfor %}</ul></dd>
+                            {% endif %}
+                            {% if page.distribution.assets %}
+                            <dt><label class="control-label">{% trans "Original files" %}</label></dt>
+                            <dd class="ogs-md-links">{% for link in page.distribution.assets %}<a href="{{ link.url }}" target="_blank" rel="noopener noreferrer">{{ link.text }}</a>{% endfor %}</dd>
+                            {% endif %}
+                            {% if page.distribution.downloads %}
+                            <dt><label class="control-label">{% trans "Downloads" %}</label></dt>
+                            <dd class="ogs-md-links">{% for link in page.distribution.downloads %}<a href="{{ link.url }}" target="_blank" rel="noopener noreferrer">{{ link.text }}</a>{% endfor %}</dd>
+                            {% endif %}
+                            {% if page.distribution.images %}
+                            <dt><label class="control-label">{% trans "Images" %}</label></dt>
+                            <dd class="ogs-md-links">{% for link in page.distribution.images %}<a href="{{ link.url }}" target="_blank" rel="noopener noreferrer">{{ link.text }}</a>{% endfor %}</dd>
+                            {% endif %}
+                            {% if page.distribution.legend %}
+                            <dt><label class="control-label">{% trans "Legend" %}</label></dt>
+                            <dd class="ogs-md-links">{% for link in page.distribution.legend %}<a href="{{ link.url }}" target="_blank" rel="noopener noreferrer">{{ link.text }} (PNG)</a>{% endfor %}</dd>
+                            {% endif %}
+                            {% if page.distribution.metadata %}
+                            <dt><label class="control-label">{% trans "Metadata" %}</label></dt>
+                            <dd class="ogs-md-links">{% with md=page.distribution.metadata %}
+                                {% if md.dublin_core %}<a href="{{ md.dublin_core.url }}" target="_blank" rel="noopener noreferrer">{{ md.dublin_core.text }}</a>{% endif %}
+                                {% if md.iso19139 %}<a href="{{ md.iso19139.url }}" target="_blank" rel="noopener noreferrer">{{ md.iso19139.text }}</a>{% endif %}
+                                {% if md.iso19115_3 %}<a href="{{ md.iso19115_3.url }}" target="_blank" rel="noopener noreferrer">{{ md.iso19115_3.text }}</a>{% endif %}
+                                {% comment %}
+                                Outros formatos gerados pelo GeoNode, ocultos na página. Para exibir, mova a linha para fora deste bloco.
+                                {% if md.iso19139_html %}<a href="{{ md.iso19139_html.url }}" target="_blank" rel="noopener noreferrer">{{ md.iso19139_html.text }}</a>{% endif %}
+                                {% if md.atom %}<a href="{{ md.atom.url }}" target="_blank" rel="noopener noreferrer">{{ md.atom.text }}</a>{% endif %}
+                                {% if md.dif %}<a href="{{ md.dif.url }}" target="_blank" rel="noopener noreferrer">{{ md.dif.text }}</a>{% endif %}
+                                {% if md.ebrim %}<a href="{{ md.ebrim.url }}" target="_blank" rel="noopener noreferrer">{{ md.ebrim.text }}</a>{% endif %}
+                                {% if md.fgdc %}<a href="{{ md.fgdc.url }}" target="_blank" rel="noopener noreferrer">{{ md.fgdc.text }}</a>{% endif %}
+                                {% endcomment %}
+                            {% endwith %}</dd>
+                            {% endif %}
+                        </dl>
+                    </div>
+
+                    <div class="gn-metadata-group gn-metadata-group-view" id="metadata_citation">
+                        <div class="gn-metadata-group-title">{% trans "How to cite" %}</div>
+                        <hr>
+                        <div class="ogs-md-block">
+                            <div class="ogs-md-citation">{{ page.citation }}</div>
+                            <div class="ogs-md-bibtex">
+                                <div class="ogs-md-bibtex-header">
+                                    <span>BibTeX</span>
+                                    <button type="button" class="btn btn-default btn-xs" id="ogs-md-bibtex-copy"
+                                            data-copied="{% trans 'Copied!' %}">{% trans "Copy" %}</button>
+                                </div>
+                                <pre><code id="ogs-md-bibtex-code">{{ page.bibtex }}</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                    <script>
+                        (function() {
+                            const button = document.getElementById('ogs-md-bibtex-copy');
+                            const code = document.getElementById('ogs-md-bibtex-code');
+                            if (!button || !code || !navigator.clipboard) {
+                                if (button) { button.style.display = 'none'; }
+                                return;
+                            }
+                            const label = button.textContent;
+                            button.addEventListener('click', function() {
+                                navigator.clipboard.writeText(code.textContent).then(function() {
+                                    button.textContent = button.getAttribute('data-copied');
+                                    setTimeout(function() { button.textContent = label; }, 2000);
+                                });
+                            });
+                        })();
+                    </script>
+
+                    <div class="gn-metadata-group gn-metadata-group-view" id="metadata_record">
+                        <div class="gn-metadata-group-title">{% trans "Metadata record" %}</div>
+                        <hr>
+                        <dl>
+                        {% for row in page.record %}
+                            <dt><label class="control-label">{{ row.label }}</label></dt>
+                            <dd>{% with item=row.items.0 %}{% include "opengeosgb/snippets/metadata_item.html" %}{% endwith %}</dd>
+                        {% endfor %}
+                        </dl>
+                    </div>
+{% else %}
+                    <div id="gn-metadata-title" class="gn-metadata-title">Metadata: {{resource.title}}</div>
+                    {% for group_key, metadata in metadata_groups.items %}
+                    <div class="gn-metadata-group gn-metadata-group-view">
+                        <div class="gn-metadata-group-title">{% trans group_key %}</div>
+                        <hr>
+                        {% include 'geonode-mapstore-client/snippets/metadata_fields.html' with metadata=metadata prefix='metadata' %}
+                    </div>
+                    {% endfor %}
+{% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
