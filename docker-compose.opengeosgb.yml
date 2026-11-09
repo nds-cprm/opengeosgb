@@ -105,7 +105,6 @@ services:
      - "5432:5432"
 
   mailserver:
-    <<: *default-common
     image: python:3.11-alpine
     container_name: mailserver4${COMPOSE_PROJECT_NAME}
     command: >
