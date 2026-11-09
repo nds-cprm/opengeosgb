@@ -84,3 +84,7 @@ docker/nginx/certificates
 node_modules/
 
 secrets/
+
+# Apenas .env.sample pode ser rastreado
+.env*
+!.env.sample
