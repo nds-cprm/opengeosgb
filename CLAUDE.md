@@ -159,6 +159,9 @@ Marcação de dependência: **[fork geonode]** depende do fork `nds-cprm/geonode
   - imagens removidas do conteúdo de uma página continuam em `flatpages/<id>/`.
 
   Uma solução seria um comando de limpeza, por exemplo agendado no Celery beat, que apague as pastas de `tmp/` com mais de um dia e os arquivos de `flatpages/<id>/` que não aparecem no conteúdo da página. Quando a página é apagada, a pasta dela já é removida (sinal `post_delete`).
+- **[opengeosgb]** **Ajustes do limite do canvas dos mapas (`MAP_RESTRICTED_EXTENT`).** O teste no navegador mostrou dois pontos ainda não tratados:
+  - **`minZoom`:** no zoom máximo para fora, o OpenLayers segura a vista (~1:18M a 1400×900), mas o MapStore continua diminuindo o zoom guardado e o seletor de escala chega a 1:591.658.711. Acrescentar `minZoom` ao `mapConstraints` no `overrideLocalConfig` (por volta de 5, a escala ~1:18M), de preferência configurável pelo `.env` como o extent. O valor ideal depende do tamanho da tela: numa tela maior o OpenLayers ainda pode parar entre dois níveis.
+  - **`DEFAULT_MAP_CENTER`:** o centro padrão é `0,0`, fora do extent, e um mapa novo abre empurrado para o canto norte do limite. Definir no `.env` (variáveis nativas do GeoNode) um centro no Brasil, por exemplo `DEFAULT_MAP_CENTER_X=-55` e `DEFAULT_MAP_CENTER_Y=-15`, e conferir o `DEFAULT_MAP_ZOOM` junto.
 - **[opengeosgb]** **Limpar o texto padrão antigo.** Rodar `clear_default_supplemental_information` (primeiro com `--dry-run`) nos ambientes com recursos que ainda têm "No information provided".
 
 ## Cuidados
