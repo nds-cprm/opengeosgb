@@ -1,4 +1,4 @@
-FROM geonode/geonode-base:latest-ubuntu-24.04
+FROM --platform=$TARGETPLATFORM geonode/geonode-base:latest-ubuntu-24.04
 
 # https://specs.opencontainers.org/image-spec/annotations/
 LABEL org.opencontainers.image.title="OpenGeoSGB/GeoNode" \
@@ -20,26 +20,22 @@ ENV LC_ALL=C.UTF-8 \
 
 WORKDIR /usr/src/project
 
-COPY src/tasks.py \
-    src/entrypoint.sh \
-    src/requirements.txt \
-    /usr/src/project/
+COPY src/requirements.txt /usr/src/project/
 
-COPY src/wait-for-databases.sh /usr/bin/wait-for-databases
+# 755 (e não só +x): scripts precisam de leitura para rodar com um usuário que não é root
+COPY --chmod=755 src/wait-for-databases.sh /usr/bin/wait-for-databases
 
-COPY src/celery.sh /usr/bin/celery-commands
+COPY --chmod=755 src/celery.sh /usr/bin/celery-commands
 
-COPY src/celery-cmd /usr/bin/celery-cmd
+COPY --chmod=755 src/celery-cmd /usr/bin/celery-cmd
 
-RUN chmod +x /usr/bin/wait-for-databases \
-        /usr/src/project/tasks.py \ 
-        /usr/src/project/entrypoint.sh \
-        /usr/bin/celery-commands \
-        /usr/bin/celery-cmd && \
-    python -m pip install -U pip setuptools wheel && \
+RUN python -m pip install -U pip setuptools wheel && \
     pip install --src /usr/src -r requirements.txt
 
 COPY src/ /usr/src/project
+
+# depois do COPY src/, que traz as permissões do host
+COPY --chmod=755 src/tasks.py src/entrypoint.sh /usr/src/project/
 
 RUN yes w | pip install -e .
 

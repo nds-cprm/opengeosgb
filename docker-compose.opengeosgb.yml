@@ -16,11 +16,18 @@ x-common-django:
     - data:/data
     # - /home/mota/_geonode/data:/data
     - tmp:/tmp
-  # user: '1000'
+  # UID arbitrário com grupo 0: as imagens dão aos diretórios graváveis g=u
+  user: '1000:0'
 
 services:
   django:
     << : *default-common-django
+    # TARGETPLATFORM: usado no FROM --platform dos Dockerfiles. O podman compose (via
+    # docker-compose) não repassa o "platform" do serviço ao builder; sem este arg, a
+    # imagem base sai na arquitetura do host. No buildx, cada plataforma já o define.
+    build:
+      args:
+        - TARGETPLATFORM=linux/amd64
     ports:
       - 8000:8000
 
@@ -36,6 +43,7 @@ services:
       dockerfile: Dockerfile
       args:
         - NGINX_VERSION=${NGINX_BASE_IMAGE_VERSION}
+        - TARGETPLATFORM=linux/amd64
     # bind to container ports of 8080 and 8443 because of use of nginx-unprivileged 
     ports:
       - "${HTTP_PORT}:8080"
@@ -53,7 +61,11 @@ services:
     image: ${DOCKER_NAMESPACE:-$COMPOSE_PROJECT_NAME}/letsencrypt:${LETSENCRYPT_BASE_IMAGE_VERSION}
     build:
       context: ./docker/docker/letsencrypt
+      args:
+        - TARGETPLATFORM=linux/amd64
     deploy:
+      # mode explícito: o podman-compose só respeita "replicas" quando mode é "replicated"
+      mode: replicated
       replicas: 0
 
   geoserver:
@@ -65,6 +77,7 @@ services:
       args:
         - GEOSERVER_VERSION=${GEOSERVER_BASE_IMAGE_VERSION}
         - IMAGE_VERSION=9.0.107-jdk11-temurin-jammy
+        - TARGETPLATFORM=linux/amd64
     volumes:
       - statics:/mnt/volumes/statics
       # - /home/mota/_geonode/statics:/mnt/volumes/statics
@@ -76,9 +89,12 @@ services:
       - tmp:/tmp
     environment:
       - PROXY_BASE_URL=${NGINX_BASE_URL}/geoserver
+      # no Podman o HOME de um UID sem passwd vira o WORKDIR (/usr/local/tomcat/tmp,
+      # do root) e o entrypoint não consegue criar o .bashrc
+      - HOME=/tmp
     ports:
       - "8080:8080"
-    # user: '1000'
+    user: '1000:0'
 
   data-dir-conf:
     <<: *default-common
@@ -89,6 +105,7 @@ services:
       dockerfile: Dockerfile
       args:
         - GEOSERVER_VERSION=${GEOSERVER_BASE_IMAGE_VERSION}
+        - TARGETPLATFORM=linux/amd64
 
   db:
     <<: *default-common
@@ -97,6 +114,7 @@ services:
       context: ./docker/docker/postgis
       args:
         - POSTGRES_BASE_IMAGE_VERSION=${POSTGRES_BASE_IMAGE_VERSION}
+        - TARGETPLATFORM=linux/amd64
     volumes:
       - dbdata:/var/lib/postgresql/data
       # - /home/mota/_geonode/dbdata:/var/lib/postgresql/data
