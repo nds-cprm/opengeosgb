@@ -30,3 +30,14 @@ def site_pages(request):
         "COOKIE_POLICY_URL": _localized_url(request, "COOKIE_POLICY_URLS", "COOKIE_POLICY_URL"),
         "ABOUT_PAGE_URL": _localized_url(request, "ABOUT_PAGE_URLS", "ABOUT_PAGE_URL"),
     }
+
+
+def map_constraints(request):
+    """
+    Limite do canvas dos mapas (MAP_RESTRICTED_EXTENT, em local_settings.py), aplicado ao
+    localConfig do client em templates/geonode-mapstore-client/_geonode_config.html.
+    """
+    return {
+        "MAP_RESTRICTED_EXTENT": getattr(settings, "MAP_RESTRICTED_EXTENT", None),
+        "MAP_RESTRICTED_EXTENT_CRS": getattr(settings, "MAP_RESTRICTED_EXTENT_CRS", "EPSG:4326"),
+    }

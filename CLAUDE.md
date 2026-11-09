@@ -33,6 +33,12 @@ geonode-docker logs -f django celery
 - O container de dev pode ser aberto pelo `.devcontainer/` (serviço `django`, workspace `/usr/src/project`).
 - A inicialização do container é feita por `src/entrypoint.sh` → `invoke` (`src/tasks.py`: `waitfordbs`, `update`, `migrations`, `prepare`, `fixtures`, `collectstatic`, `initialized`). O task `fixtures` carrega os fixtures padrão do GeoNode e depois os listados em `PROJECT_FIXTURES`.
 
+**Podman (macOS, Apple Silicon).** O stack sobe com `docker-compose` apontando para o socket do Podman (`DOCKER_HOST=unix:///var/run/docker.sock`), com estes ajustes:
+- `postgis/postgis:15-3.5-alpine` não tem imagem arm64: baixe antes a base em amd64 (`podman pull --platform linux/amd64 docker.io/postgis/postgis:15-3.5-alpine`), porque o builder clássico ignora o `platform` do serviço;
+- o Podman rootless não publica a porta 80: `podman machine ssh "sudo sysctl -w net.ipv4.ip_unprivileged_port_start=80"` (vale até a máquina reiniciar);
+- o nginx usa `resolver 127.0.0.11`, que só existe no Docker, e responde 502: defina `RESOLVER` no serviço `geonode` com o DNS do Podman (o `nameserver` do `/etc/resolv.conf` do container, por exemplo `10.89.0.1`);
+- `docker/docker/postgis/initdb-geonode.sh` precisa estar como `755` no host: com `0700`, o `COPY` o leva como root-only, o `postgres` não consegue executá-lo e os usuários do GeoNode não são criados (erro `password authentication failed for user "opengeosgb"` no django).
+
 Lint: `flake8` com a configuração de `.flake8` (max-line-length 200; `F403`/`F405` ignorados por causa dos `import *` nos settings).
 
 O projeto não tem suíte de testes própria. Os testes do núcleo ficam em `../geonode` (veja o `CLAUDE.md` de lá, se existir).
@@ -42,6 +48,7 @@ O projeto não tem suíte de testes própria. Os testes do núcleo ficam em `../
 **Cadeia de settings.** `opengeosgb/settings.py` faz `from opengeosgb.local_settings import *`, e este faz `from geonode.settings import *`. Se o import de `local_settings` falhar, ele cai direto em `geonode.settings`. Logo, **toda customização de settings vai em `local_settings.py`**: flatpages, `LANGUAGES`, formulários de conta, provedores sociais, identificação/contato do pycsw e o Google Tag Manager. Já `settings.py` só cuida do que é estrutural do template (`STATICFILES_DIRS`, `LOCALE_PATHS` e `TEMPLATES` com prioridade para os diretórios locais, `ROOT_URLCONF`, `PROJECT_FIXTURES`). Quase tudo vem de variáveis de ambiente lidas pelo `geonode.settings`. Por exemplo, `CATALOGUE_DEFAULT_FORMAT=ISO19115-3_2018` troca o perfil de metadados (ISO 19139 ↔ ISO 19115-3), e essa lógica vive no fork do GeoNode.
 
 **Configuração do client em tempo de execução.** `templates/geonode-mapstore-client/_geonode_config.html` (função `overrideLocalConfig`) ajusta o `localConfig.json` do client antes de ele ser usado:
+- o canvas dos mapas fica limitado a `mapConstraints.restrictedExtent`, que vem de `MAP_RESTRICTED_EXTENT` (`minx,miny,maxx,maxy`) e `MAP_RESTRICTED_EXTENT_CRS` no `.env`, lidas em `local_settings.py` e expostas pelo context processor `map_constraints`. O padrão é a América do Sul (`-95,-60,-25,15` em EPSG:4326); valor vazio ou inválido desativa o limite. O MapStore usa o extent como `extent` da view do OpenLayers: a tela inteira precisa ficar dentro dele, então numa tela larga o continente nunca aparece inteiro (em Web Mercator ele é mais alto que largo; a 1400×900 o zoom máximo para fora fica em ~1:18M). No zoom máximo para fora o seletor de escala do MapStore continua diminuindo (mostra 1:591M) enquanto a vista fica parada; um `minZoom` no `mapConstraints` evitaria isso. Com `DEFAULT_MAP_CENTER_X/Y` em `0,0` (fora do extent), um mapa novo abre empurrado para o canto norte do limite;
 - a coluna "Descrição" da lista do catálogo passa a ler `raw_abstract` (ver pendência [mapstore-client]);
 - todas as datas configuradas (`type: "date"`) passam a usar o formato `L HH:mm`, a data numérica do idioma mais a hora em 24h (06/11/2026 23:42 em pt, 11/06/2026 23:42 em en).
 

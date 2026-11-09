@@ -1,8 +1,21 @@
 {% extends 'geonode-mapstore-client/_geonode_config.html' %}
 {% block override_local_config %}
+{{ MAP_RESTRICTED_EXTENT|json_script:"MAP_RESTRICTED_EXTENT" }}
+{{ MAP_RESTRICTED_EXTENT_CRS|json_script:"MAP_RESTRICTED_EXTENT_CRS" }}
 <script>
     window.__GEONODE_CONFIG__.overrideLocalConfig = function(localConfig, _) {
         // Here the localConfig can be overridden and/or extended
+
+        // Limite do canvas dos mapas (MAP_RESTRICTED_EXTENT no .env; padrão: América do Sul).
+        // O MapStore converte o extent para a projeção do mapa e o usa como "extent" da view do
+        // OpenLayers (impede pan e zoom out para fora dele). Sem valor, não há limite.
+        var restrictedExtent = JSON.parse(document.getElementById('MAP_RESTRICTED_EXTENT').textContent);
+        if (Array.isArray(restrictedExtent) && restrictedExtent.length === 4) {
+            localConfig.mapConstraints = Object.assign({}, localConfig.mapConstraints, {
+                crs: JSON.parse(document.getElementById('MAP_RESTRICTED_EXTENT_CRS').textContent) || 'EPSG:4326',
+                restrictedExtent: restrictedExtent
+            });
+        }
 
         // Datas em formato numérico de acordo com o idioma (moment): "L" = data do idioma
         // (06/11/2026 em pt, 11/06/2026 em en) + hora 24h, sem texto (ex.: sem "PM" ou nome do mês)

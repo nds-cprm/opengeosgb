@@ -159,6 +159,25 @@ if isinstance(_translations_path, str):  # pode vir como texto da variável de a
     _translations_path = ast.literal_eval(_translations_path) if _translations_path.startswith("[") else [_translations_path]
 MAPSTORE_TRANSLATIONS_PATH = list(_translations_path) + ["/static/opengeosgb/translations"]
 
+
+# Limite do canvas dos mapas do client (mapConstraints.restrictedExtent do MapStore), em
+# "minx,miny,maxx,maxy" no CRS de MAP_RESTRICTED_EXTENT_CRS. O padrão é a América do Sul, com
+# folga para Galápagos, Trindade e Martim Vaz, Cabo Horn e o Caribe colombiano/venezuelano.
+# Vazio desativa o limite. Valor inválido também desativa (o mapa não pode ficar inutilizável).
+def _parse_extent(value):
+    try:
+        extent = [float(v) for v in str(value or "").split(",")]
+    except ValueError:
+        return None
+    if len(extent) != 4 or extent[0] >= extent[2] or extent[1] >= extent[3]:
+        return None
+    return extent
+
+
+MAP_RESTRICTED_EXTENT = _parse_extent(os.getenv("MAP_RESTRICTED_EXTENT", "-95,-60,-25,15"))
+MAP_RESTRICTED_EXTENT_CRS = os.getenv("MAP_RESTRICTED_EXTENT_CRS", "EPSG:4326")
+TEMPLATES[0]["OPTIONS"]["context_processors"].append("opengeosgb.context_processors.map_constraints")
+
 # Google Tag Manager
 GOOGLE_TAG_MANAGER_ID = os.getenv("GOOGLE_TAG_MANAGER_ID", "") 
 TEMPLATES[0]["OPTIONS"]["context_processors"].append("opengeosgb.context_processors.google_tag_manager_snippet")
