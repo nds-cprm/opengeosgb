@@ -1,5 +1,6 @@
 from allauth.account.forms import LoginForm, SignupForm
-from geonode.people.forms.recaptcha import AllauthRecaptchaLoginForm, AllauthReCaptchaSignupForm
+from django.contrib.admin.forms import AdminAuthenticationForm
+from geonode.people.forms.recaptcha import AllauthRecaptchaLoginForm, AllauthReCaptchaSignupForm, ReCaptchaField
 
 
 class GovBRMixin:
@@ -22,4 +23,8 @@ class GovBRReCaptchaLoginForm(GovBRMixin, AllauthRecaptchaLoginForm):
 
 class GovBRReCaptchaSignupForm(GovBRMixin, AllauthReCaptchaSignupForm):
     pass
- 
+
+
+# Login do admin do Django, com recaptcha
+class AdminReCaptchaAuthenticationForm(AdminAuthenticationForm):
+    captcha = ReCaptchaField(label=False)
