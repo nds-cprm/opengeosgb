@@ -420,13 +420,13 @@ msgstr "O usuário {username} tem permissão de download, mas não consegue aces
 #: geonode/templates/500.html:8
 msgid ""
 "\n"
-"  Please contact your GeoNode administrator (they may have received an email automatically if they configured it properly).\n"
-"  If you are the site administrator, enable debug mode to see the actual error and fix it or file an issue in <a href=\"http://github.com/GeoNode/geonode/issues\">GeoNode's issue tracker</a>\n"
+"  Please contact your OpenGeoSGB administrator (they may have received an email automatically if they configured it properly).\n"
+"  If you are the site administrator, enable debug mode to see the actual error and fix it or file an issue in <a href=\"https://github.com/nds-cprm/opengeosgb/issues\">OpenGeoSGB's issue tracker</a>\n"
 "  "
 msgstr ""
 "\n"
-"  Entre em contato com o administrador do GeoNode (ele pode ter recebido um e-mail automaticamente, se estiver configurado corretamente).\n"
-"  Se você é o administrador do site, ative o modo de depuração para ver o erro real e corrigi-lo, ou registre um problema no <a href=\"http://github.com/GeoNode/geonode/issues\">rastreador de problemas do GeoNode</a>\n"
+"  Entre em contato com o administrador do OpenGeoSGB (ele pode ter recebido um e-mail automaticamente, se estiver configurado corretamente).\n"
+"  Se você é o administrador do site, ative o modo de depuração para ver o erro real e corrigi-lo, ou registre um problema no <a href=\"https://github.com/nds-cprm/opengeosgb/issues\">rastreador de problemas do OpenGeoSGB</a>\n"
 "  "
 
 #: geonode/templates/account/admin_approval_needed.html:12
