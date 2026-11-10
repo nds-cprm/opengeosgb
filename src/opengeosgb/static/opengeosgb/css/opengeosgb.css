@@ -31,3 +31,36 @@
 .msgapi .ms-resources-container-grid .ms-resource-card-body-header .ms-text._ellipsis {
     min-height: calc(2em * var(--ogs-title-line-height));
 }
+
+/* Seção "Serviços legados do GeoSGB" na home (templates/geonode-mapstore-client/_geonode_config.html): itens do placeholder
+   GEOSGB_MENU no estilo dos botões da barra superior (#gn-brand-navbar) */
+.gn-geosgb-menu-section { padding-top: 0; padding-bottom: 0; }
+.gn-geosgb-menu { display: flex; align-items: center; gap: 8px; --ms-button-border-color: transparent; }
+.gn-geosgb-menu ul { list-style: none; margin: 0; padding: 0; }
+.gn-geosgb-menu-inline { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.gn-geosgb-menu .dropdown { position: relative; }
+.gn-geosgb-menu-compact { display: none; }
+
+.gn-geosgb-menu .btn-default:hover,
+.gn-geosgb-menu .btn-default:focus,
+.gn-geosgb-menu .btn-default.focus,
+.gn-geosgb-menu .btn-default:active,
+.gn-geosgb-menu .open > .dropdown-toggle.btn-default {
+    color: var(--ms-button-color);
+    background-color: var(--ms-button-bg);
+    border-color: transparent;
+    text-decoration-line: underline;
+    text-decoration-thickness: 2px;
+    text-underline-position: under;
+    text-decoration-color: var(--ms-primary);
+    box-shadow: none;
+}
+
+/* submenu do hambúrguer, como o da barra superior */
+.gn-geosgb-menu-compact .dropdown-menu .dropdown-submenu-title { font-weight: bold; text-align: left; margin: 3px 20px; display: block; }
+.gn-geosgb-menu-compact .dropdown-menu li > a { text-align: left; }
+
+@media (max-width: 768px) {
+    .gn-geosgb-menu-inline { display: none; }
+    .gn-geosgb-menu-compact { display: block; }
+}

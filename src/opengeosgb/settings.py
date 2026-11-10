@@ -76,4 +76,6 @@ TEMPLATES[0].pop("APP_DIRS", None)
 
 PROJECT_FIXTURES = [
     # List project-related fixture files here, in the order they should be loaded.
+    # Placeholder GEOSGB_MENU (seção "Serviços legados do GeoSGB" da home)
+    # os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "fixtures/opengeosgb/opengeosgb-legacy-menu.json"),
 ]

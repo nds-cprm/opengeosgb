@@ -1,4 +1,5 @@
 {% extends 'geonode-mapstore-client/_geonode_config.html' %}
+{% load get_menu_json %}
 {% block override_local_config %}
 <script>
     window.__GEONODE_CONFIG__.overrideLocalConfig = function(localConfig, _) {
@@ -97,5 +98,158 @@
 
         return localConfig;
     };
+</script>
+<!-- 
+   Seção "Serviços legados do GeoSGB" na home, com os itens do placeholder GEOSGB_MENU (próprio do opengeosgb, para não
+   colidir com placeholders do GeoNode/MapStore, como o CARDS_MENU que o client 5.0.x não lê mais). CSS em
+   opengeosgb.css (.gn-geosgb-menu*) 
+-->
+{% get_menu_json 'GEOSGB_MENU' as GEOSGB_MENU %}
+{{ GEOSGB_MENU|json_script:"menu-GEOSGB_MENU" }}
+<script>
+    (function() {
+        var SECTION_ID = 'gn-geosgb-menu-section';
+        var SECTION_TITLE = 'Serviços legados do GeoSGB';
+
+        function readItems() {
+            try {
+                var node = document.getElementById('menu-GEOSGB_MENU');
+                var items = node && JSON.parse(node.textContent);
+                return Array.isArray(items) ? items : [];
+            } catch (e) {
+                return [];
+            }
+        }
+
+        function safeHref(href) {
+            return /^\s*javascript:/i.test(href || '') ? '#' : (href || '#');
+        }
+
+        function link(item, className) {
+            var a = document.createElement('a');
+            a.href = safeHref(item.href);
+            a.textContent = item.label || '';
+            if (className) { a.className = className; }
+            if (item.target === '_blank') {
+                a.target = '_blank';
+                a.rel = 'noopener noreferrer';
+            } else {
+                // links que abrem na mesma aba usam o estado "active" (negrito + sublinhado)
+                a.classList.add('active');
+            }
+            return a;
+        }
+
+        function el(tag, className) {
+            var node = document.createElement(tag);
+            if (className) { node.className = className; }
+            return node;
+        }
+
+        function buildInline(items) {
+            var ul = el('ul', 'gn-geosgb-menu-inline');
+            items.forEach(function(item) {
+                var li = el('li');
+                if (item.type === 'dropdown') {
+                    li.className = 'dropdown';
+                    var btn = el('button', 'btn btn-default dropdown-toggle');
+                    btn.type = 'button';
+                    btn.setAttribute('data-toggle', 'dropdown');
+                    btn.setAttribute('aria-haspopup', 'true');
+                    btn.appendChild(document.createTextNode((item.label || '') + ' '));
+                    btn.appendChild(el('span', 'caret'));
+                    var menu = el('ul', 'dropdown-menu');
+                    (item.items || []).forEach(function(child) {
+                        var cli = el('li');
+                        cli.appendChild(link(child));
+                        menu.appendChild(cli);
+                    });
+                    li.appendChild(btn);
+                    li.appendChild(menu);
+                } else {
+                    li.appendChild(link(item, 'btn btn-default'));
+                }
+                ul.appendChild(li);
+            });
+            return ul;
+        }
+
+        function buildCompact(items) {
+            var wrapper = el('div', 'dropdown gn-geosgb-menu-compact');
+            var btn = el('button', 'btn btn-default dropdown-toggle');
+            btn.type = 'button';
+            btn.setAttribute('data-toggle', 'dropdown');
+            btn.setAttribute('aria-haspopup', 'true');
+            btn.setAttribute('aria-label', 'Menu');
+            btn.appendChild(el('i', 'fa fa-bars'));
+            var menu = el('ul', 'dropdown-menu');
+
+            function divider() {
+                var li = el('li', 'divider');
+                li.setAttribute('role', 'separator');
+                menu.appendChild(li);
+            }
+
+            items.forEach(function(item) {
+                if (item.type === 'dropdown') {
+                    divider();
+                    var header = el('li');
+                    var title = el('span', 'dropdown-submenu-title');
+                    title.textContent = item.label || '';
+                    header.appendChild(title);
+                    menu.appendChild(header);
+                    divider();
+                    (item.items || []).forEach(function(child) {
+                        var cli = el('li');
+                        cli.appendChild(link(child));
+                        menu.appendChild(cli);
+                    });
+                    divider();
+                } else {
+                    var li = el('li');
+                    li.appendChild(link(item));
+                    menu.appendChild(li);
+                }
+            });
+            wrapper.appendChild(btn);
+            wrapper.appendChild(menu);
+            return wrapper;
+        }
+
+        function buildSection(items) {
+            // espelha o markup das grades da home: .ms-resources-container > div._relative._margin-auto,
+            // com o título no mesmo estilo do cabeçalho (.ms-resources-menu: _padding-tb-sm + fonte lg)
+            var section = el('section', 'ms-resources-container ms-main-colors _padding-lr-md gn-geosgb-menu-section');
+            section.id = SECTION_ID;
+            var inner = el('div', '_relative _margin-auto');
+            var header = el('div', '_padding-tb-sm');
+            var title = el('div', 'ms-text _font-size-lg');
+            title.textContent = SECTION_TITLE;
+            header.appendChild(title);
+            var bar = el('div', 'gn-geosgb-menu _padding-tb-sm');
+            bar.appendChild(buildInline(items));
+            bar.appendChild(buildCompact(items));
+            inner.appendChild(header);
+            inner.appendChild(bar);
+            section.appendChild(inner);
+            return section;
+        }
+
+        function mount() {
+            var items = readItems();
+            // só na página inicial: entre os destaques e a grade "todos os recursos"
+            var allResources = document.getElementById('gn-home-resources-grid');
+            if (!items.length || !allResources || !allResources.parentNode || document.getElementById(SECTION_ID)) {
+                return;
+            }
+            allResources.parentNode.insertBefore(buildSection(items), allResources);
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', mount);
+        } else {
+            mount();
+        }
+    })();
 </script>
 {% endblock %}
