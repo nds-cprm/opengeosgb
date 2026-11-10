@@ -32,10 +32,9 @@ COPY --chmod=755 src/celery-cmd /usr/bin/celery-cmd
 RUN python -m pip install -U pip setuptools wheel && \
     pip install --src /usr/src -r requirements.txt
 
-COPY src/ /usr/src/project
-
-# depois do COPY src/, que traz as permissões do host
-COPY --chmod=755 src/tasks.py src/entrypoint.sh /usr/src/project/
+# 755 em tudo: sem isso a cópia traz as permissões do host (700 no macOS), e um UID que não é
+# o dono (ex.: UID aleatório do OpenShift, grupo 0) não consegue ler manage.py nem o pacote
+COPY --chmod=755 src/ /usr/src/project
 
 RUN yes w | pip install -e .
 
