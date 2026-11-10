@@ -18,6 +18,8 @@
 #
 #########################################################################
 
+from django.conf import settings
+from django.contrib import admin
 from django.urls import path, re_path, include
 from django.contrib.flatpages.sitemaps import FlatPageSitemap
 from geonode.urls import urlpatterns, sitemaps
@@ -26,6 +28,13 @@ from . import views
 from .metadata.views import RegionsI18nAutocomplete, metadata_page, metadata_page_embed, scales_autocomplete
 
 sitemaps.update(page=FlatPageSitemap)
+
+# Login do admin com recaptcha (mesma flag do login principal)
+if settings.RECAPTCHA_ENABLED:
+    from .account.forms import AdminReCaptchaAuthenticationForm
+
+    admin.site.login_form = AdminReCaptchaAuthenticationForm
+    admin.site.login_template = "admin/login_recaptcha.html"
 
 # Página de visualização de metadados do opengeosgb: inserida no início para ter
 # prioridade sobre as rotas de mesmo nome do geonode-mapstore-client
