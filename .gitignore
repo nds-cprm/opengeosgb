@@ -88,3 +88,5 @@ secrets/
 # Apenas .env.sample pode ser rastreado
 .env*
 !.env.sample
+
+.DS_Store
