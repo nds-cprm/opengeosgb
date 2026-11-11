@@ -1,0 +1,459 @@
+[
+{
+    "model": "base.menuplaceholder",
+    "pk": 5,
+    "fields": {
+        "name": "GEOSGB_MENU"
+    }
+},
+{
+  "model": "base.menu",
+  "pk": 1,
+  "fields": {
+    "title": "Bases de Dados",
+    "placeholder": 5,
+    "order": 0
+  }
+},
+{
+  "model": "base.menu",
+  "pk": 3,
+  "fields": {
+    "title": "Serviços",
+    "placeholder": 5,
+    "order": 1
+  }
+},
+{
+  "model": "base.menu",
+  "pk": 4,
+  "fields": {
+    "title": "Acesso Corporativo",
+    "placeholder": 5,
+    "order": 4
+  }
+},
+{
+  "model": "base.menu",
+  "pk": 5,
+  "fields": {
+    "title": "Tutoriais",
+    "placeholder": 5,
+    "order": 3
+  }
+},
+{
+  "model": "base.menu",
+  "pk": 6,
+  "fields": {
+    "title": "Mapas Temáticos",
+    "placeholder": 5,
+    "order": 2
+  }
+},
+{
+  "model": "base.menu",
+  "pk": 7,
+  "fields": {
+    "title": "Serviços Remotos",
+    "placeholder": 5,
+    "order": 100
+  }
+},
+{
+  "model": "base.menuitem",
+  "pk": 1,
+  "fields": {
+    "title": "Afloramentos",
+    "menu": 1,
+    "order": 0,
+    "blank_target": true,
+    "url": "https://geoportal.sgb.gov.br/geosgb/?extent=-14345865.23%2C-6204183.6456%2C4439298.8414%2C2699201.4091%2C102100&showLayersEncoded=d3t%3Bhsx5%3Bd6t5%3B2lf9%3Bljbs%3Bj7k7%3Bbo6g%3Bgg82%3Bg74y%3Bf5r1%3Bhejf%3Bhdcr%3Bh13v%3Bh1i3%3Bjyaq%3Bm80b%3B4fbg%3Bhy39%3B37ye%3B58na%3B46hj%3B5kjd%3Bh0bl%3Bh2ap%3Bhfc1%3B3w46%3B7vov%3B2sfh%3Biu9v%3Bjkcj%3Bcel0%3B3x90%3B13d2%3B2a22%3B2may%3B1yzu%3B8zjc%3B8xk8%3B8kiw%3Bnmo%3Balc%3Bsdc%3B390t%3B3ey5%3B31wt%3B1a5y%3Bxx2%3B3hy%3B6oah%3B6ni1%3B6c1l%3B3tuv%3Bfor6%3Bfkeq%3Bfxg2%3Bj9bn%3Be805%3Be7lx%3Bejut%3Bel1h%3Bf8cl%3B9w48%3Ba4ew%3Bahg8%3Ba8d4%3Baswo%3B9syg%3B9iag%3B4v62%3B4m2y%3Bd1gk%3B85bb%3Btrd%3B63es%3B66ys%3B5upw%3B5qdg%3B6ksk%3B6ev8%3B6rwk%3B6x1g%3B7xs4%3B7v0k%3B29p2%3B2avq%3B2n4m%3B2mqe%3B1ymu%3B1wnq%3B1jme%3B1mdy%3Blna%3Bgie%3B29qs%3B2axg%3B2n6c%3B2ms4%3B1yok%3B1wpg%3Bbej9%3Bbexh%3Bci1h%3Bc505%3Bgv7t%3Bh6o9%3Bi87d%3Bhjpl%3Bh7gp%3Bhxjd%3Bhlah%3Bhv61%3Bjl6x%3Bluol%3Bm1ed%3B7c3d%3B727t%3B7egp%3B7p4p%3B82yh%3B8f7d%3B8261%3B7qpl%3B6pyx%3B6z21%3B6dq0%3B6m0o%3B6z20%3B6pyw%3B68zc%3B61h4%3B5p88%3B5vy0%3B7p4o%3B7ego%3B6doa%3B6lyy%3B6z0a%3B6px6%3B68xm"
+  }
+},
+{
+  "model": "base.menuitem",
+  "pk": 2,
+  "fields": {
+    "title": "Biblioteca Espectral",
+    "menu": 1,
+    "order": 1,
+    "blank_target": true,
+    "url": "https://geoportal.sgb.gov.br/geosgb/?extent=-12127417.1901%2C-5764892.6799%2C396025.5242%2C1279543.8469%2C102100&showLayersEncoded=hsx5%3Baflp%3Biphg%3Bj0ht%3Bmetl%3Bd6t5%3B2lf9%3Bljbs%3Bj7k7%3B3n5%3Bbo6g%3Bgg82%3Bg74y%3Bf5r1%3B6zgz%3B6plf%3B6ck3%3B6n83%3Bjyaq%3Bm80b%3B4fbg%3B4cjw%3B4pl8%3B4rkc%3B5fnw%3B5g24%3B53t8%3Bhy39%3Bi7yt%3Bhvpx%3Bhl1x%3Bh785%3Bguz9%3Bh80l%3Bhjh1%3Bik7p%3Bib4l%3B46hj%3B5kjd%3Bjzu1%3Bh0bl%3Bh2ap%3Bhfc1%3B3w46%3B2sfh%3Biu9v%3Bjkcj%3Bcel0%3B3x90%3B13d2%3Bbovn%3Bf5hu%3Beoia%3B2a22%3B2may%3B1yzu%3B8zjc%3B8xk8%3B8kiw%3Bnmo%3Balc%3Bsdc%3B390t%3B3ey5%3B31wt%3B1a5y%3Bxx2%3B3hy%3B6oah%3B6ni1%3B6c1l%3Bfor6%3Bfkeq%3Bfxg2%3Be805%3Be7lx%3Bejut%3Bel1h%3Bf8cl%3B9w48%3Ba4ew%3Bahg8%3Ba8d4%3Baswo%3B9syg%3B9iag%3B4v62%3B4m2y%3B8zc8%3B8xd4%3B9c64%3Bd1gk%3B85bb%3Btrd%3B63es%3B66ys%3B5upw%3B5qdg%3B6ksk%3B6ev8%3B6rwk%3B6x1g%3B7xs4%3B7v0k%3B29p2%3B2avq%3B2n4m%3B2mqe%3B1ymu%3B1wnq%3B1jme%3B1mdy%3Blna%3Bgie%3B29qs%3B2axg%3B2n6c%3B2ms4%3B1yok%3B1wpg%3Bbej9%3Bbexh%3Bci1h%3Bc505%3Bgv7t%3Bh6o9%3Bi87d%3Bhjpl%3Bh7gp%3Bhxjd%3Bhlah%3Bhv61%3Bjl6x%3Bluol%3Bm1ed%3B7c3d%3B727t%3B7egp%3B7p4p%3B82yh%3B8f7d%3B8261%3B7qpl%3B6pyx%3B6z21%3B6dq0%3B6m0o%3B6z20%3B6pyw%3B68zc%3B61h4%3B5p88%3B5vy0%3B7p4o%3B7ego%3B6doa%3B6lyy%3B6z0a%3B6px6%3B68xm"
+  }
+},
+{
+  "model": "base.menuitem",
+  "pk": 4,
+  "fields": {
+    "title": "SCDI",
+    "menu": 3,
+    "order": 1,
+    "blank_target": true,
+    "url": "https://www.sgb.gov.br/scdi"
+  }
+},
+{
+  "model": "base.menuitem",
+  "pk": 5,
+  "fields": {
+    "title": "Geologia.GIS",
+    "menu": 6,
+    "order": 0,
+    "blank_target": true,
+    "url": "https://geoportal.sgb.gov.br/geosgb/"
+  }
+},
+{
+  "model": "base.menuitem",
+  "pk": 6,
+  "fields": {
+    "title": "Cadastro de Dados",
+    "menu": 4,
+    "order": 0,
+    "blank_target": true,
+    "url": "https://geosgb.sgb.gov.br/geobank"
+  }
+},
+{
+  "model": "base.menuitem",
+  "pk": 7,
+  "fields": {
+    "title": "Acompanhamento Gerencial",
+    "menu": 4,
+    "order": 1,
+    "blank_target": true,
+    "url": "https://geosgb.sgb.gov.br/agerencial"
+  }
+},
+{
+  "model": "base.menuitem",
+  "pk": 8,
+  "fields": {
+    "title": "Simbologia GeoSGB",
+    "menu": 5,
+    "order": 0,
+    "blank_target": false,
+    "url": "/pages/simbologia/"
+  }
+},
+{
+  "model": "base.menuitem",
+  "pk": 9,
+  "fields": {
+    "title": "Manuais",
+    "menu": 5,
+    "order": 1,
+    "blank_target": false,
+    "url": "/pages/manuais/"
+  }
+},
+{
+  "model": "base.menuitem",
+  "pk": 10,
+  "fields": {
+    "title": "Sistema de Controle de Publicações",
+    "menu": 4,
+    "order": 2,
+    "blank_target": true,
+    "url": "https://geosgb.sgb.gov.br/controlePublicacao"
+  }
+},
+{
+  "model": "base.menuitem",
+  "pk": 11,
+  "fields": {
+    "title": "Sistema FCampo",
+    "menu": 4,
+    "order": 3,
+    "blank_target": true,
+    "url": "http://novofcampo.cprm.gov.br/"
+  }
+},
+{
+  "model": "base.menuitem",
+  "pk": 12,
+  "fields": {
+    "title": "Prevenção de Desastres",
+    "menu": 6,
+    "order": 1,
+    "blank_target": true,
+    "url": "https://geoportal.sgb.gov.br/desastres/"
+  }
+},
+{
+  "model": "base.menuitem",
+  "pk": 13,
+  "fields": {
+    "title": "Sensoriamento Remoto e Geofísica",
+    "menu": 6,
+    "order": 2,
+    "blank_target": true,
+    "url": "https://geoportal.sgb.gov.br/geofisica/"
+  }
+},
+{
+  "model": "base.menuitem",
+  "pk": 14,
+  "fields": {
+    "title": "Downloads",
+    "menu": 3,
+    "order": 2,
+    "blank_target": true,
+    "url": "https://geosgb.sgb.gov.br/geosgb/downloads.html"
+  }
+},
+{
+  "model": "base.menuitem",
+  "pk": 15,
+  "fields": {
+    "title": "Dados Hidrometeorológicos",
+    "menu": 3,
+    "order": 3,
+    "blank_target": true,
+    "url": "https://geosgb.sgb.gov.br/geosgb/dados_hidro.html"
+  }
+},
+{
+  "model": "base.menuitem",
+  "pk": 16,
+  "fields": {
+    "title": "Repositório RiGEO",
+    "menu": 3,
+    "order": 4,
+    "blank_target": true,
+    "url": "https://rigeo.sgb.gov.br/"
+  }
+},
+{
+  "model": "base.menuitem",
+  "pk": 17,
+  "fields": {
+    "title": "Serviços OGC SGB",
+    "menu": 7,
+    "order": 0,
+    "blank_target": false,
+    "url": "/pages/servicos-ogc/"
+  }
+},
+{
+  "model": "base.menuitem",
+  "pk": 18,
+  "fields": {
+    "title": "OneGeology",
+    "menu": 7,
+    "order": 3,
+    "blank_target": false,
+    "url": "/pages/onegeology/"
+  }
+},
+{
+  "model": "base.menuitem",
+  "pk": 19,
+  "fields": {
+    "title": "Catálogo de Metadados INDE",
+    "menu": 7,
+    "order": 1,
+    "blank_target": true,
+    "url": "https://metadados.inde.gov.br/geonetwork"
+  }
+},
+{
+  "model": "base.menuitem",
+  "pk": 20,
+  "fields": {
+    "title": "Visualizador INDE",
+    "menu": 7,
+    "order": 2,
+    "blank_target": true,
+    "url": "https://visualizador.inde.gov.br/"
+  }
+},
+{
+  "model": "base.menuitem",
+  "pk": 21,
+  "fields": {
+    "title": "Geologia Médica",
+    "menu": 6,
+    "order": 3,
+    "blank_target": true,
+    "url": "https://geoportal.sgb.gov.br/portal/apps/webappviewer/index.html?id=30c27a5e48dd4dd3bc0f77ffb8a0663f"
+  }
+},
+{
+  "model": "base.menuitem",
+  "pk": 22,
+  "fields": {
+    "title": "Projeto Diamante Brasil",
+    "menu": 6,
+    "order": 4,
+    "blank_target": true,
+    "url": "https://geoportal.sgb.gov.br/diamante/"
+  }
+},
+{
+  "model": "base.menuitem",
+  "pk": 23,
+  "fields": {
+    "title": "Avaliação do Potencial do Lítio no Brasil",
+    "menu": 6,
+    "order": 5,
+    "blank_target": true,
+    "url": "https://geoportal.sgb.gov.br/litio/"
+  }
+},
+{
+  "model": "base.menuitem",
+  "pk": 24,
+  "fields": {
+    "title": "Aplicativo Aflora",
+    "menu": 3,
+    "order": 5,
+    "blank_target": true,
+    "url": "https://geosgb.sgb.gov.br/geosgb/media/aplicativo_aflora.zip"
+  }
+},
+{
+  "model": "base.menuitem",
+  "pk": 25,
+  "fields": {
+    "title": "Acervo de Litotecas",
+    "menu": 6,
+    "order": 6,
+    "blank_target": true,
+    "url": "https://geoportal.sgb.gov.br/litoteca/"
+  }
+},
+{
+  "model": "base.menuitem",
+  "pk": 26,
+  "fields": {
+    "title": "Léxico Estratigráfico do Brasil",
+    "menu": 3,
+    "order": 6,
+    "blank_target": true,
+    "url": "https://www.sgb.gov.br/lexico/indice.htm"
+  }
+},
+{
+  "model": "base.menuitem",
+  "pk": 27,
+  "fields": {
+    "title": "Catálogo Pronasolos",
+    "menu": 3,
+    "order": 0,
+    "blank_target": false,
+    "url": "/pages/catalogo-pronasolos/"
+  }
+},
+{
+  "model": "base.menuitem",
+  "pk": 28,
+  "fields": {
+    "title": "Geocronologia",
+    "menu": 1,
+    "order": 2,
+    "blank_target": true,
+    "url": "https://geoportal.sgb.gov.br/geosgb/?extent=-14345865.23%2C-6204183.6456%2C4439298.8414%2C2699201.4091%2C102100&showLayersEncoded=hsx5%3Bd6t5%3B8qt1%3B2lf9%3Bljbs%3Bj7k7%3Bbo6g%3Bgg82%3Bg74y%3Bf5r1%3Bhejf%3Bhdcr%3Bh13v%3Bh1i3%3Bjyaq%3Bm80b%3B4fbg%3Bhy39%3B37ye%3B58na%3B46hj%3B5kjd%3Bh0bl%3Bh2ap%3Bhfc1%3B3w46%3B7vov%3B2sfh%3Biu9v%3Bjkcj%3Bcel0%3B3x90%3B13d2%3B2a22%3B2may%3B1yzu%3B8zjc%3B8xk8%3B8kiw%3Bnmo%3Balc%3Bsdc%3B390t%3B3ey5%3B31wt%3B1a5y%3Bxx2%3B3hy%3B6oah%3B6ni1%3B6c1l%3B3tuv%3Bfor6%3Bfkeq%3Bfxg2%3Bj9bn%3Be805%3Be7lx%3Bejut%3Bel1h%3Bf8cl%3B9w48%3Ba4ew%3Bahg8%3Ba8d4%3Baswo%3B9syg%3B9iag%3B4v62%3B4m2y%3Bd1gk%3B85bb%3Btrd%3B63es%3B66ys%3B5upw%3B5qdg%3B6ksk%3B6ev8%3B6rwk%3B6x1g%3B7xs4%3B7v0k%3B29p2%3B2avq%3B2n4m%3B2mqe%3B1ymu%3B1wnq%3B1jme%3B1mdy%3Blna%3Bgie%3B29qs%3B2axg%3B2n6c%3B2ms4%3B1yok%3B1wpg%3Bbej9%3Bbexh%3Bci1h%3Bc505%3Bgv7t%3Bh6o9%3Bi87d%3Bhjpl%3Bh7gp%3Bhxjd%3Bhlah%3Bhv61%3Bjl6x%3Bluol%3Bm1ed%3B7c3d%3B727t%3B7egp%3B7p4p%3B82yh%3B8f7d%3B8261%3B7qpl%3B6pyx%3B6z21%3B6dq0%3B6m0o%3B6z20%3B6pyw%3B68zc%3B61h4%3B5p88%3B5vy0%3B7p4o%3B7ego%3B6doa%3B6lyy%3B6z0a%3B6px6%3B68xm"
+  }
+},
+{
+  "model": "base.menuitem",
+  "pk": 29,
+  "fields": {
+    "title": "Geodiversidade",
+    "menu": 1,
+    "order": 3,
+    "blank_target": true,
+    "url": "https://geoportal.sgb.gov.br/geosgb/?extent=-14345865.23%2C-6204183.6456%2C4439298.8414%2C2699201.4091%2C102100&showLayersEncoded=hsx5%3Bd6t5%3B2lf9%3Bljbs%3Bj7k7%3Bbo6g%3Bgg82%3Bg74y%3Bf5r1%3Bhejf%3Bhdcr%3Bh13v%3Bh1i3%3Bjyaq%3Bm80b%3B4fbg%3Bhy39%3B37ye%3B58na%3B46hj%3B5kjd%3Bh0bl%3Bh2ap%3Bhfc1%3B3w46%3B7vov%3B2sfh%3Biu9v%3Bjkcj%3Bcel0%3B3x90%3B13d2%3B2a22%3B2may%3B1yzu%3B8zjc%3B8xk8%3B8kiw%3Bnmo%3Balc%3Bsdc%3B390t%3B3ey5%3B31wt%3B1a5y%3Bxx2%3B3hy%3B6oah%3B6ni1%3B6c1l%3B3tuv%3Bfor6%3Bfkeq%3Bfxg2%3Bj9bn%3Be805%3Be7lx%3Bejut%3Bel1h%3Bf8cl%3B9w48%3Ba4ew%3Bahg8%3Ba8d4%3Baswo%3B9syg%3B9iag%3B4v62%3B4m2y%3Bd1gk%3B85bb%3Bhtzi%3Btrd%3B63es%3B66ys%3B5upw%3B5qdg%3B6ksk%3B6ev8%3B6rwk%3B6x1g%3B7xs4%3B7v0k%3B29p2%3B2avq%3B2n4m%3B2mqe%3B1ymu%3B1wnq%3B1jme%3B1mdy%3Blna%3Bgie%3B29qs%3B2axg%3B2n6c%3B2ms4%3B1yok%3B1wpg%3Bbej9%3Bbexh%3Bci1h%3Bc505%3Bgv7t%3Bh6o9%3Bi87d%3Bhjpl%3Bh7gp%3Bhxjd%3Bhlah%3Bhv61%3Bjl6x%3Bluol%3Bm1ed%3B7c3d%3B727t%3B7egp%3B7p4p%3B82yh%3B8f7d%3B8261%3B7qpl%3B6pyx%3B6z21%3B6dq0%3B6m0o%3B6z20%3B6pyw%3B68zc%3B61h4%3B5p88%3B5vy0%3B7p4o%3B7ego%3B6doa%3B6lyy%3B6z0a%3B6px6%3B68xm"
+  }
+},
+{
+  "model": "base.menuitem",
+  "pk": 30,
+  "fields": {
+    "title": "Geoquímica",
+    "menu": 1,
+    "order": 4,
+    "blank_target": true,
+    "url": "https://geoportal.sgb.gov.br/geosgb/?extent=-11126949.0948%2C-3934309.6536%2C-1734367.0591%2C517382.8737%2C102100&showLayersEncoded=gveh%3Bgb3e%3Bcmnd%3B2be1%3Bhsx5%3Bd6t5%3B2lf9%3Bljbs%3Bj7k7%3Bbo6g%3Bgg82%3Bg74y%3Bf5r1%3Bhejf%3Bhdcr%3Bh13v%3Bh1i3%3Bjyaq%3Bm80b%3B4fbg%3Bhy39%3B37ye%3B58na%3B46hj%3B5kjd%3Bh0bl%3Bh2ap%3Bhfc1%3B3w46%3B7vov%3B2sfh%3Biu9v%3Bjkcj%3Bcel0%3B3x90%3B13d2%3B2a22%3B2may%3B1yzu%3B8zjc%3B8xk8%3B8kiw%3Bnmo%3Balc%3Bsdc%3B390t%3B3ey5%3B31wt%3B1a5y%3Bxx2%3B3hy%3B6oah%3B6ni1%3B6c1l%3B3tuv%3Bfor6%3Bfkeq%3Bfxg2%3Bj9bn%3Be805%3Be7lx%3Bejut%3Bel1h%3Bf8cl%3B9w48%3Ba4ew%3Bahg8%3Ba8d4%3Baswo%3B9syg%3B9iag%3B4v62%3B4m2y%3Bd1gk%3B85bb%3Btrd%3B63es%3B66ys%3B5upw%3B5qdg%3B6ksk%3B6ev8%3B6rwk%3B6x1g%3B7xs4%3B7v0k%3B29p2%3B2avq%3B2n4m%3B2mqe%3B1ymu%3B1wnq%3B1jme%3B1mdy%3Blna%3Bgie%3B29qs%3B2axg%3B2n6c%3B2ms4%3B1yok%3B1wpg%3Bbej9%3Bbexh%3Bci1h%3Bc505%3Bgv7t%3Bh6o9%3Bi87d%3Bhjpl%3Bh7gp%3Bhxjd%3Bhlah%3Bhv61%3Bjl6x%3Bluol%3Bm1ed%3B7c3d%3B727t%3B7egp%3B7p4p%3B82yh%3B8f7d%3B8261%3B7qpl%3B6pyx%3B6z21%3B6dq0%3B6m0o%3B6z20%3B6pyw%3B68zc%3B61h4%3B5p88%3B5vy0%3B7p4o%3B7ego%3B6doa%3B6lyy%3B6z0a%3B6px6%3B68xm"
+  }
+},
+{
+  "model": "base.menuitem",
+  "pk": 31,
+  "fields": {
+    "title": "Litoestratigrafia Mapa",
+    "menu": 1,
+    "order": 5,
+    "blank_target": true,
+    "url": "https://geoportal.sgb.gov.br/geosgb/?extent=-11126949.0948%2C-3934309.6536%2C-1734367.0591%2C517382.8737%2C102100&showLayersEncoded=hsx5%3Bd6t5%3B2lf9%3Bljbs%3Bj7k7%3Bbo6g%3Bgg82%3Bg74y%3Bf5r1%3Bhejf%3Bhdcr%3Bh13v%3Bh1i3%3Bjyaq%3Bm80b%3B4fbg%3Bhy39%3B37ye%3B58na%3B46hj%3B5kjd%3Bh0bl%3Bh2ap%3Bhfc1%3B3w46%3B7vov%3B2sfh%3Biu9v%3Bjkcj%3Bcel0%3B3x90%3B13d2%3B2a22%3B2may%3B1yzu%3B8zjc%3B8xk8%3B8kiw%3Bnmo%3Balc%3Bsdc%3B390t%3B3ey5%3B31wt%3B1a5y%3Bxx2%3B3hy%3B6oah%3B6ni1%3B6c1l%3B3tuv%3Bfor6%3Bfkeq%3Bfxg2%3Bj9bn%3Be805%3Be7lx%3Bejut%3Bel1h%3Bf8cl%3B9w48%3Ba4ew%3Bahg8%3Ba8d4%3Baswo%3B9syg%3B9iag%3B4v62%3B4m2y%3Bd1gk%3B85bb%3Bf7g%3Btrd%3B63es%3B66ys%3B5upw%3B5qdg%3B6ksk%3B6ev8%3B6rwk%3B6x1g%3B7xs4%3B7v0k%3B29p2%3B2avq%3B2n4m%3B2mqe%3B1ymu%3B1wnq%3B1jme%3B1mdy%3Blna%3Bgie%3B29qs%3B2axg%3B2n6c%3B2ms4%3B1yok%3B1wpg%3Bbej9%3Bbexh%3Bci1h%3Bc505%3Bgv7t%3Bh6o9%3Bi87d%3Bhjpl%3Bh7gp%3Bhxjd%3Bhlah%3Bhv61%3Bjl6x%3Bluol%3Bm1ed%3B7c3d%3B727t%3B7egp%3B7p4p%3B82yh%3B8f7d%3B8261%3B7qpl%3B6pyx%3B6z21%3B6dq0%3B6m0o%3B6z20%3B6pyw%3B68zc%3B61h4%3B5p88%3B5vy0%3B7p4o%3B7ego%3B6doa%3B6lyy%3B6z0a%3B6px6%3B68xm"
+  }
+},
+{
+  "model": "base.menuitem",
+  "pk": 32,
+  "fields": {
+    "title": "Litoestratigrafia Textual",
+    "menu": 1,
+    "order": 6,
+    "blank_target": true,
+    "url": "https://geosgb.sgb.gov.br/geobank/index_consulta.php"
+  }
+},
+{
+  "model": "base.menuitem",
+  "pk": 33,
+  "fields": {
+    "title": "Paleontologia",
+    "menu": 1,
+    "order": 7,
+    "blank_target": true,
+    "url": "https://geoportal.sgb.gov.br/geosgb/?extent=-11126949.0948%2C-3934309.6536%2C-1734367.0591%2C517382.8737%2C102100&showLayersEncoded=hsx5%3Bd6t5%3B2lf9%3Bljbs%3Bga0l%3Bj7k7%3Bbo6g%3Bgg82%3Bg74y%3Bf5r1%3Bhejf%3Bhdcr%3Bh13v%3Bh1i3%3Bjyaq%3Bm80b%3B4fbg%3Bhy39%3B37ye%3B58na%3B46hj%3B5kjd%3Bh0bl%3Bh2ap%3Bhfc1%3B3w46%3B7vov%3B2sfh%3Biu9v%3Bjkcj%3Bcel0%3B3x90%3B13d2%3B2a22%3B2may%3B1yzu%3B8zjc%3B8xk8%3B8kiw%3Bnmo%3Balc%3Bsdc%3B390t%3B3ey5%3B31wt%3B1a5y%3Bxx2%3B3hy%3B6oah%3B6ni1%3B6c1l%3B3tuv%3Bfor6%3Bfkeq%3Bfxg2%3Bj9bn%3Be805%3Be7lx%3Bejut%3Bel1h%3Bf8cl%3B9w48%3Ba4ew%3Bahg8%3Ba8d4%3Baswo%3B9syg%3B9iag%3B4v62%3B4m2y%3Bd1gk%3B85bb%3Btrd%3B63es%3B66ys%3B5upw%3B5qdg%3B6ksk%3B6ev8%3B6rwk%3B6x1g%3B7xs4%3B7v0k%3B29p2%3B2avq%3B2n4m%3B2mqe%3B1ymu%3B1wnq%3B1jme%3B1mdy%3Blna%3Bgie%3B29qs%3B2axg%3B2n6c%3B2ms4%3B1yok%3B1wpg%3Bbej9%3Bbexh%3Bci1h%3Bc505%3Bgv7t%3Bh6o9%3Bi87d%3Bhjpl%3Bh7gp%3Bhxjd%3Bhlah%3Bhv61%3Bjl6x%3Bluol%3Bm1ed%3B7c3d%3B727t%3B7egp%3B7p4p%3B82yh%3B8f7d%3B8261%3B7qpl%3B6pyx%3B6z21%3B6dq0%3B6m0o%3B6z20%3B6pyw%3B68zc%3B61h4%3B5p88%3B5vy0%3B7p4o%3B7ego%3B6doa%3B6lyy%3B6z0a%3B6px6%3B68xm"
+  }
+},
+{
+  "model": "base.menuitem",
+  "pk": 34,
+  "fields": {
+    "title": "Petrografia",
+    "menu": 1,
+    "order": 8,
+    "blank_target": true,
+    "url": "https://geoportal.sgb.gov.br/geosgb/?extent=-11126949.0948%2C-3934309.6536%2C-1734367.0591%2C517382.8737%2C102100&showLayersEncoded=jz6%3Bhsx5%3Bd6t5%3B2lf9%3Bljbs%3Bj7k7%3Bbo6g%3Bgg82%3Bg74y%3Bf5r1%3Bhejf%3Bhdcr%3Bh13v%3Bh1i3%3Bjyaq%3Bm80b%3B4fbg%3Bhy39%3B37ye%3B58na%3B46hj%3B5kjd%3Bh0bl%3Bh2ap%3Bhfc1%3B3w46%3B7vov%3B2sfh%3Biu9v%3Bjkcj%3Bcel0%3B3x90%3B13d2%3B2a22%3B2may%3B1yzu%3B8zjc%3B8xk8%3B8kiw%3Bnmo%3Balc%3Bsdc%3B390t%3B3ey5%3B31wt%3B1a5y%3Bxx2%3B3hy%3B6oah%3B6ni1%3B6c1l%3B3tuv%3Bfor6%3Bfkeq%3Bfxg2%3Bj9bn%3Be805%3Be7lx%3Bejut%3Bel1h%3Bf8cl%3B9w48%3Ba4ew%3Bahg8%3Ba8d4%3Baswo%3B9syg%3B9iag%3B4v62%3B4m2y%3Bd1gk%3B85bb%3Btrd%3B63es%3B66ys%3B5upw%3B5qdg%3B6ksk%3B6ev8%3B6rwk%3B6x1g%3B7xs4%3B7v0k%3B29p2%3B2avq%3B2n4m%3B2mqe%3B1ymu%3B1wnq%3B1jme%3B1mdy%3Blna%3Bgie%3B29qs%3B2axg%3B2n6c%3B2ms4%3B1yok%3B1wpg%3Bbej9%3Bbexh%3Bci1h%3Bc505%3Bgv7t%3Bh6o9%3Bi87d%3Bhjpl%3Bh7gp%3Bhxjd%3Bhlah%3Bhv61%3Bjl6x%3Bluol%3Bm1ed%3B7c3d%3B727t%3B7egp%3B7p4p%3B82yh%3B8f7d%3B8261%3B7qpl%3B6pyx%3B6z21%3B6dq0%3B6m0o%3B6z20%3B6pyw%3B68zc%3B61h4%3B5p88%3B5vy0%3B7p4o%3B7ego%3B6doa%3B6lyy%3B6z0a%3B6px6%3B68xm"
+  }
+},
+{
+  "model": "base.menuitem",
+  "pk": 35,
+  "fields": {
+    "title": "Projetos",
+    "menu": 1,
+    "order": 9,
+    "blank_target": true,
+    "url": "https://geoportal.sgb.gov.br/geosgb/?extent=-11126949.0948%2C-3934309.6536%2C-1734367.0591%2C517382.8737%2C102100&showLayersEncoded=hsx5%3Bd6t5%3B2lf9%3Bljbs%3Bj7k7%3Bbo6g%3Bgg82%3Bg74y%3Basyw%3Bf5r1%3Bhejf%3Bhdcr%3Bh13v%3Bh1i3%3Bjyaq%3Bm80b%3B4fbg%3Bhy39%3B37ye%3B58na%3B46hj%3B5kjd%3Bh0bl%3Bh2ap%3Bhfc1%3B3w46%3B7vov%3B2sfh%3Biu9v%3Bjkcj%3Bcel0%3B3x90%3B13d2%3B2a22%3B2may%3B1yzu%3B8zjc%3B8xk8%3B8kiw%3Bnmo%3Balc%3Bsdc%3B390t%3B3ey5%3B31wt%3B1a5y%3Bxx2%3B3hy%3B6oah%3B6ni1%3B6c1l%3B3tuv%3Bfor6%3Bfkeq%3Bfxg2%3Bj9bn%3Be805%3Be7lx%3Bejut%3Bel1h%3Bf8cl%3B9w48%3Ba4ew%3Bahg8%3Ba8d4%3Baswo%3B9syg%3B9iag%3B4v62%3B4m2y%3Bd1gk%3B85bb%3Btrd%3B63es%3B66ys%3B5upw%3B5qdg%3B6ksk%3B6ev8%3B6rwk%3B6x1g%3B7xs4%3B7v0k%3B29p2%3B2avq%3B2n4m%3B2mqe%3B1ymu%3B1wnq%3B1jme%3B1mdy%3Blna%3Bgie%3B29qs%3B2axg%3B2n6c%3B2ms4%3B1yok%3B1wpg%3Bbej9%3Bbexh%3Bci1h%3Bc505%3Bgv7t%3Bh6o9%3Bi87d%3Bhjpl%3Bh7gp%3Bhxjd%3Bhlah%3Bhv61%3Bjl6x%3Bluol%3Bm1ed%3B7c3d%3B727t%3B7egp%3B7p4p%3B82yh%3B8f7d%3B8261%3B7qpl%3B6pyx%3B6z21%3B6dq0%3B6m0o%3B6z20%3B6pyw%3B68zc%3B61h4%3B5p88%3B5vy0%3B7p4o%3B7ego%3B6doa%3B6lyy%3B6z0a%3B6px6%3B68xm"
+  }
+},
+{
+  "model": "base.menuitem",
+  "pk": 36,
+  "fields": {
+    "title": "Projetos de Aerogeofísica",
+    "menu": 1,
+    "order": 10,
+    "blank_target": true,
+    "url": "https://geoportal.sgb.gov.br/geosgb/?extent=-11126949.0948%2C-3934309.6536%2C-1734367.0591%2C517382.8737%2C102100&showLayersEncoded=hsx5%3Bd6t5%3B2lf9%3Bljbs%3Bj7k7%3Bbo6g%3Bgg82%3Bg74y%3Bf5r1%3B65an%3Bhejf%3Bhdcr%3Bh13v%3Bh1i3%3Bjyaq%3Bm80b%3B4fbg%3Bhy39%3B37ye%3B58na%3B46hj%3B5kjd%3Bh0bl%3Bh2ap%3Bhfc1%3B3w46%3B7vov%3B2sfh%3Biu9v%3Bjkcj%3Bcel0%3B3x90%3B13d2%3B2a22%3B2may%3B1yzu%3B8zjc%3B8xk8%3B8kiw%3Bnmo%3Balc%3Bsdc%3B390t%3B3ey5%3B31wt%3B1a5y%3Bxx2%3B3hy%3B6oah%3B6ni1%3B6c1l%3B3tuv%3Bfor6%3Bfkeq%3Bfxg2%3Bj9bn%3Be805%3Be7lx%3Bejut%3Bel1h%3Bf8cl%3B9w48%3Ba4ew%3Bahg8%3Ba8d4%3Baswo%3B9syg%3B9iag%3B4v62%3B4m2y%3Bd1gk%3B85bb%3Btrd%3B63es%3B66ys%3B5upw%3B5qdg%3B6ksk%3B6ev8%3B6rwk%3B6x1g%3B7xs4%3B7v0k%3B29p2%3B2avq%3B2n4m%3B2mqe%3B1ymu%3B1wnq%3B1jme%3B1mdy%3Blna%3Bgie%3B29qs%3B2axg%3B2n6c%3B2ms4%3B1yok%3B1wpg%3Bbej9%3Bbexh%3Bci1h%3Bc505%3Bgv7t%3Bh6o9%3Bi87d%3Bhjpl%3Bh7gp%3Bhxjd%3Bhlah%3Bhv61%3Bjl6x%3Bluol%3Bm1ed%3B7c3d%3B727t%3B7egp%3B7p4p%3B82yh%3B8f7d%3B8261%3B7qpl%3B6pyx%3B6z21%3B6dq0%3B6m0o%3B6z20%3B6pyw%3B68zc%3B61h4%3B5p88%3B5vy0%3B7p4o%3B7ego%3B6doa%3B6lyy%3B6z0a%3B6px6%3B68xm"
+  }
+},
+{
+  "model": "base.menuitem",
+  "pk": 37,
+  "fields": {
+    "title": "Recursos Minerais",
+    "menu": 1,
+    "order": 11,
+    "blank_target": true,
+    "url": "https://geoportal.sgb.gov.br/geosgb/?extent=-11126949.0948%2C-3934309.6536%2C-1734367.0591%2C517382.8737%2C102100&showLayersEncoded=hsx5%3B7wwt%3Bd6t5%3B2lf9%3Bljbs%3Bj7k7%3Bbo6g%3Bgg82%3Bg74y%3Bf5r1%3Bhejf%3Bhdcr%3Bh13v%3Bh1i3%3Bjyaq%3Bm80b%3B4fbg%3Bhy39%3B37ye%3B58na%3B46hj%3B5kjd%3Bh0bl%3Bh2ap%3Bhfc1%3B3w46%3B7vov%3B2sfh%3Biu9v%3Bjkcj%3Bcel0%3B3x90%3B13d2%3B2a22%3B2may%3B1yzu%3B8zjc%3B8xk8%3B8kiw%3Bnmo%3Balc%3Bsdc%3B390t%3B3ey5%3B31wt%3B1a5y%3Bxx2%3B3hy%3B6oah%3B6ni1%3B6c1l%3B3tuv%3Bfor6%3Bfkeq%3Bfxg2%3Bj9bn%3Be805%3Be7lx%3Bejut%3Bel1h%3Bf8cl%3B9w48%3Ba4ew%3Bahg8%3Ba8d4%3Baswo%3B9syg%3B9iag%3B4v62%3B4m2y%3Bd1gk%3B85bb%3Btrd%3B63es%3B66ys%3B5upw%3B5qdg%3B6ksk%3B6ev8%3B6rwk%3B6x1g%3B7xs4%3B7v0k%3B29p2%3B2avq%3B2n4m%3B2mqe%3B1ymu%3B1wnq%3B1jme%3B1mdy%3Blna%3Bgie%3B29qs%3B2axg%3B2n6c%3B2ms4%3B1yok%3B1wpg%3Bbej9%3Bbexh%3Bci1h%3Bc505%3Bgv7t%3Bh6o9%3Bi87d%3Bhjpl%3Bh7gp%3Bhxjd%3Bhlah%3Bhv61%3Bjl6x%3Bluol%3Bm1ed%3B7c3d%3B727t%3B7egp%3B7p4p%3B82yh%3B8f7d%3B8261%3B7qpl%3B6pyx%3B6z21%3B6dq0%3B6m0o%3B6z20%3B6pyw%3B68zc%3B61h4%3B5p88%3B5vy0%3B7p4o%3B7ego%3B6doa%3B6lyy%3B6z0a%3B6px6%3B68xm"
+  }
+}
+]
