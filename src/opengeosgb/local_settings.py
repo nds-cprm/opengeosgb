@@ -16,7 +16,9 @@ if "django.contrib.flatpages" in INSTALLED_APPS:
 
 # Internationalization
 # geonode.settings lines 1551-1565
-LANGUAGES = ast.literal_eval(os.getenv("LANGUAGES", MAPSTORE_DEFAULT_LANGUAGES))
+# A env LANGUAGES é texto (tupla Python); sem ela, vale a tupla MAPSTORE_DEFAULT_LANGUAGES, que não
+# passa pelo literal_eval (ele só aceita texto e dava ValueError com a variável ausente)
+LANGUAGES = ast.literal_eval(os.environ["LANGUAGES"]) if os.getenv("LANGUAGES") else MAPSTORE_DEFAULT_LANGUAGES
 
 # Recaptcha
 # RECAPTCHA_ENABLED = ast.literal_eval(os.environ.get("RECAPTCHA_ENABLED", "False"))
@@ -124,7 +126,29 @@ PYCSW["CONFIGURATION"]["metadata"]["contact"] = {
     "role": "pointOfContact",
 }
 
-# CATALOGUE_METADATA_TEMPLATE = "catalogue/full_metadata.xml"
+# Catálogo (app opengeosgb.catalogue): backend, formato e templates dos metadados
+INSTALLED_APPS += ("opengeosgb.catalogue.apps.CatalogueConfig",)
+
+CATALOGUE["default"]["ENGINE"] = os.getenv("CATALOGUE_ENGINE", "opengeosgb.catalogue.backends.pycsw_local")
+
+# Formato gravado em metadata_xml e devolvido pelo catálogo: ISO19115-3_2018 (padrão) ou ISO (19139).
+# Depois de trocar, rode `python manage.py regenerate_xml` em todos os recursos.
+from opengeosgb.catalogue.constants import ISO19115_3, METADATA_TEMPLATES  # noqa: E402
+
+CATALOGUE_DEFAULT_FORMAT = os.getenv("CATALOGUE_DEFAULT_FORMAT", ISO19115_3)
+
+CATALOG_METADATA_TEMPLATE = os.getenv(
+    "CATALOG_METADATA_TEMPLATE", METADATA_TEMPLATES.get(CATALOGUE_DEFAULT_FORMAT, METADATA_TEMPLATES[ISO19115_3])
+)
+
+# GetDomain devolve a lista de valores com contagem (o padrão do pycsw_local do GeoNode é
+# "range", só mínimo e máximo)
+PYCSW["CONFIGURATION"]["server"]["domainquerytype"] = os.getenv("PYCSW_DOMAINQUERYTYPE", "list")
+
+# CSW (opengeosgb/catalogue/filters.py): só entrega datasets aprovados, publicados e com
+# completude de metadados acima deste percentual
+CSW_MIN_METADATA_COMPLETENESS = int(os.getenv("CSW_MIN_METADATA_COMPLETENESS", "60"))
+
 # CATALOGUE_METADATA_XSL = "/static/metadataxsl/metadata.xsl"
 
 # DOWNLOAD_FORMATS_METADATA = [

@@ -1,5 +1,7 @@
 # For an editable installation of GeoNode, you can perform the following inside the python venv:
 # pip install -e git+https://github.com/GeoNode/geonode.git@master#egg=geonode
 # pip install -e git+https://github.com/GeoNode/geonode-mapstore-client.git@master#egg=django_geonode_mapstore_client
-git+https://github.com/nds-cprm/geonode.git@iso19115-3_2018-support#egg=GeoNode
+# fork com ISO 19115-3 no núcleo, substituído pelo app opengeosgb.catalogue:
+# git+https://github.com/nds-cprm/geonode.git@iso19115-3_2018-support#egg=GeoNode
+git+https://github.com/GeoNode/geonode.git@5.0.x#egg=GeoNode
 # GeoNode==5.0.2

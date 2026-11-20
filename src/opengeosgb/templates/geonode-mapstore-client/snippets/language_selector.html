@@ -1,4 +1,11 @@
-{% load i18n static %}
+{% load i18n opengeosgb_tags %}
+{% comment %}
+Cópia de geonode_mapstore_client 5.0.3 (geonode-mapstore-client/snippets/language_selector.html).
+Alterações: bandeira no lugar do texto do idioma (static/opengeosgb/img/flags/<código>.png, pela tag
+language_flag de templatetags/opengeosgb_tags.py; sem imagem para o idioma, aparece o código, ex.: es-ES),
+title com o nome do idioma, CSS para a bandeira não ser recortada em círculo pelo tema e
+event.currentTarget no clique. Ao atualizar o client, comparar com o original da nova versão.
+{% endcomment %}
 {% if csrf_token != "NOTPROVIDED" %}
 {% get_current_language as LANGUAGE %}
 {% get_language_info for LANGUAGE as lang_info %}
@@ -12,15 +19,14 @@
     {% if inline %}
         <li id="gn-language-selector-inline" class="gn-language-selector inline">
             {% for lang in LANGUAGES %}
+                {% language_flag lang.0 as flag %}
                 <button
                     data-lang-code="{{lang.0}}"
                     data-lang-state="{% if lang.0 == LANGUAGE %}active{% else %}{% endif %}"
                     class="btn btn-primary {% if lang.0 == LANGUAGE %} active{% else %}{% endif %}"
                     title="{{ lang.1 }}"
                 >
-                    {% with 'opengeosgb/img/flags/'|add:lang.0|add:'.png' as flag %}
-                        <img src="{% static flag %}" alt="{{ lang.1 }}" width="24" height="24"/>
-                    {% endwith %}
+                    {% if flag %}<img src="{{ flag }}" alt="{{ lang.1 }}" width="24" height="24"/>{% else %}{{ lang.0|language_code_label }}{% endif %}
                 </button>
             {% endfor %}
         </li>
@@ -52,11 +58,30 @@
                 object-fit: contain;
                 border-radius: 0;
             }
+            /* No hover, no foco e com o menu aberto, o tema pinta borda e contorno na imagem (pensado para o
+               avatar redondo); na bandeira quadrada eles eram cortados pelo círculo do botão. A borda fica
+               transparente (mantém os 2px, sem mudar o tamanho) e o destaque passa a ser um anel no botão. */
+            #gn-brand-navbar #gn-language-selector.focus img,
+            #gn-brand-navbar #gn-language-selector:active img,
+            #gn-brand-navbar #gn-language-selector:focus img,
+            #gn-brand-navbar #gn-language-selector:hover img,
+            #gn-brand-navbar .open > #gn-language-selector img {
+                border-color: transparent;
+                outline: none;
+            }
+            #gn-brand-navbar #gn-language-selector.focus,
+            #gn-brand-navbar #gn-language-selector:active,
+            #gn-brand-navbar #gn-language-selector:focus,
+            #gn-brand-navbar #gn-language-selector:hover,
+            #gn-brand-navbar .open > #gn-language-selector {
+                box-shadow: inset 0 0 0 2px var(--ms-primary);
+            }
         </style>
 
         <li class="gn-language-selector">
 
             <div class="dropdown" id="gn-language-selector-dropdown">
+                {% language_flag LANGUAGE as flag %}
                 <button
                     id="gn-language-selector"
                     role="button"
@@ -67,18 +92,15 @@
                     data-toggle="dropdown"
                     title="{{ lang_info.name_local }}"
                 >
-                    {% with 'opengeosgb/img/flags/'|add:LANGUAGE|add:'.png' as flag %}
-                        <img src="{% static flag %}" alt="{{ lang_info.name_local }}" width="24" height="24"/>
-                    {% endwith %}
+                    {% if flag %}<img src="{{ flag }}" alt="{{ lang_info.name_local }}" width="24" height="24"/>{% else %}{{ LANGUAGE|language_code_label }}{% endif %}
                 </button>
                 <ul class="dropdown-menu{% if align_right %} dropdown-menu-right{% endif %}" aria-labelledby="gn-language-selector">
                     {% for lang in LANGUAGES %}
                         {% if lang.0 != LANGUAGE %}
+                            {% language_flag lang.0 as flag %}
                             <li>
                                 <a style="cursor:pointer;" data-lang-code="{{lang.0}}">
-                                    {% with 'opengeosgb/img/flags/'|add:lang.0|add:'.png' as flag %}
-                                        <img src="{% static flag %}" alt="" width="24" height="24"/>
-                                    {% endwith %}
+                                    {% if flag %}<img src="{{ flag }}" alt="" width="24" height="24"/>{% else %}{{ lang.0|language_code_label }}{% endif %}
                                     {{ lang.1 }}
                                 </a>
                             </li>

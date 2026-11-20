@@ -417,7 +417,7 @@ msgstr "Excluir avatar"
 msgid "User {username} has download permissions but cannot access the resource. Please update permission consistently!"
 msgstr "O usuário {username} tem permissão de download, mas não consegue acessar o recurso. Ajuste as permissões para que fiquem consistentes!"
 
-#: geonode/templates/500.html:8
+#: opengeosgb/templates/500.html:14
 msgid ""
 "\n"
 "  Please contact your OpenGeoSGB administrator (they may have received an email automatically if they configured it properly).\n"
@@ -2551,3 +2551,20 @@ msgstr "Zâmbia"
 msgctxt "metadata region"
 msgid "Zimbabwe"
 msgstr "Zimbábue"
+
+# Textos padrão do componente de seleção do client (templates/opengeosgb/snippets/select_i18n.html)
+#: opengeosgb/templates/opengeosgb/snippets/select_i18n.html
+msgid "Select..."
+msgstr "Selecione..."
+
+#: opengeosgb/templates/opengeosgb/snippets/select_i18n.html
+msgid "No results found"
+msgstr "Nenhum resultado encontrado"
+
+#: opengeosgb/templates/opengeosgb/snippets/select_i18n.html
+msgid "Loading..."
+msgstr "Carregando..."
+
+#: opengeosgb/templates/opengeosgb/snippets/select_i18n.html
+msgid "Type to search"
+msgstr "Digite para buscar"

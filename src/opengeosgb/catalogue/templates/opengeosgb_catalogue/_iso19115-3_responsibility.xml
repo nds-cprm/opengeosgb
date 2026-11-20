@@ -1,0 +1,92 @@
+{% comment %}
+cit:CI_Responsibility de um contato. Variáveis: role (CI_RoleCode) e contact (perfil do GeoNode).
+Incluído por full_metadata_iso19115-3.xml dentro de mdb:contact e de mri:pointOfContact.
+Ordem dos elementos e gco:nilReason (no elemento de propriedade) conforme o XSD cit 2.0.
+{% endcomment %}<cit:CI_Responsibility>
+  <cit:role>
+    <cit:CI_RoleCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_RoleCode" codeListValue="{{ role }}"/>
+  </cit:role>
+  <cit:party>
+    <cit:CI_Organisation>
+      {% if contact.organization %}<cit:name>
+        <gco:CharacterString>{{ contact.organization }}</gco:CharacterString>
+      </cit:name>{% else %}<cit:name gco:nilReason="missing"/>{% endif %}
+      <cit:individual>
+        <cit:CI_Individual>
+          {% if contact.first_name and contact.last_name %}<cit:name>
+            <gco:CharacterString>{{ contact.get_full_name }}</gco:CharacterString>
+          </cit:name>{% else %}<cit:name gco:nilReason="missing"/>{% endif %}
+          <cit:contactInfo>
+            <cit:CI_Contact>
+              {% if contact.voice %}
+              <cit:phone>
+                <cit:CI_Telephone>
+                  <cit:number>
+                    <gco:CharacterString>{{ contact.voice }}</gco:CharacterString>
+                  </cit:number>
+                  <cit:numberType>
+                    <cit:CI_TelephoneTypeCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_TelephoneTypeCode" codeListValue="voice">voice</cit:CI_TelephoneTypeCode>
+                  </cit:numberType>
+                </cit:CI_Telephone>
+              </cit:phone>
+              {% endif %}
+              {% if contact.fax %}
+              <cit:phone>
+                <cit:CI_Telephone>
+                  <cit:number>
+                    <gco:CharacterString>{{ contact.fax }}</gco:CharacterString>
+                  </cit:number>
+                  <cit:numberType>
+                    <cit:CI_TelephoneTypeCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_TelephoneTypeCode" codeListValue="facsimile">facsimile</cit:CI_TelephoneTypeCode>
+                  </cit:numberType>
+                </cit:CI_Telephone>
+              </cit:phone>
+              {% endif %}
+              <cit:address>
+                <cit:CI_Address>
+                  {% if contact.delivery %}<cit:deliveryPoint>
+                    <gco:CharacterString>{{ contact.delivery }}</gco:CharacterString>
+                  </cit:deliveryPoint>{% else %}<cit:deliveryPoint gco:nilReason="missing"/>{% endif %}
+                  {% if contact.city %}<cit:city>
+                    <gco:CharacterString>{{ contact.city }}</gco:CharacterString>
+                  </cit:city>{% else %}<cit:city gco:nilReason="missing"/>{% endif %}
+                  {% if contact.area %}<cit:administrativeArea>
+                    <gco:CharacterString>{{ contact.area }}</gco:CharacterString>
+                  </cit:administrativeArea>{% else %}<cit:administrativeArea gco:nilReason="missing"/>{% endif %}
+                  {% if contact.zipcode %}<cit:postalCode>
+                    <gco:CharacterString>{{ contact.zipcode }}</gco:CharacterString>
+                  </cit:postalCode>{% else %}<cit:postalCode gco:nilReason="missing"/>{% endif %}
+                  {% if contact.country %}<cit:country>
+                    <gco:CharacterString>{{ contact.country }}</gco:CharacterString>
+                  </cit:country>{% else %}<cit:country gco:nilReason="missing"/>{% endif %}
+                  {% if contact.email %}<cit:electronicMailAddress>
+                    <gco:CharacterString>{{ contact.email }}</gco:CharacterString>
+                  </cit:electronicMailAddress>{% else %}<cit:electronicMailAddress gco:nilReason="missing"/>{% endif %}
+                </cit:CI_Address>
+              </cit:address>
+              <cit:onlineResource>
+                <cit:CI_OnlineResource>
+                  <cit:linkage>
+                    <gco:CharacterString>{{ SITEURL }}{{ contact.get_absolute_url }}</gco:CharacterString>
+                  </cit:linkage>
+                  <cit:protocol>
+                    <gco:CharacterString>WWW:LINK-1.0-http--link</gco:CharacterString>
+                  </cit:protocol>
+                  <cit:name>
+                    <gco:CharacterString>Profile</gco:CharacterString>
+                  </cit:name>
+                  <cit:description>
+                    <gco:CharacterString>GeoNode profile page</gco:CharacterString>
+                  </cit:description>
+                </cit:CI_OnlineResource>
+              </cit:onlineResource>
+            </cit:CI_Contact>
+          </cit:contactInfo>
+          {% if contact.position %}<cit:positionName>
+            <gco:CharacterString>{{ contact.position }}</gco:CharacterString>
+          </cit:positionName>{% else %}<cit:positionName gco:nilReason="missing"/>{% endif %}
+        </cit:CI_Individual>
+      </cit:individual>
+    </cit:CI_Organisation>
+  </cit:party>
+</cit:CI_Responsibility>

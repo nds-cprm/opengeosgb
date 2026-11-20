@@ -1,0 +1,17 @@
+{% extends "geonode_base.html" %}
+{% load i18n %}
+{% comment %}
+Cópia de geonode/templates/500.html (GeoNode 5.0.3), com OpenGeoSGB no lugar de GeoNode e o
+rastreador de problemas do projeto. O texto do blocktrans tem de ficar igual, com quebras e espaços,
+ao msgid do django.po do opengeosgb, senão a tradução deixa de casar.
+{% endcomment %}
+
+{% block body %}
+  <div id="description">
+      <h3><strong>{% trans "There was a problem loading this page" %}</strong></h3>
+  </div>
+  {% blocktrans %}
+  Please contact your OpenGeoSGB administrator (they may have received an email automatically if they configured it properly).
+  If you are the site administrator, enable debug mode to see the actual error and fix it or file an issue in <a href="https://github.com/nds-cprm/opengeosgb/issues">OpenGeoSGB's issue tracker</a>
+  {% endblocktrans %}
+{% endblock %}

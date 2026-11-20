@@ -1,0 +1,58 @@
+{% load i18n %}
+{% comment %}
+Tradução dos textos padrão do componente de seleção (react-select v1) do client.
+
+Os filtros por facet da barra lateral do catálogo (categoria, palavra-chave, região, proprietário,
+grupo, escala) são montados pelo client a partir da API de facets, sem placeholder, e o componente usa os
+textos padrão, fixos em inglês ("Select...", "No results found"...). O localConfig não alcança esses
+campos. Aqui, os textos padrão são trocados no DOM pela tradução do Django; só o texto exatamente
+igual ao padrão em inglês é trocado, e no inglês nada muda. Incluído em
+geonode-mapstore-client/snippets/head.html. Ao atualizar o client, conferir se ainda é necessário.
+{% endcomment %}
+{% trans "Select..." as s_select %}{% trans "No results found" as s_noresults %}{% trans "Loading..." as s_loading %}{% trans "Type to search" as s_typetosearch %}
+<script>
+    (function () {
+        var MESSAGES = {
+            'Select...': '{{ s_select|escapejs }}',
+            'No results found': '{{ s_noresults|escapejs }}',
+            'Loading...': '{{ s_loading|escapejs }}',
+            'Type to search': '{{ s_typetosearch|escapejs }}'
+        };
+        var SELECTOR = '.Select-placeholder, .Select-noresults';
+
+        function translate(el) {
+            var node = el.firstChild;
+            if (node && node.nodeType === 3 && !node.nextSibling) {
+                var text = MESSAGES[node.nodeValue];
+                if (text && text !== node.nodeValue) {
+                    node.nodeValue = text;
+                }
+            }
+        }
+
+        function scan(el) {
+            if (el.nodeType !== 1) {
+                return;
+            }
+            if (el.matches(SELECTOR)) {
+                translate(el);
+            }
+            Array.prototype.forEach.call(el.querySelectorAll(SELECTOR), translate);
+        }
+
+        // o React recria ou altera esses elementos a cada renderização; o texto já traduzido não
+        // está em MESSAGES, então a troca não se repete
+        new MutationObserver(function (mutations) {
+            mutations.forEach(function (mutation) {
+                if (mutation.type === 'characterData') {
+                    var parent = mutation.target.parentNode;
+                    if (parent && parent.nodeType === 1 && parent.matches(SELECTOR)) {
+                        translate(parent);
+                    }
+                } else {
+                    Array.prototype.forEach.call(mutation.addedNodes, scan);
+                }
+            });
+        }).observe(document.documentElement, {childList: true, subtree: true, characterData: true});
+    })();
+</script>

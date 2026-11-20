@@ -14,4 +14,6 @@
 <link rel="stylesheet" href="{% static 'opengeosgb/css/opengeosgb.css' %}" />
 {# aviso de cookies; carrega o Google Tag Manager só depois do aceite #}
 {% include "opengeosgb/snippets/cookie_consent.html" %}
+{# textos padrão dos campos de seleção do client (ex.: filtros por facet do catálogo), fixos em inglês no componente #}
+{% include "opengeosgb/snippets/select_i18n.html" %}
 {% endblock extras %}

@@ -22,9 +22,13 @@ from django.conf import settings
 from django.contrib import admin
 from django.urls import path, re_path, include
 from django.contrib.flatpages.sitemaps import FlatPageSitemap
-from geonode.urls import urlpatterns, sitemaps
+# handler500 é reexportado para o Django usar a página de erro do GeoNode (geonode.views.err500, que
+# renderiza o 500.html com a requisição); sem ele, vale o handler padrão do Django, sem contexto.
+# Ver https://github.com/GeoNode/geonode-project/issues/570
+from geonode.urls import urlpatterns, sitemaps, handler500  # noqa: F401
 
 from . import views
+from .catalogue.urls import urlpatterns as catalogue_urlpatterns
 from .metadata.views import RegionsI18nAutocomplete, metadata_page, metadata_page_embed, scales_autocomplete
 
 sitemaps.update(page=FlatPageSitemap)
@@ -41,6 +45,9 @@ if settings.RECAPTCHA_ENABLED:
 urlpatterns[0:0] = [
     re_path(r"^metadata/(?P<pk>[^/]*)$", metadata_page, name="metadata"),
     re_path(r"^metadata/(?P<pk>[^/]*)/embed$", metadata_page_embed, name="metadata_embed"),
+    # CSW do app opengeosgb.catalogue (datasets aprovados, publicados e com
+    # metadados completos): no início para ter prioridade sobre catalogue/csw do geonode
+    *catalogue_urlpatterns,
 ]
 
 urlpatterns += [
