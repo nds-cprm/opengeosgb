@@ -44,17 +44,7 @@ services:
       args:
         - NGINX_VERSION=${NGINX_BASE_IMAGE_VERSION}
         - TARGETPLATFORM=linux/amd64
-    # bind to container ports of 8080 and 8443 because of use of nginx-unprivileged 
-    ports:
-      - "${HTTP_PORT}:8080"
-      - "${HTTPS_PORT}:8443"
-    environment:
-      - RESOLVER=${RESOLVER}
-    volumes:
-      # - nginx-confd:/etc/nginx
-      - nginx-certificates:/geonode-certificates
-      - statics:/mnt/volumes/statics
-      # - /home/mota/_geonode/statics:/mnt/volumes/statics
+    # Portas (8080/8443 do nginx-unprivileged), volumes e RESOLVER vêm do compose base
 
   letsencrypt:
     <<: *default-common
@@ -76,7 +66,6 @@ services:
       dockerfile: Dockerfile
       args:
         - GEOSERVER_VERSION=${GEOSERVER_BASE_IMAGE_VERSION}
-        - IMAGE_VERSION=9.0.107-jdk11-temurin-jammy
         - TARGETPLATFORM=linux/amd64
     volumes:
       - statics:/mnt/volumes/statics
@@ -96,24 +85,14 @@ services:
       - "8080:8080"
     user: '1000:0'
 
-  data-dir-conf:
-    <<: *default-common
-    image: ${DOCKER_NAMESPACE:-$COMPOSE_PROJECT_NAME}/geoserver_data:${GEOSERVER_BASE_IMAGE_VERSION}-geonode
-    # user: '1000'
-    build:
-      context: ./docker/docker/geoserver_data
-      dockerfile: Dockerfile
-      args:
-        - GEOSERVER_VERSION=${GEOSERVER_BASE_IMAGE_VERSION}
-        - TARGETPLATFORM=linux/amd64
-
   db:
     <<: *default-common
-    image: ${DOCKER_NAMESPACE:-$COMPOSE_PROJECT_NAME}/postgis:${POSTGRES_BASE_IMAGE_VERSION}-geonode
+    image: ${DOCKER_NAMESPACE:-$COMPOSE_PROJECT_NAME}/postgis:${POSTGRES_BASE_IMAGE_VERSION}-${POSTGIS_BASE_IMAGE_VERSION}-geonode
     build:
       context: ./docker/docker/postgis
       args:
-        - POSTGRES_BASE_IMAGE_VERSION=${POSTGRES_BASE_IMAGE_VERSION}
+        - POSTGRES_VERSION=${POSTGRES_BASE_IMAGE_VERSION}
+        - POSTGIS_VERSION=${POSTGIS_BASE_IMAGE_VERSION}
         - TARGETPLATFORM=linux/amd64
     volumes:
       - dbdata:/var/lib/postgresql/data

@@ -9,7 +9,7 @@ Este repositório é um projeto Django gerado a partir do template [`geonode-pro
 | Repositório | Papel |
 |---|---|
 | [`nds-cprm/geonode`](https://github.com/nds-cprm/geonode) (branch `iso19115-3_2018-support`) | Fork do núcleo do GeoNode, instalado via `src/requirements.txt`. Mudanças em modelos, catálogo/CSW, upload e templates XML de metadados vão para lá. |
-| [`nds-cprm/geonode-docker`](https://github.com/nds-cprm/geonode-docker) (branch `opengeosgb`) | Submódulo `docker/`, com os Dockerfiles do nginx, GeoServer, geoserver_data, PostGIS e letsencrypt. |
+| [`nds-cprm/geonode-docker`](https://github.com/nds-cprm/geonode-docker) (branch `unifica-opengeosgb`, que vai substituir o `opengeosgb`) | Submódulo `docker/`, com os Dockerfiles do nginx, GeoServer, PostGIS e letsencrypt. É compartilhado com o geosdc (Defesa Civil de SC). |
 | [`GeoNode/geonode-mapstore-client`](https://github.com/GeoNode/geonode-mapstore-client) | Frontend (React/MapStore). Os templates sobrescritos ficam em `src/opengeosgb/templates/geonode-mapstore-client/`. |
 | [`GeoNode/geonode-project`](https://github.com/GeoNode/geonode-project) | Template de origem, útil para comparar com a versão upstream. |
 
@@ -20,8 +20,7 @@ Este repositório é um projeto Django gerado a partir do template [`geonode-pro
 | `django` | construída de `Dockerfile` | GeoNode (uWSGI, porta 8000) |
 | `celery` | mesma imagem do `django` | Workers de tarefas assíncronas e harvesting |
 | `geonode` | construída de `docker/docker/nginx` | nginx (portas 8080/8443 no container) |
-| `geoserver` | construída de `docker/docker/geoserver` | GeoServer 2.27 sobre Tomcat 9 |
-| `data-dir-conf` | construída de `docker/docker/geoserver_data` | Popula o data dir do GeoServer |
+| `geoserver` | construída de `docker/docker/geoserver` | GeoServer 2.28 sobre Tomcat 9 (Java 17), com as extensões `excel` e `geopkg-output` e as fontes do SGB. No primeiro boot, com o volume sem `global.xml`, a própria imagem extrai o data dir do GeoNode (não há mais o `data-dir-conf`) |
 | `db` | construída de `docker/docker/postgis` | PostgreSQL + PostGIS |
 | `letsencrypt` | construída de `docker/docker/letsencrypt` | Certificados (desativado: `replicas: 0`) |
 | `memcached`, `redis` | oficiais | Cache e broker do celery |
@@ -110,7 +109,7 @@ Pontos de atenção:
 
 Ajustes necessários além dos já descritos:
 - O Podman sem root não publica a porta 80. Libere com `podman machine ssh "sudo sysctl -w net.ipv4.ip_unprivileged_port_start=80"` (vale até a máquina reiniciar).
-- O nginx usa `RESOLVER=127.0.0.11`, que só existe no Docker; no Podman, as requisições ficam pendentes e dão timeout. Defina `RESOLVER` no `.env` com o DNS da rede do Podman: o `nameserver` do `/etc/resolv.conf` de um container do stack (por exemplo, `RESOLVER=10.89.0.1`).
+- O nginx detecta o DNS pelo `/etc/resolv.conf` do container quando `RESOLVER` não está definido no `.env`. Não deixe `RESOLVER=127.0.0.11` no `.env` do Podman: esse endereço só existe no Docker, e as requisições ficam pendentes até dar timeout.
 - Se os `apk add` dos builds baseados em Alpine falharem com `DNS: transient error`, o DNS da máquina do Podman travou. Reinicie-a com `podman machine stop && podman machine start` e repita o `sysctl` da porta 80.
 - `docker/docker/postgis/initdb-geonode.sh` precisa estar com permissão `755` no host. Com `0700`, o usuário `postgres` não consegue executá-lo, os usuários do GeoNode não são criados e o django falha com `password authentication failed`.
 
