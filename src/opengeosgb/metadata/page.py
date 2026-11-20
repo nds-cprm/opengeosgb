@@ -54,7 +54,6 @@ CONSUMED_FIELDS = {"title", "abstract", "date", "date_type", "contacts", "uuid"}
 METADATA_FORMATS = {
     "Dublin Core": ("dublin_core", "Dublin Core"),
     "ISO": ("iso19139", "ISO 19139"),
-    "ISO19115-3_2018": ("iso19115_3", "ISO 19115-3:2018"),
     "ISO with XSL": ("iso19139_html", gettext_lazy("ISO 19139 (HTML view)")),
     "Atom": ("atom", "Atom"),
     "DIF": ("dif", "DIF"),
