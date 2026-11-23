@@ -106,7 +106,9 @@ class BaseFormHandler(BaseHandler):
 
     def get_jsonschema_instance(self, resource, field_name, context, errors, lang=None):
         if field_name == "date" and isinstance(resource.date, datetime):
-            return timezone.localtime(resource.date).date().isoformat()
+            # data sem fuso (ex.: criada em código ou nos testes do GeoNode) não passa pelo localtime()
+            date = timezone.localtime(resource.date) if timezone.is_aware(resource.date) else resource.date
+            return date.date().isoformat()
         return super().get_jsonschema_instance(resource, field_name, context, errors, lang)
 
     def update_resource(self, resource, field_name, json_instance, context, errors, **kwargs):
