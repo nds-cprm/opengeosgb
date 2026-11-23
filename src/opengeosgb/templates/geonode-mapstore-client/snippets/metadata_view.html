@@ -128,7 +128,6 @@ contatos, dicionário de dados, citação e distribuição. Sem ele, mantém o l
                             <dd class="ogs-md-links">{% with md=page.distribution.metadata %}
                                 {% if md.dublin_core %}<a href="{{ md.dublin_core.url }}" target="_blank" rel="noopener noreferrer">{{ md.dublin_core.text }}</a>{% endif %}
                                 {% if md.iso19139 %}<a href="{{ md.iso19139.url }}" target="_blank" rel="noopener noreferrer">{{ md.iso19139.text }}</a>{% endif %}
-                                {% if md.iso19115_3 %}<a href="{{ md.iso19115_3.url }}" target="_blank" rel="noopener noreferrer">{{ md.iso19115_3.text }}</a>{% endif %}
                                 {% comment %}
                                 Outros formatos gerados pelo GeoNode, ocultos na página. Para exibir, mova a linha para fora deste bloco.
                                 {% if md.iso19139_html %}<a href="{{ md.iso19139_html.url }}" target="_blank" rel="noopener noreferrer">{{ md.iso19139_html.text }}</a>{% endif %}

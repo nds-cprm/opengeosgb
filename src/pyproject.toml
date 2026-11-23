@@ -13,8 +13,7 @@ keywords = ["OpenGeoSGB", "geonode", "django"]
 
 # Equivalent modern replacement for dependency_links:
 dependencies = [
-  # "GeoNode @ git+https://github.com/nds-cprm/geonode.git"
-  # "GeoNode == 5.0.2"
+  # "GeoNode @ git+https://github.com/GeoNode/geonode.git@5.0.3"
 ]
 
 [project.urls]

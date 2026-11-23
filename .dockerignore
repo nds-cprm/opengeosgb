@@ -1,3 +1,17 @@
 __pycache__/
 **/node_modules/
 celerybeat-schedule
+
+# O Dockerfile só copia src/. O resto fica fora do contexto de build, que é enviado inteiro ao
+# daemon/máquina do Podman a cada build.
+# Backups de produção, credenciais e variantes do .env: nunca devem ir para o contexto
+draft/
+secrets/
+.env*
+# Repositório, submódulo (as imagens dele usam o próprio contexto) e ambientes locais
+.git/
+docker/
+venv/
+.claude/
+.vscode/
+.devcontainer/

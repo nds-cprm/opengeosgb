@@ -54,23 +54,25 @@ services:
   geonode:
     image: ${COMPOSE_PROJECT_NAME}/nginx:${NGINX_BASE_IMAGE_VERSION}
     build:
-      context: ./docker/nginx
+      context: ./docker/docker/nginx
       dockerfile: Dockerfile
       args:
-        - BASE_IMAGE_VERSION=${NGINX_BASE_IMAGE_VERSION}
+        - NGINX_VERSION=${NGINX_BASE_IMAGE_VERSION}
     container_name: nginx4${COMPOSE_PROJECT_NAME}
     env_file:
       - .env
-    environment:
-      - RESOLVER=127.0.0.11
-    # Overrided ports in opengeosgb compose
-    # ports:
-    #   - "${HTTP_PORT}:80"
-    #   - "${HTTPS_PORT}:443"
+    # RESOLVER (DNS do nginx) é detectado pelo /etc/resolv.conf do container quando não definido
+    # no .env (Docker: 127.0.0.11; Podman: gateway da rede). Defina só para forçar outro servidor.
+    # A imagem é nginx-unprivileged: dentro do container o nginx escuta em 8080 (HTTP) e 8443 (HTTPS).
+    ports:
+      - "${HTTP_PORT}:8080"
+      - "${HTTPS_PORT}:8443"
+    # Sem volume no /etc/nginx: o entrypoint regera a configuração a cada boot a partir dos templates
+    # da imagem, então um rebuild + up -d basta para aplicar mudanças nos templates.
     volumes:
-      - nginx-confd:/etc/nginx
       - nginx-certificates:/geonode-certificates
-      - statics:/mnt/volumes/statics
+      # Somente leitura: o nginx só serve os estáticos e a mídia gravados pelo GeoNode
+      - statics:/mnt/volumes/statics:ro
     restart: unless-stopped
 
   # memcached service
@@ -90,10 +92,8 @@ services:
   letsencrypt:
     image: ${COMPOSE_PROJECT_NAME}/letsencrypt:${LETSENCRYPT_BASE_IMAGE_VERSION}
     build:
-      context: ./docker/letsencrypt
+      context: ./docker/docker/letsencrypt
       dockerfile: Dockerfile
-      args:
-        - BASE_IMAGE_VERSION=${LETSENCRYPT_BASE_IMAGE_VERSION}
     container_name: letsencrypt4${COMPOSE_PROJECT_NAME}
     env_file:
       - .env
@@ -105,10 +105,10 @@ services:
   geoserver:
     image: ${COMPOSE_PROJECT_NAME}/geoserver:${GEOSERVER_BASE_IMAGE_VERSION}
     build:
-      context: ./docker/geoserver
+      context: ./docker/docker/geoserver
       dockerfile: Dockerfile
       args:
-        - BASE_IMAGE_VERSION=${GEOSERVER_BASE_IMAGE_VERSION}
+        - GEOSERVER_VERSION=${GEOSERVER_BASE_IMAGE_VERSION}
     container_name: geoserver4${COMPOSE_PROJECT_NAME}
     healthcheck:
       test: "curl -m 10 --fail --silent --write-out 'HTTP CODE : %{http_code}\n' --output /dev/null http://geoserver:8080/geoserver/ows"
@@ -120,6 +120,8 @@ services:
       - .env
     ports:
       - "8080:8080"
+    # O data dir é populado pela própria imagem do GeoServer no primeiro boot
+    # (volume sem global.xml = extrai o skeleton do GeoNode), dispensando o antigo data-dir-conf.
     volumes:
       - statics:/mnt/volumes/statics
       - geoserver-data-dir:/geoserver_data/data
@@ -128,34 +130,21 @@ services:
       - tmp:/tmp
     restart: unless-stopped
     depends_on:
-      data-dir-conf:
-        condition: service_healthy
       django:
         condition: service_healthy
 
-  data-dir-conf:
-    image: ${COMPOSE_PROJECT_NAME}/geoserver_data:${GEOSERVER_DATA_BASE_IMAGE_VERSION}
-    build:
-      context: ./docker/geoserver_data
-      dockerfile: Dockerfile
-      args:
-        - BASE_IMAGE_VERSION=${GEOSERVER_DATA_BASE_IMAGE_VERSION}
-    container_name: gsconf4${COMPOSE_PROJECT_NAME}
-    entrypoint: sleep infinity
-    volumes:
-      - geoserver-data-dir:/geoserver_data/data
-    restart: unless-stopped
-    healthcheck:
-      test: "ls -A '/geoserver_data/data' | wc -l"
 
   # PostGIS database.
   db:
-    image: ${COMPOSE_PROJECT_NAME}/postgis:${POSTGRES_BASE_IMAGE_VERSION}
+    image: ${COMPOSE_PROJECT_NAME}/postgis:${POSTGRES_BASE_IMAGE_VERSION}-${POSTGIS_BASE_IMAGE_VERSION}
     build:
-      context: ./docker/postgresql
+      context: ./docker/docker/postgis
       dockerfile: Dockerfile
       args:
-        - BASE_IMAGE_VERSION=${POSTGRES_BASE_IMAGE_VERSION}
+        # Não usar POSTGRES_VERSION/POSTGIS_VERSION no .env: ele é env_file de todos os serviços e
+        # sobrescreveria as variáveis homônimas da imagem do PostGIS
+        - POSTGRES_VERSION=${POSTGRES_BASE_IMAGE_VERSION}
+        - POSTGIS_VERSION=${POSTGIS_BASE_IMAGE_VERSION}
     command: postgres -c "max_connections=${POSTGRESQL_MAX_CONNECTIONS}"
     container_name: db4${COMPOSE_PROJECT_NAME}
     env_file:
@@ -181,8 +170,6 @@ services:
 volumes:
   statics:
     name: ${COMPOSE_PROJECT_NAME}-statics
-  nginx-confd:
-    name: ${COMPOSE_PROJECT_NAME}-nginxconfd
   nginx-certificates:
     name: ${COMPOSE_PROJECT_NAME}-nginxcerts
   geoserver-data-dir:

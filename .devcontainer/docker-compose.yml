@@ -1,4 +1,3 @@
-version: '3.4'
 services:
   # Update this to the name of the service you want to work with in your docker-compose.yml file
   django:
@@ -63,15 +62,15 @@ services:
   # Removes letsencrypt when developing
   letsencrypt:
     deploy:
+      # mode explícito: o podman-compose só respeita "replicas" quando mode é "replicated"
+      mode: replicated
       replicas: 0
 
+  # O data dir é populado pela própria imagem do GeoServer no primeiro boot (não há mais data-dir-conf)
   geoserver:
     restart: "no"
     ports:
       - "8080:8080"
-
-  data-dir-conf:
-    restart: "no"
 
   db:
     restart: "no"
