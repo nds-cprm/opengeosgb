@@ -8,7 +8,7 @@ Este repositório é um projeto Django gerado a partir do template [`geonode-pro
 
 | Repositório | Papel |
 |---|---|
-| [`nds-cprm/geonode`](https://github.com/nds-cprm/geonode) (branch `iso19115-3_2018-support`) | Fork do núcleo do GeoNode, instalado via `src/requirements.txt`. Mudanças em modelos, catálogo/CSW, upload e templates XML de metadados vão para lá. |
+| [`GeoNode/geonode`](https://github.com/GeoNode/geonode) (tag `5.0.3`) | Núcleo do GeoNode, sem fork, instalado via `src/requirements.txt`. Personalizações são feitas por override no app `opengeosgb`. |
 | [`nds-cprm/geonode-docker`](https://github.com/nds-cprm/geonode-docker) (branch `unifica-opengeosgb`, que vai substituir o `opengeosgb`) | Submódulo `docker/`, com os Dockerfiles do nginx, GeoServer, PostGIS e letsencrypt. É compartilhado com o geosdc (Defesa Civil de SC). |
 | [`GeoNode/geonode-mapstore-client`](https://github.com/GeoNode/geonode-mapstore-client) | Frontend (React/MapStore). Os templates sobrescritos ficam em `src/opengeosgb/templates/geonode-mapstore-client/`. |
 | [`GeoNode/geonode-project`](https://github.com/GeoNode/geonode-project) | Template de origem, útil para comparar com a versão upstream. |
@@ -117,7 +117,6 @@ Ajustes necessários além dos já descritos:
 
 - **Settings:** toda customização vai em `src/opengeosgb/local_settings.py`, que importa `geonode.settings`. `settings.py` só contém o que é estrutural do template.
 - **Templates e estáticos:** arquivos em `src/opengeosgb/templates/` e `src/opengeosgb/static/` sobrescrevem os do GeoNode e do mapstore-client quando têm o mesmo caminho relativo.
-- **Metadados:** `CATALOGUE_DEFAULT_FORMAT=ISO19115-3_2018` troca o perfil de metadados de ISO 19139 para ISO 19115-3 (lógica no fork do GeoNode).
 - **Escala:** os recursos ganham o campo "Escala" no painel de informações e um filtro "Escala" no catálogo (`src/opengeosgb/metadata/`).
 - **Autenticação:** login com Google, ORCID e gov.br (OpenID Connect), formulários próprios e reCAPTCHA opcional (`RECAPTCHA_ENABLED`).
 - **Páginas institucionais:** flatpages em `/pages/`, editadas no admin com um editor TinyMCE restrito; o HTML é sanitizado ao salvar e ao exibir. Cada idioma é uma página separada (`/pages/sobre/` e `/pages/about/`).
@@ -142,7 +141,7 @@ geonode-docker exec django sh -c 'SOURCE_URL=$SOURCE_URL TARGET_URL=$TARGET_URL 
 - O override monta `./src` em `/usr/src/project`, então alterações no código aparecem nos containers sem rebuild. O uWSGI recarrega o código quando `src/opengeosgb/wsgi.py` é modificado (`touch src/opengeosgb/wsgi.py`).
 - Há uma configuração de Dev Container em `.devcontainer/` (serviço `django`, workspace `/usr/src/project`).
 - Lint: `flake8`, com a configuração de `.flake8` (linhas de até 200 caracteres).
-- O projeto não tem suíte de testes própria; os testes do núcleo ficam no fork do GeoNode.
+- O projeto não tem suíte de testes própria. O `./opengeosgb-tests` roda os testes do GeoNode por grupo numa stack descartável (`./opengeosgb-tests --help`).
 
 ## Estrutura
 
@@ -157,7 +156,7 @@ geonode-docker exec django sh -c 'SOURCE_URL=$SOURCE_URL TARGET_URL=$TARGET_URL 
 └── src/
     ├── entrypoint.sh, tasks.py     # inicialização do container (invoke)
     ├── celery-cmd                  # inicialização do celery
-    ├── requirements.txt            # aponta para o fork do GeoNode
+    ├── requirements.txt            # GeoNode 5.0.3 (upstream)
     ├── fixtures/
     └── opengeosgb/                 # app Django do projeto
 ```
