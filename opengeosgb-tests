@@ -1,0 +1,530 @@
+#!/usr/bin/env bash
+# Executa a suíte de testes automatizados do GeoNode numa stack descartável, separada por grupos
+# como na CI do GeoNode 5.0.x (.github/workflows/tests.yml do upstream).
+#
+# A stack de testes é isolada da stack do ambiente: usa o projeto compose "<COMPOSE_PROJECT_NAME>test",
+# com containers, rede e volumes próprios, e sobe só db, redis, memcached, django, celery e geoserver
+# (sem nginx, sem mailserver e sem portas publicadas). Usa só o docker-compose.yml, sem o
+# docker-compose.opengeosgb.yml (que publica portas e monta ./src e ./draft/br), mas com as imagens já
+# construídas pelo "geonode-docker build" (opengeosgb-alias.sh), que têm o código do src/ do momento do
+# build: reconstrua a imagem do django antes, se o src/ mudou. Os containers rodam como na stack real
+# (UID 1000, grupo 0), salvo com --relaxed.
+#
+# Grupos (iguais aos da CI do GeoNode):
+#   smoke        geonode.tests.smoke, test_rest_api, test_search, test_utils, test_headers
+#   main         <app>.tests de todos os GEONODE_APPS, exceto security, geoserver e upload,
+#                mais thumbs, people e o provider geonode_openid_connect
+#   security     <app>.tests dos GEONODE_APPS com "security"
+#   gis_backend  <app>.tests dos GEONODE_APPS com "geoserver"
+#   rest_apis    testes das APIs REST (api, base, layers, maps, documents, geoapps)
+#   csw          geonode.tests.csw e geonode.catalogue.backends.tests
+#   upload       geonode.upload
+#
+# Uso:
+#   ./opengeosgb-tests [opções] [grupo...]        (sem grupos: todos, na ordem acima)
+#
+# Opções:
+#   -l, --list        lista os grupos e sai
+#   -k, --keep        mantém a stack de testes no final (para inspeção); remova depois com --down
+#       --down        derruba a stack de testes mantida (e apaga os volumes) e sai
+#   -f, --failfast    para cada grupo no primeiro teste com falha (como na CI)
+#       --lang CODE   LANGUAGE_CODE dos testes (padrão: en-us, e não o do .env): vários testes do
+#                     GeoNode comparam textos em inglês e falham com o idioma pt (ex.: --lang pt)
+#       --relaxed     roda django/celery/geoserver como root, para separar falhas causadas pela
+#                     execução sem root
+#       --no-data     não monta os dados de teste do GeoNode nem importa as camadas de exemplo (ver abaixo)
+#   -h, --help        mostra esta ajuda
+#
+# Dados de teste: o GeoNode instalado na imagem (pelo src/requirements.txt, da tag do GitHub e sem
+# "-e") passa por um wheel, que não traz os arquivos de dados dos testes (fixtures de upload,
+# shapefiles, SLDs, imagens esperadas dos thumbnails etc.). Antes de subir a stack, o script baixa o
+# código-fonte do commit exato que foi instalado (lido do direct_url.json do pip, na imagem; para um
+# GeoNode do PyPI, a tag da versão: 5.0.3.post1 -> tag 5.0.3), guarda em ~/.cache/opengeosgb-tests/src/
+# e o monta em django e celery, sobre o pacote instalado e em /usr/src/geonode (vários
+# testes usam caminhos relativos à raiz do fonte, como "geonode/base/fixtures/..."; ver o diretório de
+# trabalho abaixo). Os .py do commit são idênticos aos instalados; o fonte só acrescenta os dados. Se o
+# GeoNode estiver instalado em modo editável (pip install -e), o fonte já está na imagem e nada é baixado.
+# Com a stack saudável, e antes do primeiro grupo, importa as camadas de exemplo do gisdata com o
+# importlayers, como o "paver setup_data" da CI (os testes de csw e upload consultam esses dados por
+# HTTP); o log fica em importlayers.log, junto dos logs dos grupos.
+#
+# Como no .env_test da CI do GeoNode, a stack de testes roda, independente do .env, com:
+#   SOCIALACCOUNT_OIDC_PROVIDER_ENABLED=True   (testes do provider geonode_openid_connect)
+#   SITEURL=http://localhost:8000/ e GEOSERVER_WEB_UI_LOCATION=http://localhost:8000/geoserver/
+#     (o GeoNode chama a si mesmo pelo SITEURL, e dentro do container só o uWSGI atende, na 8000;
+#     sem nginx na stack de testes, e vários testes esperam essa URL fixa)
+#   ASYNC_SIGNALS=False, ACCOUNT_OPEN_SIGNUP=True, ACCOUNT_OPEN_SOCIALSIGNUP=True e
+#   SAFE_URL_CHECK_ENABLED=False (importação de WMS em localhost)
+#   RESOURCE_PUBLISHING=False, ADMIN_MODERATE_UPLOADS=False, GROUP_PRIVATE_RESOURCES=False,
+#   RECAPTCHA_ENABLED=False e SOCIALACCOUNT_PROVIDER=google (o .env do opengeosgb liga a publicação
+#   moderada, os grupos privados e o reCAPTCHA, e os testes pressupõem os padrões do GeoNode)
+# e com INVOKE_LOG_STDOUT=True (sem o ./src montado, o /usr/src/project da imagem não é gravável para o
+# UID 1000, e o entrypoint gravaria lá o invoke.log).
+#
+# Os testes rodam em /tmp/geonode-tests (volume tmp da stack de testes, gravável), com o link "geonode" para o
+# pacote do fonte: os caminhos relativos dos testes funcionam e os arquivos que eles criam no
+# diretório atual (ex.: a trava "send_notices" do send_all() do pinax) podem ser gravados.
+#
+# Variáveis:
+#   CONTAINER_ENGINE=docker|podman   força o engine (padrão: Docker se o daemon responder, senão Podman)
+#   BOOT_TIMEOUT=<segundos>          espera máxima pelo django/geoserver saudáveis (padrão: 3600)
+#   MAX_FAILED_LIST=<n>              testes com falha listados por grupo no resumo (padrão: 20)
+#   GEONODE_SRC_REPO=<dono/repo>     repositório no GitHub de onde vêm os dados de teste (padrão: o
+#                                    do direct_url.json da imagem; ou GeoNode/geonode)
+#   GEONODE_SRC_REF=<commit|tag|branch>  ref desse repositório (padrão: o commit instalado na imagem,
+#                                    ou a tag da versão instalada)
+#   DOCKER_NAMESPACE=<nome>          prefixo das imagens, como no docker-compose.opengeosgb.yml (padrão:
+#                                    o do .env ou, sem ele, o COMPOSE_PROJECT_NAME)
+#
+# Os logs de cada grupo ficam em ~/.cache/opengeosgb-tests/logs/<data-hora>/<grupo>.log. O código de
+# saída é 0 só se todos os grupos passarem.
+
+set -euo pipefail
+
+ALL_GROUPS=(smoke main security gis_backend rest_apis csw upload)
+
+usage() {
+    cat <<EOF
+Uso: $(basename "$0") [opções] [grupo...]
+
+Executa os testes automatizados do GeoNode, por grupo (como na CI do GeoNode 5.0.x), numa stack
+descartável e isolada (projeto "<COMPOSE_PROJECT_NAME>test", sem nginx e sem portas publicadas),
+com as imagens já construídas por "geonode-docker build" (que têm o src/ do momento do build).
+Sem grupos, roda todos, na ordem abaixo.
+
+Grupos:
+  smoke        geonode.tests.smoke, test_rest_api, test_search, test_utils, test_headers
+  main         <app>.tests dos GEONODE_APPS (exceto security, geoserver e upload),
+               mais thumbs, people e geonode_openid_connect
+  security     <app>.tests dos GEONODE_APPS com "security"
+  gis_backend  <app>.tests dos GEONODE_APPS com "geoserver"
+  rest_apis    APIs REST (api, base, layers, maps, documents, geoapps)
+  csw          geonode.tests.csw e geonode.catalogue.backends.tests
+  upload       geonode.upload
+
+Opções:
+  -h, --help        mostra esta ajuda e sai
+  -l, --list        lista os grupos e sai
+  -f, --failfast    para cada grupo no primeiro teste com falha (como na CI)
+      --lang CODE   LANGUAGE_CODE dos testes (padrão: en-us, e não o do .env,
+                    pois vários testes do GeoNode comparam textos em inglês)
+      --relaxed     django/celery/geoserver como root, para separar falhas
+                    causadas pela execução sem root
+      --no-data     não baixa nem monta os dados de teste do GeoNode (código-fonte do
+                    commit instalado, em cache em ~/.cache/opengeosgb-tests/src/)
+  -k, --keep        mantém a stack de testes no final, para inspeção
+      --down        remove a stack de testes mantida (com os volumes) e sai
+
+Variáveis:
+  CONTAINER_ENGINE=docker|podman   força o engine (padrão: Docker se responder, senão Podman)
+  BOOT_TIMEOUT=<segundos>          espera máxima pelo django/geoserver saudáveis (padrão: 3600)
+  MAX_FAILED_LIST=<n>              testes com falha listados por grupo no resumo (padrão: 20)
+  GEONODE_SRC_REPO=<dono/repo>     repositório no GitHub dos dados de teste (padrão: o da
+                                   instalação na imagem, ex.: GeoNode/geonode)
+  GEONODE_SRC_REF=<ref>            commit, tag ou branch dele (padrão: o commit instalado)
+  DOCKER_NAMESPACE=<nome>          prefixo das imagens (padrão: o do .env ou o COMPOSE_PROJECT_NAME)
+
+Saída:
+  logs em ~/.cache/opengeosgb-tests/logs/<data-hora>/: <grupo>.log para cada grupo e
+  compose-up.log com a subida da stack; código 0 só se todos os grupos passarem.
+
+Exemplos:
+  $(basename "$0") smoke
+  $(basename "$0") main upload
+  $(basename "$0") --lang pt smoke
+  $(basename "$0") --failfast --keep gis_backend
+  $(basename "$0") --down
+EOF
+    exit "${1:-0}"
+}
+
+keep=false; down_only=false; failfast=""; lang="en-us"; relaxed=false; test_data=true; groups=()
+while [ $# -gt 0 ]; do
+    case "$1" in
+        -l|--list)     printf '%s\n' "${ALL_GROUPS[@]}"; exit 0 ;;
+        -k|--keep)     keep=true ;;
+        --down)        down_only=true ;;
+        -f|--failfast) failfast="--failfast" ;;
+        --lang)        [ $# -ge 2 ] || { echo "--lang exige um valor (ex.: en-us)" >&2; exit 1; }; lang="$2"; shift ;;
+        --lang=*)      lang="${1#--lang=}" ;;
+        --relaxed)     relaxed=true ;;
+        --no-data)     test_data=false ;;
+        -h|--help)     usage 0 ;;
+        -*)            echo "Opção desconhecida: $1" >&2; usage 1 ;;
+        *)             groups+=("$1") ;;
+    esac
+    shift
+done
+[ ${#groups[@]} -gt 0 ] || groups=("${ALL_GROUPS[@]}")
+for g in "${groups[@]}"; do
+    [[ " ${ALL_GROUPS[*]} " == *" $g "* ]] || { echo "Grupo desconhecido: '$g' (grupos: ${ALL_GROUPS[*]})" >&2; exit 1; }
+done
+
+# Executa a partir do diretório do projeto, independente de onde foi chamado
+cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")"
+[ -e .env ] || { echo "Não há .env no projeto (crie-o a partir do .env.sample)" >&2; exit 1; }
+
+# Lê uma variável do .env sem carregá-lo (sem aspas; não exibe valores)
+env_get() { sed -n -E "s/^$1=[\"']?([^\"']*)[\"']?\$/\1/p" .env | tail -n 1; }
+
+base_project="$(env_get COMPOSE_PROJECT_NAME)"
+[ -n "$base_project" ] || { echo "COMPOSE_PROJECT_NAME não definido no .env" >&2; exit 1; }
+project="${base_project}test"
+
+# --- Engine (Docker se o daemon responder, senão Podman) ---------------------------------------------------------------
+engine_ok() {
+    case "$1" in
+        docker) command -v docker >/dev/null 2>&1 && docker version --format '{{.Server.Version}}' >/dev/null 2>&1 ;;
+        podman) command -v podman >/dev/null 2>&1 && podman info --format '{{.Host.Arch}}' >/dev/null 2>&1 ;;
+        *) return 1 ;;
+    esac
+}
+engine="${CONTAINER_ENGINE:-}"
+if [ -n "$engine" ]; then
+    engine_ok "$engine" || { echo "CONTAINER_ENGINE='$engine' indisponível" >&2; exit 1; }
+elif engine_ok docker; then engine=docker
+elif engine_ok podman; then engine=podman
+else echo "Nenhum engine de containers disponível (Docker ou Podman)" >&2; exit 1
+fi
+case "$engine" in
+    docker) if docker compose version >/dev/null 2>&1; then compose=(docker compose); else compose=(docker-compose); fi ;;
+    podman) export PODMAN_COMPOSE_WARNING_LOGS=false; compose=(podman compose) ;;
+esac
+
+# --- Arquivos da stack de testes (fora do repositório; a cópia do .env tem segredos) ---------------
+state_dir="${XDG_CACHE_HOME:-$HOME/.cache}/opengeosgb-tests"
+run_dir="$state_dir/$project"
+mkdir -p "$run_dir"; chmod 700 "$state_dir" "$run_dir"
+env_copy="$run_dir/env"
+override="$run_dir/compose-override.yml"
+lock_dir="$state_dir/$project.lock"
+
+# Uma execução por vez: todas usam o mesmo projeto compose, e a limpeza de uma derrubaria a stack
+# da outra. A trava guarda o PID; trava de um processo que já terminou é descartada.
+take_lock() {
+    if ! mkdir "$lock_dir" 2>/dev/null; then
+        local pid; pid="$(cat "$lock_dir/pid" 2>/dev/null || true)"
+        if [ -n "$pid" ] && kill -0 "$pid" 2>/dev/null; then
+            echo "Já há uma execução do opengeosgb-tests em andamento (PID $pid); aguarde ou interrompa-a" >&2
+            exit 1
+        fi
+        rm -rf "$lock_dir"; mkdir "$lock_dir"
+    fi
+    echo $$ > "$lock_dir/pid"
+}
+release_lock() { rm -rf "$lock_dir"; }
+
+dc() { "${compose[@]}" -p "$project" --env-file "$env_copy" -f docker-compose.yml -f "$override" "$@"; }
+
+teardown() {
+    echo ">> Removendo a stack de testes '$project' e os volumes dela" >&2
+    dc down -v --remove-orphans >/dev/null 2>&1 || true
+    rm -rf "$run_dir"
+    release_lock
+}
+
+take_lock
+if $down_only; then
+    [ -f "$env_copy" ] || { release_lock; rmdir "$run_dir" 2>/dev/null || true; echo "Nenhuma stack de testes '$project' mantida" >&2; exit 0; }
+    teardown; exit 0
+fi
+
+# Sem --keep, a stack de testes e a cópia do .env são removidas na saída, inclusive em falhas
+if $keep; then trap release_lock EXIT; else trap teardown EXIT; fi
+# Ctrl+C ou SIGTERM: sai pelo caminho normal, para o trap de EXIT remover a stack
+trap 'echo ">> Interrompido" >&2; exit 130' INT TERM
+
+# Cópia do .env só com o nome do projeto trocado (e o idioma, se pedido)
+umask 077
+sed -E "s/^COMPOSE_PROJECT_NAME=.*/COMPOSE_PROJECT_NAME=$project/" .env > "$env_copy"
+if [ -n "$lang" ]; then
+    sed -i.bak -E "s/^LANGUAGE_CODE=.*/LANGUAGE_CODE=$lang/" "$env_copy" && rm -f "$env_copy.bak"
+    grep -q '^LANGUAGE_CODE=' "$env_copy" || echo "LANGUAGE_CODE=$lang" >> "$env_copy"
+fi
+# Variáveis como no .env_test da CI, só na stack de testes (no ambiente real continua valendo o .env).
+# Provider OIDC do GeoNode ativo: sem ele o app geonode_openid_connect fica fora do INSTALLED_APPS e
+# os testes do provider falham no setUp (o @override_settings dos testes não altera o INSTALLED_APPS).
+# URLs como no .env_test da CI: o GeoNode chama a si mesmo pelo SITEURL (CSW em /catalogue/csw, proxy
+# do GeoServer em /gs/), e dentro do container django "localhost" é o próprio container, onde só o
+# uWSGI (porta 8000) atende; vários testes também esperam "http://localhost:8000/" fixo nos resultados
+test_env_overrides=(
+    "SOCIALACCOUNT_OIDC_PROVIDER_ENABLED=True"
+    "SITEURL=http://localhost:8000/"
+    "GEOSERVER_WEB_UI_LOCATION=http://localhost:8000/geoserver/"
+    # Sinais síncronos, como os testes do GeoNode pressupõem (no .env real, True: via Celery)
+    "ASYNC_SIGNALS=False"
+    # Cadastro aberto: test_users_register_email_verification cadastra um usuário pelo formulário
+    "ACCOUNT_OPEN_SIGNUP=True"
+    # Cadastro pelo login social aberto (padrão do GeoNode; o .env_test não define): os testes do
+    # geonode_openid_connect criam o usuário no login social
+    "ACCOUNT_OPEN_SOCIALSIGNUP=True"
+    # Sem o bloqueio de URLs locais/privadas (proteção contra SSRF) no upload de recursos remotos: os
+    # testes de importação de WMS usam http://localhost:8000/proxy (os testes do próprio bloqueio o
+    # religam com override_settings)
+    "SAFE_URL_CHECK_ENABLED=False"
+    # Log do invoke no stdout: sem o ./src montado (como no docker-compose.opengeosgb.yml), o
+    # /usr/src/project da imagem não é gravável para o UID 1000, onde o entrypoint gravaria o invoke.log
+    "INVOKE_LOG_STDOUT=True"
+    # Fluxo de publicação, grupos e cadastro como no .env_test da CI: os testes de permissões, busca e
+    # APIs pressupõem os padrões do GeoNode (no .env do opengeosgb, publicação moderada, grupos
+    # privados e reCAPTCHA ligados)
+    "RESOURCE_PUBLISHING=False"
+    "ADMIN_MODERATE_UPLOADS=False"
+    "GROUP_PRIVATE_RESOURCES=False"
+    "RECAPTCHA_ENABLED=False"
+    # Provider social padrão do .env_test (testes do geonode_openid_connect com o Google)
+    "SOCIALACCOUNT_PROVIDER=google"
+)
+for kv in "${test_env_overrides[@]}"; do
+    sed -i.bak -E "/^${kv%%=*}=/d" "$env_copy" && rm -f "$env_copy.bak"
+    echo "$kv" >> "$env_copy"
+done
+umask 022
+
+# Imagens do ambiente, com os nomes do docker-compose.opengeosgb.yml, que é quem as constrói (o compose
+# base montaria os nomes com o projeto de testes e sem os sufixos)
+ns="${DOCKER_NAMESPACE:-$(env_get DOCKER_NAMESPACE)}"; ns="${ns:-$base_project}"
+img_geonode="$ns/geonode:$(env_get GEONODE_BASE_IMAGE_VERSION)-rootless"
+img_geoserver="$ns/geoserver:$(env_get GEOSERVER_BASE_IMAGE_VERSION)-geonode"
+img_postgis="$ns/postgis:$(env_get POSTGRES_BASE_IMAGE_VERSION)-$(env_get POSTGIS_BASE_IMAGE_VERSION)-geonode"
+for img in "$img_geonode" "$img_geoserver" "$img_postgis"; do
+    "$engine" image inspect "$img" >/dev/null 2>&1 || {
+        echo "Imagem $img não encontrada: rode 'geonode-docker build' antes (source opengeosgb-alias.sh)" >&2; exit 1; }
+done
+# Plataforma de cada imagem (a do build, que segue a arquitetura do host; os containers de teste usam a mesma)
+img_platform() { "$engine" image inspect -f '{{.Os}}/{{.Architecture}}' "$1"; }
+
+# --- Dados de teste do GeoNode (código-fonte do commit instalado, em cache) --------------------------
+# O wheel construído na instalação não traz os arquivos de dados dos testes; o fonte do mesmo commit
+# tem os mesmos .py e os dados
+src_mount=/usr/src/geonode
+test_pkg=""   # pacote do fonte, apontado pelo link "geonode" do diretório de trabalho dos testes
+if $test_data; then
+    # Versão, local do pacote e origem da instalação (direct_url.json do pip, PEP 610), ex.:
+    # "5.0.3 /usr/local/lib/python3.12/dist-packages/geonode vcs GeoNode/geonode <commit>"
+    read -r gn_version gn_pkg_dir gn_mode gn_repo gn_commit < <("$engine" run --rm --platform "$(img_platform "$img_geonode")" \
+        --entrypoint python "$img_geonode" -c '
+import importlib.metadata as m, json, os, re, geonode
+d = m.distribution("geonode")
+u = json.loads(d.read_text("direct_url.json") or "{}")
+g = re.match(r"(?:git\+)?https://github\.com/([^/]+/[^/]+?)(?:\.git)?/?$", u.get("url", ""))
+c = u.get("vcs_info", {}).get("commit_id")
+mode = "editable" if u.get("dir_info", {}).get("editable") else ("vcs" if g and c else "pypi")
+print(d.version, os.path.dirname(geonode.__file__), mode, g.group(1) if g else "-", c or "-")' 2>/dev/null) \
+        || { echo "Não foi possível ler a versão do GeoNode na imagem $img_geonode" >&2; exit 1; }
+    if [ "$gn_mode" = editable ] && [ -z "${GEONODE_SRC_REF:-}${GEONODE_SRC_REPO:-}" ]; then
+        # Instalação editável: o fonte completo, com os dados, já está na imagem
+        test_pkg="$gn_pkg_dir"
+        echo ">> Dados de teste: GeoNode $gn_version instalado em modo editável ($gn_pkg_dir, na imagem)" >&2
+    else
+        if [ "$gn_mode" = vcs ]; then
+            src_repo="${GEONODE_SRC_REPO:-$gn_repo}"; src_ref="${GEONODE_SRC_REF:-$gn_commit}"
+        else
+            src_repo="${GEONODE_SRC_REPO:-GeoNode/geonode}"; src_ref="${GEONODE_SRC_REF:-${gn_version%%.post*}}"
+        fi
+        src_dir="$state_dir/src/${src_repo//\//_}-${src_ref//\//_}"
+        if [ ! -f "$src_dir/geonode/__init__.py" ]; then
+            echo ">> Baixando os dados de teste do GeoNode (código-fonte de $src_repo@$src_ref)" >&2
+            mkdir -p "$state_dir/src"
+            src_tmp="$(mktemp -d "$state_dir/src/.download.XXXXXX")"
+            if ! curl -fsSL "https://codeload.github.com/$src_repo/tar.gz/$src_ref" | tar -xz -C "$src_tmp" --strip-components=1 \
+                || [ ! -f "$src_tmp/geonode/__init__.py" ]; then
+                rm -rf "$src_tmp"
+                echo "Falha ao baixar $src_repo@$src_ref do GitHub (defina GEONODE_SRC_REPO/GEONODE_SRC_REF ou use --no-data)" >&2
+                exit 1
+            fi
+            # mktemp -d cria com 0700: sem leitura para o UID dos containers (1000) fora do Podman rootless
+            chmod 755 "$src_tmp"
+            rm -rf "$src_dir"; mv "$src_tmp" "$src_dir"
+        fi
+        test_pkg="$src_mount/geonode"
+        echo ">> Dados de teste: $src_repo@$src_ref (instalado: GeoNode $gn_version) em $src_dir" >&2
+    fi
+fi
+
+# Usuário dos containers: o do docker-compose.opengeosgb.yml (UID arbitrário com grupo 0), ou root
+run_user="1000:0"; $relaxed && run_user="0:0"
+{
+    echo "# Gerado por opengeosgb-tests: stack de testes descartável"
+    echo "services:"
+    for svc in django celery geoserver db; do
+        case "$svc" in django|celery) img=$img_geonode ;; geoserver) img=$img_geoserver ;; db) img=$img_postgis ;; esac
+        echo "  $svc:"
+        echo "    image: $img"
+        echo "    platform: $(img_platform "$img")"
+        echo "    env_file: [\"$env_copy\"]"
+        [ "$svc" = db ] || echo "    user: \"$run_user\""
+        if [ "$svc" = geoserver ]; then
+            # Como no docker-compose.opengeosgb.yml: no Podman o HOME de um UID sem passwd vira o
+            # WORKDIR (do root) e o entrypoint não consegue criar o .bashrc
+            echo "    environment: [\"HOME=/tmp\"]"
+            # O compose base publica a 8080 do GeoServer, que conflitaria com a stack do ambiente
+            # (!reset exige docker compose 2.24.4 ou mais novo, também como provider do podman compose)
+            echo "    ports: !reset []"
+        fi
+        if [ -n "$test_pkg" ] && [ "$test_pkg" != "$gn_pkg_dir" ] && { [ "$svc" = django ] || [ "$svc" = celery ]; }; then
+            echo "    volumes:"
+            # Graváveis, como na CI: alguns testes gravam arquivos no fonte (ex.: test_sld.sld em
+            # geonode/base/fixtures/); o fonte fica no cache e é baixado de novo se for apagado
+            echo "      - \"$src_dir:$src_mount\""
+            echo "      - \"$src_dir/geonode:$gn_pkg_dir\""
+        fi
+    done
+} > "$override"
+
+log_dir="$state_dir/logs/$(date +%Y%m%d-%H%M%S)"
+mkdir -p "$log_dir"
+up_log="$log_dir/compose-up.log"
+
+# Subida com o progresso do compose (stdout e stderr) no log, e o final dele na tela em caso de falha
+dc_up() {
+    dc up -d --no-build "$@" >> "$up_log" 2>&1 || {
+        echo "Falha ao subir $*; final de $up_log:" >&2; tail -n 20 "$up_log" >&2; return 1; }
+}
+
+# --- Subida da stack --------------------------------------------------------------------------------
+boot_timeout="${BOOT_TIMEOUT:-3600}"
+wait_healthy() {
+    local svc=$1 cid status waited=0
+    # Nome fixo do compose (container_name: <serviço>4${COMPOSE_PROJECT_NAME}); o "ps -q" do
+    # podman compose não devolve o ID
+    cid="${svc}4${project}"
+    while :; do
+        status="$("$engine" inspect -f '{{.State.Status}} {{if .State.Health}}{{.State.Health.Status}}{{end}}' "$cid" 2>/dev/null || echo missing)"
+        case "$status" in
+            "running healthy") return 0 ;;
+            exited*|dead*|missing) echo "O serviço $svc parou ($status); veja: ${compose[*]} -p $project logs $svc" >&2; return 1 ;;
+        esac
+        [ "$waited" -lt "$boot_timeout" ] || { echo "Tempo esgotado esperando o $svc ficar saudável ($status)" >&2; return 1; }
+        # No Podman, o healthcheck periódico depende de um timer (systemd) que às vezes para de
+        # disparar: o container fica "unhealthy"/"starting" para sempre, com o serviço já no ar.
+        # Roda a verificação a cada 30 s, o que também atualiza o estado do container.
+        if [ "$engine" = podman ] && [ "$waited" -gt 0 ] && [ $((waited % 30)) -eq 0 ]; then
+            podman healthcheck run "$cid" >/dev/null 2>&1 || true
+        fi
+        sleep 10; waited=$((waited + 10))
+    done
+}
+
+echo ">> Engine: $engine | stack de testes: $project | grupos: ${groups[*]}$($relaxed && echo ' | modo relaxed (root, gravável)')" >&2
+echo ">> Logs em $log_dir" >&2
+echo ">> Subindo db, redis, memcached e django (o primeiro boot roda migrações e fixtures)" >&2
+dc_up db redis memcached django
+wait_healthy django
+echo ">> Subindo celery e geoserver" >&2
+dc_up celery geoserver
+wait_healthy geoserver
+
+# Camadas de exemplo, como o "paver setup_data" da CI: importlayers envia os arquivos do gisdata pela
+# API de upload do próprio django (SITEURL na porta 8000), e o celery os publica no banco principal e
+# no GeoServer. Os testes de csw e de upload consultam esses dados por HTTP, fora do banco de teste.
+# Credenciais: ADMIN_USERNAME/ADMIN_PASSWORD do env (não são impressas)
+if $test_data; then
+    echo ">> Importando as camadas de exemplo do gisdata (log em $log_dir/importlayers.log)" >&2
+    start=$(date +%s)
+    set +e
+    dc exec -T django bash -s > "$log_dir/importlayers.log" 2>&1 <<'EOF'
+set -e
+umask 0002
+# O entrypoint roda com HOME=/tmp e grava lá o .override_env (no exec, o HOME é outro)
+export HOME=/tmp
+[ -f /tmp/.override_env ] && source /tmp/.override_env
+export DJANGO_SETTINGS_MODULE="${DJANGO_SETTINGS_MODULE:-opengeosgb.settings}"
+mkdir -p /tmp/geonode-tests && cd /tmp/geonode-tests
+GOOD_DATA="$(python -c 'import gisdata; print(gisdata.GOOD_DATA)')"
+python /usr/src/project/manage.py importlayers -v2 -hh "$SITEURL" "$GOOD_DATA"
+EOF
+    rc=$?
+    set -e
+    n_ok="$(python3 -c 'import json,re,sys
+t=open(sys.argv[1]).read(); m=re.search(r"Importlayers results:\s*(\{.*\})", t, re.S)
+r=json.loads(m.group(1)) if m else None
+print("%d importadas, %d com erro" % (len(r["success"]), len(r["errors"])) if r else "sem resultado")' "$log_dir/importlayers.log" 2>/dev/null || echo "sem resultado")"
+    echo ">> importlayers: rc=$rc, $n_ok, $(( ($(date +%s) - start) / 60 )) min" >&2
+    [ "$rc" -eq 0 ] || echo "AVISO: importlayers falhou; os grupos csw e upload devem falhar nos testes que dependem dos dados" >&2
+fi
+
+# --- Execução dos grupos ----------------------------------------------------------------------------
+pg_user="$(env_get POSTGRES_USER)"; pg_user="${pg_user:-postgres}"
+db_main="$(env_get GEONODE_DATABASE)";   db_main_owner="$(env_get GEONODE_DATABASE_USER)"
+db_data="$(env_get GEONODE_GEODATABASE)"; db_data_owner="$(env_get GEONODE_GEODATABASE_USER)"
+
+# Bancos de teste recriados a cada grupo (na CI, cada grupo roda numa stack nova)
+reset_test_dbs() {
+    dc exec -T db psql -U "$pg_user" -qc \
+        "SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname LIKE 'test\_%' AND pid <> pg_backend_pid();" >/dev/null
+    local pair db owner
+    for pair in "test_$db_main:$db_main_owner" "test_$db_data:$db_data_owner"; do
+        db=${pair%%:*}; owner=${pair##*:}
+        # client_min_messages=warning: sem o NOTICE de "does not exist, skipping" do --if-exists
+        dc exec -T -e PGOPTIONS="-c client_min_messages=warning" db dropdb -U "$pg_user" --if-exists "$db"
+        dc exec -T db createdb -U "$pg_user" -O "$owner" "$db"
+        dc exec -T db psql -U "$pg_user" -d "$db" -qc "CREATE EXTENSION IF NOT EXISTS postgis;"
+    done
+}
+
+# Rótulos de teste de cada grupo, avaliados dentro do container (GEONODE_APPS vem dos settings)
+labels_for() {
+    local sel='import django; django.setup(); from django.conf import settings as s; print(" ".join(a + ".tests" for a in s.GEONODE_APPS if FILTER))'
+    case "$1" in
+        smoke)       echo 'geonode.tests.smoke geonode.tests.test_rest_api geonode.tests.test_search geonode.tests.test_utils geonode.tests.test_headers' ;;
+        main)        echo "\$(python -c '${sel/FILTER/\"security\" not in a and \"geoserver\" not in a and \"upload\" not in a}' 2>/dev/null | tail -n 1) geonode.thumbs.tests geonode.people.tests geonode.people.socialaccount.providers.geonode_openid_connect.tests" ;;
+        security)    echo "\$(python -c '${sel/FILTER/\"security\" in a}' 2>/dev/null | tail -n 1)" ;;
+        gis_backend) echo "\$(python -c '${sel/FILTER/\"geoserver\" in a}' 2>/dev/null | tail -n 1)" ;;
+        rest_apis)   echo 'geonode.api.tests geonode.base.api.tests geonode.layers.api.tests geonode.maps.api.tests geonode.documents.api.tests geonode.geoapps.api.tests' ;;
+        csw)         echo 'geonode.tests.csw geonode.catalogue.backends.tests' ;;
+        upload)      echo 'geonode.upload' ;;
+    esac
+}
+
+declare -a summary=()
+overall=0
+max_failed_list="${MAX_FAILED_LIST:-20}"
+
+for g in "${groups[@]}"; do
+    start=$(date +%s)
+    echo ">> [$g] início $(date +%H:%M:%S)" >&2
+    reset_test_dbs
+    set +e
+    dc exec -T django bash -s > "$log_dir/$g.log" 2>&1 <<EOF
+set -e
+export HOME=/tmp
+[ -f /tmp/.override_env ] && source /tmp/.override_env
+export DJANGO_SETTINGS_MODULE="\${DJANGO_SETTINGS_MODULE:-opengeosgb.settings}"
+cd /usr/src/project
+T="$(labels_for "$g")"
+[ -n "\$(echo \$T | tr -d ' ')" ] || { echo "ERRO: lista de testes vazia para o grupo $g"; exit 2; }
+echo "LABELS: \$T"
+# Diretório de trabalho gravável (volume tmp, em /tmp), pois os testes criam arquivos no diretório atual
+# (ex.: a trava "send_notices" do send_all() do pinax); com os dados de teste, o link "geonode" faz
+# os caminhos relativos dos testes ("geonode/base/fixtures/...") acharem o fonte, como na CI
+mkdir -p /tmp/geonode-tests
+$([ -n "$test_pkg" ] && echo "ln -sfn $test_pkg /tmp/geonode-tests/geonode")
+cd /tmp/geonode-tests
+python /usr/src/project/manage.py test -v 2 --keepdb --noinput $failfast \$T
+EOF
+    rc=$?
+    set -e
+    mins=$(( ($(date +%s) - start) / 60 ))
+    # Resultado do unittest ("Ran N tests in Xs" + "OK"/"FAILED (...)") ou o erro do próprio script,
+    # numa linha; os testes com falha vão abaixo, um por linha
+    result="$(grep -E '^Ran [0-9]+ tests? in |^(OK|FAILED)( \(.*\))?$|^ERRO: ' "$log_dir/$g.log" \
+        | awk 'NR > 1 { printf ", " } { printf "%s", $0 }' || true)"
+    [ "$rc" -eq 0 ] || overall=1
+    line="$(printf '%-12s %-14s %3d min  %s' "$g" "$([ "$rc" -eq 0 ] && echo 'PASSOU' || echo "FALHOU (rc=$rc)")" "$mins" "${result:-sem resumo; veja o log}")"
+    # "ERROR: test_x (geonode.app.tests.Classe.test_x)" -> "ERROR geonode.app.tests.Classe.test_x"
+    failed="$(grep -E '^(FAIL|ERROR): ' "$log_dir/$g.log" | sed -E 's/^(FAIL|ERROR): [^ ]+ \((.*)\)$/\1 \2/' || true)"
+    if [ -n "$failed" ]; then
+        n_failed=$(printf '%s\n' "$failed" | wc -l | tr -d ' ')
+        line+=$'\n'"$(printf '%s\n' "$failed" | head -n "$max_failed_list" | sed 's/^/      /')"
+        [ "$n_failed" -le "$max_failed_list" ] || line+=$'\n'"      ... e mais $((n_failed - max_failed_list)); veja $g.log"
+    fi
+    summary+=("$line")
+    echo ">> $line" >&2
+done
+
+echo
+echo "Resumo ($project, logs em $log_dir):"
+for line in "${summary[@]}"; do printf '  %s\n' "$line"; done
+$keep && echo ">> Stack mantida. Para remover: ./opengeosgb-tests --down" >&2
+exit "$overall"
