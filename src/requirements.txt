@@ -3,3 +3,5 @@
 # pip install -e git+https://github.com/GeoNode/geonode-mapstore-client.git@master#egg=django_geonode_mapstore_client
 # GeoNode do upstream, na tag 5.0.3 (sem fork)
 git+https://github.com/GeoNode/geonode.git@5.0.3#egg=GeoNode
+# Catálogo CSW com ISO 19115-3 (app separado, extraído do opengeosgb), fixado por commit do main
+git+https://github.com/nds-cprm/geonode-catalogue-iso19115-3.git@6e6b3d10c53d24bc2c5f6720d0ce32eb2d001bb2#egg=geonode-catalogue-iso19115-3

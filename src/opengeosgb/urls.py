@@ -21,8 +21,10 @@
 from django.conf import settings
 from django.contrib import admin
 from django.urls import path, re_path, include
+from django.views.generic import RedirectView
 from django.contrib.flatpages.sitemaps import FlatPageSitemap
 from geonode.urls import urlpatterns, sitemaps
+from geonode_catalogue_iso19115_3.urls import urlpatterns as catalogue_urlpatterns
 
 from . import views
 from .metadata.views import RegionsI18nAutocomplete, metadata_page, metadata_page_embed, scales_autocomplete
@@ -41,7 +43,16 @@ if settings.RECAPTCHA_ENABLED:
 urlpatterns[0:0] = [
     re_path(r"^metadata/(?P<pk>[^/]*)$", metadata_page, name="metadata"),
     re_path(r"^metadata/(?P<pk>[^/]*)/embed$", metadata_page_embed, name="metadata_embed"),
+    # Link "ISO with XSL" do GeoNode (app geonode.catalogue.metadataxsl): o metadata.xsl só entende
+    # ISO 19139 e os navegadores estão removendo o XSLT, então a rota leva à página de metadados.
+    # Mesmo nome de rota, para o GeoNode continuar gerando o link com o mesmo endereço. Redirecionamento
+    # temporário (302), para não ficar em cache se a rota voltar a ser usada
+    re_path(r"^showmetadata/xsl/(?P<pk>\d+)$", RedirectView.as_view(pattern_name="metadata"), name="prefix_xsl_line"),
 ]
+
+# /catalogue/csw do app geonode-catalogue-iso19115-3 (ISO 19115-3 e correções do CSW),
+# antes da rota de mesmo endereço do GeoNode
+urlpatterns[0:0] = catalogue_urlpatterns
 
 urlpatterns += [
     # flatpages

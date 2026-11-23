@@ -1,4 +1,6 @@
 from geonode.settings import *
+# constantes sem dependências, importáveis num módulo de settings
+from geonode_catalogue_iso19115_3.constants import ENGINE as CATALOGUE_ISO19115_3_ENGINE, ISO19115_3, ISO19139
 
 # Flatpages
 if SITE_ID and ("django.contrib.flatpages" not in INSTALLED_APPS):
@@ -124,7 +126,28 @@ PYCSW["CONFIGURATION"]["metadata"]["contact"] = {
     "role": "pointOfContact",
 }
 
-# CATALOGUE_METADATA_TEMPLATE = "catalogue/full_metadata.xml"
+# Catálogo CSW com ISO 19115-3 (app geonode-catalogue-iso19115-3). O backend do app grava o
+# metadata_xml no formato de CATALOGUE_DEFAULT_FORMAT (ISO19115-3_2018 ou ISO, isto é, ISO 19139);
+# a view /catalogue/csw do app é inserida antes da do GeoNode em urls.py
+INSTALLED_APPS += ("geonode_catalogue_iso19115_3",)
+
+CATALOGUE["default"]["ENGINE"] = os.getenv("CATALOGUE_ENGINE", CATALOGUE_ISO19115_3_ENGINE)
+CATALOGUE_DEFAULT_FORMAT = os.getenv("CATALOGUE_DEFAULT_FORMAT", ISO19115_3)
+
+# Templates do opengeosgb: estendem os do app e acrescentam a escala (campo esparso "scale")
+CATALOG_METADATA_TEMPLATE = os.getenv(
+    "CATALOG_METADATA_TEMPLATE",
+    {
+        ISO19115_3: "opengeosgb/catalogue/full_metadata_iso19115-3.xml",
+        ISO19139: "opengeosgb/catalogue/full_metadata_iso19139.xml",
+    }.get(CATALOGUE_DEFAULT_FORMAT, ""),
+)
+# o aviso W002 aponta template diferente do padrão do formato; os do opengeosgb o estendem
+SILENCED_SYSTEM_CHECKS = list(globals().get("SILENCED_SYSTEM_CHECKS", [])) + ["geonode_catalogue_iso19115_3.W002"]
+
+# GetDomain devolve todos os valores com a contagem, e não só mínimo e máximo
+PYCSW["CONFIGURATION"]["server"]["domainquerytype"] = "list"
+
 # CATALOGUE_METADATA_XSL = "/static/metadataxsl/metadata.xsl"
 
 # DOWNLOAD_FORMATS_METADATA = [

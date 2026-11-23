@@ -1,0 +1,15 @@
+{% extends "geonode_catalogue_iso19115_3/full_metadata_iso19139.xml" %}{% load l10n %}
+{% comment %}opengeosgb: escala do recurso (campo esparso "scale", {id: denominador, label}) em gmd:spatialResolution{% endcomment %}
+{% block spatial_resolution %}{% if metadata.scale.id %}
+       <gmd:spatialResolution>
+         <gmd:MD_Resolution>
+           <gmd:equivalentScale>
+             <gmd:MD_RepresentativeFraction>
+               <gmd:denominator>
+                 <gco:Integer>{{ metadata.scale.id|unlocalize }}</gco:Integer>
+               </gmd:denominator>
+             </gmd:MD_RepresentativeFraction>
+           </gmd:equivalentScale>
+         </gmd:MD_Resolution>
+       </gmd:spatialResolution>
+{% endif %}{% endblock %}
