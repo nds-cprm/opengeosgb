@@ -10,11 +10,21 @@ if SITE_ID and ("django.contrib.flatpages" not in INSTALLED_APPS):
     INSTALLED_APPS += ("django.contrib.flatpages",)
     MIDDLEWARE += ("django.contrib.flatpages.middleware.FlatpageFallbackMiddleware",)
 
-# Editor de flatpages (TinyMCE, sanitização, imagens por página); precisa vir depois de
-# django.contrib.flatpages, pois substitui o admin dele
+# Editor de flatpages (pacote geonode-flatpages-editor: TinyMCE, sanitização, imagens por página);
+# precisa vir depois de django.contrib.flatpages, pois substitui o admin dele
 if "django.contrib.flatpages" in INSTALLED_APPS:
-    INSTALLED_APPS += ("opengeosgb.flatpages_editor.apps.FlatpagesEditorConfig",)
-    
+    INSTALLED_APPS += ("geonode_flatpages_editor",)
+
+    # Limpeza diária (3h) das imagens órfãs das flatpages. A tarefa não define fila, e o worker do
+    # GeoNode só consome as filas de CELERY_TASK_QUEUES, por isso a fila "cleanup"
+    from celery.schedules import crontab
+
+    CELERY_BEAT_SCHEDULE["flatpages-cleanup-images"] = {
+        "task": "geonode_flatpages_editor.cleanup_orphan_images",
+        "schedule": crontab(hour=3, minute=0),
+        "options": {"queue": "cleanup"},
+    }
+
 
 # Internationalization
 # geonode.settings lines 1551-1565
