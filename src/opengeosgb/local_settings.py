@@ -158,6 +158,16 @@ SILENCED_SYSTEM_CHECKS = list(globals().get("SILENCED_SYSTEM_CHECKS", [])) + ["g
 # GetDomain devolve todos os valores com a contagem, e não só mínimo e máximo
 PYCSW["CONFIGURATION"]["server"]["domainquerytype"] = "list"
 
+# O CSW só entrega datasets e mapas aprovados e publicados, para todos os usuários (inclusive
+# admin). PYCSW["FILTER"] é do GeoNode, que o aplica só no GetRecords (padrão: só datasets); a
+# view /catalogue/csw do app geonode_catalogue_iso19115_3 o aplica também no GetRecordById e
+# no GetDomain. Ele substitui o padrão inteiro
+PYCSW["FILTER"] = {
+    "resource_type__in": ["dataset", "map"],
+    "is_approved": True,
+    "is_published": True,
+}
+
 # CATALOGUE_METADATA_XSL = "/static/metadataxsl/metadata.xsl"
 
 # DOWNLOAD_FORMATS_METADATA = [
