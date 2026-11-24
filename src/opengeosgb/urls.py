@@ -23,6 +23,7 @@ from django.contrib import admin
 from django.urls import path, re_path, include
 from django.contrib.flatpages.sitemaps import FlatPageSitemap
 from geonode.urls import urlpatterns, sitemaps
+from geonode_catalogue_iso19115_3.urls import urlpatterns as catalogue_urlpatterns
 
 from . import views
 from .metadata.views import RegionsI18nAutocomplete, metadata_page, metadata_page_embed, scales_autocomplete
@@ -42,6 +43,11 @@ urlpatterns[0:0] = [
     re_path(r"^metadata/(?P<pk>[^/]*)$", metadata_page, name="metadata"),
     re_path(r"^metadata/(?P<pk>[^/]*)/embed$", metadata_page_embed, name="metadata_embed"),
 ]
+
+# Rotas do app geonode-catalogue-iso19115-3, antes das de mesmo endereço do GeoNode: /catalogue/csw
+# (ISO 19115-3 e correções do CSW) e /showmetadata/xsl/<id> (link "ISO with XSL"), que com ISO 19115-3
+# redireciona para a rota "metadata", isto é, a página de metadados do opengeosgb
+urlpatterns[0:0] = catalogue_urlpatterns
 
 urlpatterns += [
     # flatpages
