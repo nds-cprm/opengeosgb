@@ -2,10 +2,10 @@
 # pip install -e git+https://github.com/GeoNode/geonode.git@master#egg=geonode
 # pip install -e git+https://github.com/GeoNode/geonode-mapstore-client.git@master#egg=django_geonode_mapstore_client
 # GeoNode do upstream, na tag 5.0.3 (sem fork)
-git+https://github.com/GeoNode/geonode.git@5.0.3#egg=GeoNode
+GeoNode @ git+https://github.com/GeoNode/geonode.git@5.0.3
 
 # Catálogo CSW com ISO 19115-3 (app separado, extraído do opengeosgb)
-git+https://github.com/nds-cprm/geonode-catalogue-iso19115-3.git@0.3.0#egg=geonode-catalogue-iso19115-3
+geonode-catalogue-iso19115-3 @ git+https://github.com/nds-cprm/geonode-catalogue-iso19115-3.git@0.4.1
 
 # Editor das flatpages no admin (TinyMCE, sanitização, upload de imagens)
-geonode-flatpages-editor @ git+https://github.com/nds-cprm/geonode-flatpages-editor@v0.2.0
+geonode-flatpages-editor @ git+https://github.com/nds-cprm/geonode-flatpages-editor.git@v0.2.0
