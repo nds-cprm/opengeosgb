@@ -89,6 +89,7 @@ services:
   mailserver:
     image: python:3.11-alpine
     container_name: mailserver4${COMPOSE_PROJECT_NAME}
+    restart: unless-stopped
     command: >
       sh -c "python -m smtpd -d -c DebuggingServer -n 0.0.0.0:1025"
     ports:
