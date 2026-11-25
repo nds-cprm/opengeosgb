@@ -1,0 +1,10 @@
+# Versões que substituem as fixadas pelo GeoNode instalado, por correções de segurança.
+# O Dockerfile as instala com "pip install --no-deps" depois do requirements.txt, porque o resolvedor do pip
+# recusaria a combinação. O build-smoke-test.sh aceita no "pip check" só as divergências causadas por estas
+# linhas. Use uma versão exata por linha (pacote==versão) e remova a linha quando o GeoNode instalado já
+# exigir a mesma versão ou uma mais nova.
+
+# GeoNode 5.0.3 fixa Pillow==12.1.1, afetado por dezenas de vulnerabilidades (heap overflow, injeção de
+# argumento no Ghostscript, bombas de descompressão), algumas só corrigidas no 13.0.0. O GeoNode upstream
+# já usa o 13.0.0 nos branches 5.1.x e master, mas não no 5.0.x.
+Pillow==13.0.0

@@ -30,6 +30,11 @@ RUN pip install --src /usr/src -r requirements.txt && \
     mkdir -p /mnt/volumes/statics /geoserver_data/data /backup_restore /data /var/log/geonode && \
     chmod g=u /mnt/volumes/statics /geoserver_data/data /backup_restore /data /var/log/geonode
 
+# Correções de segurança: versões mais novas que as fixadas pelo GeoNode (ex.: Pillow). --no-deps porque o
+# resolvedor do pip recusaria a combinação; o build-smoke-test.sh aceita só essas divergências no pip check.
+COPY src/requirements-overrides.txt .
+RUN pip install --no-deps -r requirements-overrides.txt
+
 # 755 (e não só +x): scripts precisam de leitura para rodar com um usuário que não é root
 COPY --chmod=755 src/wait-for-databases.sh /usr/bin/wait-for-databases
 COPY --chmod=755 src/celery.sh /usr/bin/celery-commands
@@ -39,8 +44,9 @@ COPY --chmod=755 src/celery-cmd /usr/bin/celery-cmd
 # o dono (ex.: UID aleatório do OpenShift, grupo 0) não consegue ler manage.py nem o pacote
 COPY --chmod=755 src/ .
 
-# O smoke test da base confere o venv depois dos pacotes do projeto (GDAL, psycopg2, invoke, pip check...)
+# O smoke test da base confere o venv depois dos pacotes do projeto (GDAL, psycopg2, invoke, pip check...).
+# O build-smoke-test.sh o roda aceitando só as divergências do pip check de requirements-overrides.txt
 RUN yes w | pip install -e . && \
-    geonode-base-smoke-test
+    ./build-smoke-test.sh
 
 EXPOSE 8000
