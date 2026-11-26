@@ -296,8 +296,8 @@
             "syncWarningMessage": "O processo de sincronização atualizou os seguintes recursos: {successTitles}. Os seguintes recursos não foram atualizados: {errorTitles}. Isto pode ocorrer porque os recursos foram excluídos do banco de dados",
             "applyStyle": "Aplicar",            
             "resourceOrigin": {
-                "a": "a",
-                "from": "from"
+                "a": "Recurso do tipo",
+                "from": "de"
             },
             "styleEditorCloseTitle": "Alterações pendentes",
             "styleEditorCloseMessage": "Você tem certeza em fechar o editor de estilos, sem aplicar as mudanças??",
