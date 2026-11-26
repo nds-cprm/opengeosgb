@@ -73,6 +73,12 @@ def run_setup_hooks(*args, **kwargs):
 
     pre_save.connect(set_resource_defaults, dispatch_uid="opengeosgb_set_resource_defaults")
 
+    # PATCH/PUT da API v2 que muda is_approved, is_published ou o grupo passa a recalcular as
+    # permissões do fluxo (o GeoNode 5.0.3 só grava as flags)
+    from .workflow import patch_resource_serializer_update
+
+    patch_resource_serializer_update()
+
 
 class AppConfig(BaseAppConfig):
     name = "opengeosgb"

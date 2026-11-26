@@ -131,6 +131,53 @@ As imagens órfãs (de páginas novas não salvas, removidas do conteúdo ou de 
 
 **Padrões de recursos novos.** Em `opengeosgb/signals.py`, um `pre_save` age só na criação de um recurso: se as informações complementares estiverem com o texto padrão do GeoNode ("No information provided"), deixa o campo vazio. Para os recursos existentes, o comando `python manage.py clear_default_supplemental_information [--dry-run]` esvazia esse texto padrão. Ele não regrava o XML de metadados; rode `regenerate_metadata_xml` depois (ver "Campos extras do editor").
 
+**Fluxo de aprovação e publicação (GeoNode 5.0.3).** O projeto não altera as regras do GeoNode: o fluxo é escolhido só pelas flags `RESOURCE_PUBLISHING` (RP) e `ADMIN_MODERATE_UPLOADS` (AMU) do `.env`. Por isso, confira o valor do ambiente antes de diagnosticar. Em 25/11/2026, o dev estava no modo avançado e o sandbox no simplificado. As regras estão no core:
+- `get_workflow_permissions` e `handle_moderated_uploads`, em `geonode/security/utils.py`;
+- `user_can_approve`, `user_can_publish` e `get_visible_resources`, em `geonode/security/registry.py`;
+- a checagem do serializer, em `geonode/base/api/serializers.py` (`ROLE_BASED_MANAGED_FIELDS`).
+
+Os dados abaixo vêm da leitura do código; só o modo avançado foi testado no stack, em 25/11/2026.
+
+"Gerente" e "membro" não são só os do grupo atribuído ao recurso. O `get_group_managers` (`geonode/security/models.py:140`) junta esse grupo com **todos os grupos de que o dono participa**, exceto o `registered-members`, e usa os gerentes e os membros de todos eles. Gerentes que são superusuários ficam de fora da lista. Consequências:
+- **O gerente de qualquer grupo do dono aprova e publica o recurso**, mesmo que o recurso esteja em outro grupo.
+- **Um recurso sem grupo, de um dono que está em grupos,** recebe os gerentes e os membros desses grupos. Atribuir o grupo não restringe nada.
+- **Um recurso sem grupo, de um dono sem grupo nenhum,** não tem gerente. No simple e no advanced, só o superusuário publica, e no simplified e no advanced, só ele aprova. No simplified, porém, o dono continua podendo publicar.
+
+| Modo | RP | AMU | Ao criar | Quem aprova | Quem publica |
+|---|---|---|---|---|---|
+| Auto publishing | False | False | aprovado e publicado | dono, gerente, quem edita metadados, superusuário | dono, gerente, superusuário |
+| Simple publishing | True | False | não aprovado, não publicado | dono, gerente, quem edita metadados, superusuário | gerente, superusuário |
+| Simplified | False | True | não aprovado, não publicado | gerente com edição de metadados, superusuário | dono, gerente, superusuário |
+| Advanced | True | True | não aprovado, não publicado | gerente com edição de metadados, superusuário | gerente, superusuário |
+
+Permissões por papel: V visualizar, D baixar (datasets e documentos), E editar metadados, dados e estilo, X apagar, P mudar permissões, Pub `publish_resourcebase`.
+
+| Papel | Auto | Simple | Simplified | Advanced |
+|---|---|---|---|---|
+| Dono (sem ser gerente) | V D E X P Pub | V D E X P | V D E X P; depois de aprovado ou publicado, V D X P | V D E; depois de aprovado ou publicado, V D |
+| Gerente | nada especial | V D E X P Pub | V D E X P Pub | V D E X P Pub |
+| Membro | nada especial | V D | V D | V D |
+| Outro autenticado e anônimo | V D conforme `DEFAULT_ANONYMOUS_*` | V D só depois de publicado | V D depois de aprovado **ou** publicado | V D só depois de publicado |
+| Superusuário | tudo | tudo | tudo | tudo |
+
+Um dono que também é gerente fica com as permissões de gerente.
+
+Pontos que a tabela não mostra:
+- **Nenhuma combinação deixa só o superusuário publicar.** O gerente sempre publica, também no `5.0.x` e no `master`. Restringir exigiria sobrescrever o `user_can_publish` no projeto.
+- **No modo avançado, o gerente publica sem aprovar** (testado).
+- **No simplificado, o dono publica sem aprovação**, apesar de perder a permissão `Pub`, porque o `user_can_publish` só olha o RP.
+- **Quem não pode mudar `is_approved`/`is_published` recebe HTTP 200, mas o campo é descartado sem aviso.**
+- **Autenticados de fora do grupo têm o mesmo acesso que o anônimo,** porque todo usuário entra no grupo `anonymous` ao se cadastrar. O ramo que daria visualização ao grupo `registered-members` depende de `AUTO_ASSIGN_REGISTERED_MEMBERS_TO_REGISTERED_MEMBERS_GROUP_NAME`, que o 5.0.3 não define (a variável do `.env.sample` não tem efeito).
+- **As `DEFAULT_ANONYMOUS_*` só valem na criação.** Ao aprovar ou publicar, o anônimo ganha V D de qualquer forma.
+- **Staff que não é superusuário não aprova nem publica pelas regras do GeoNode.** Ele faz isso pelas ações do `opengeosgb/admin.py`, se tiver permissão de alterar o modelo.
+
+Filtros de listagem, além das permissões:
+- AMU esconde os recursos não aprovados e RP esconde os não publicados, ambos só do usuário não autenticado.
+- `GROUP_PRIVATE_RESOURCES=True` esconde os recursos de grupos com acesso `private` de quem não é membro nem dono, mesmo publicados. Ele não altera permissões nem regras do GeoServer.
+- O CSW mostra só recursos aprovados e publicados (`PYCSW["FILTER"]`). No simplificado, um recurso aprovado e não publicado fica fora do CSW.
+
+As permissões são recalculadas por três caminhos: o admin do Django (`opengeosgb/admin.py`), o `resource_manager.update` e, no opengeosgb, o `PATCH`/`PUT` da API v2, pelo handler de `opengeosgb/workflow.py` (ver "Problemas conhecidos"). Mudar as flags do `.env` não realinha os recursos existentes.
+
 **Traduções.** O `django.po` do opengeosgb (`LOCALE_PATHS`, tem prioridade sobre os catálogos do GeoNode e do allauth) também traduz strings do GeoNode, do mapstore-client e do allauth sem tradução pt-BR upstream. As do allauth ficam numa seção própria, marcadas com `# allauth`. Não rode `makemessages --no-obsolete` neste app: ele apagaria essas entradas. Os JSON de tradução do MapStore em pt-BR ficam em `src/opengeosgb/static/mapstore/{gn,ms}-translations/`.
 
 **Imagem Docker.** O `Dockerfile` parte de `docker.io/ndscprm/geonode-base:ubuntu-24.04-pg${POSTGRES_CLIENT_VERSION}` (build arg `GEONODE_BASE_IMAGE`; com o sufixo `-devel`, usa a variante com compiladores). Há uma variante por versão major do PostgreSQL (hoje `pg15` e `pg17`), escolhida pelo build arg `POSTGRES_CLIENT_VERSION` (padrão `17`). O `docker-compose.opengeosgb.yml` o preenche com o `POSTGRES_BASE_IMAGE_VERSION` do `.env`, a mesma variável que define a imagem do postgis. É a base do GeoNode 5.0.x em multi-stage (`docker/base/ubuntu/multi-stage/Dockerfile` do `nds-cprm/geonode`, branch `geonode-base-multistage`): Ubuntu 24.04 com o GDAL 3.8.4 do apt, venv em `/usr/src/venv` e, sem compiladores, os pacotes do GeoNode 5.0.x sem wheel para Python 3.12 já compilados nas versões fixadas (GDAL 3.8.4, psycopg2 2.9.12, pylibmc 1.6.3, uWSGI 2.0.30). O estágio `devel` (a mesma imagem mais os compiladores e os pacotes `-dev`) é publicado com o sufixo `-devel` (por exemplo `ubuntu-24.04-pg17-devel`).
@@ -165,8 +212,19 @@ No restore, os erros "already exists" de papéis, bancos e dos schemas `topology
 ## Problemas conhecidos (pendentes nas dependências)
 
 - **[mapstore-client]** **Caixas "Publicado" e "Aprovado" não aparecem no painel de configurações do recurso (`DetailsSettings`).** Em `client/js/utils/ResourceUtils.js`, `RESOURCE_PUBLISHING_PROPERTIES` e `RESOURCE_OPTIONS_PROPERTIES` são constantes calculadas no carregamento do módulo (`filterResourcePublishingProperties()`). Elas leem `getConfigProp('geoNodeSettings').isPublishedOptionEnabled` e `isApprovedOptionEnabled` antes de o client carregar a configuração da página, então `is_published` e `is_approved` são sempre removidos, mesmo com `RESOURCE_PUBLISHING=True` e `ADMIN_MODERATE_UPLOADS=True` e com o usuário admin. O problema existe na 5.0.3 instalada e continua na `master` e no `5.0.x` upstream; não há issue aberta.
-  - **Correção prevista:** trocar as constantes por funções avaliadas no uso, em `DetailsSettings.jsx`, `epics/gnsave.js` e `selectors/resource.js`. Não dá para contornar no opengeosgb, porque o cálculo acontece no carregamento do bundle. Até lá, aprovar e publicar pelo admin do Django ou pela API (`PATCH /api/v2/resources/<pk>`).
+  - **Correção prevista:** trocar as constantes por funções avaliadas no uso, em `DetailsSettings.jsx`, `epics/gnsave.js` e `selectors/resource.js`. Não dá para contornar no opengeosgb, porque o cálculo acontece no carregamento do bundle. Até lá, aprove e publique pelo admin do Django ou pela API (`PATCH /api/v2/resources/<pk>`). Pela API, as permissões só são recalculadas por causa do handler do opengeosgb (ver o item seguinte).
   - **Admin do Django:** `opengeosgb/admin.py` substitui os admins de Dataset, Map, Document e GeoApp (este último cobre dashboards e GeoStories). Ele acrescenta as ações em lote Aprovar, Publicar, Aprovar e publicar, Despublicar e Reprovar. Quando `is_approved` ou `is_published` mudam, seja pelas ações ou pela edição na lista ou no formulário, o recurso é salvo com `save(notify=True)`, com os campos `was_*` sincronizados com o banco. O save padrão do admin (`notify=False`) só gravaria os campos, sem atualizar as permissões do fluxo, as regras do GeoFence e as notificações. Com `ADMIN_MODERATE_UPLOADS` e `RESOURCE_PUBLISHING` ativos, aprovar e publicar concede `view` e `download` ao usuário anônimo.
+- **[geonode]** **Aprovar ou publicar por `PATCH` na API não recalcula as permissões (com contorno no opengeosgb).** As permissões do fluxo (guardian e regras do GeoFence) só são recalculadas quando o `ResourceBase.save()` roda com `notify=True`. Nesse caso, ele compara `is_approved`/`is_published` com `was_approved`/`was_published` e chama `set_permissions(approval_status_changed=True)`.
+  - **Onde falha:** o `ResourceBaseSerializer.update` (`geonode/base/api/serializers.py:783`) termina num `save()` sem `notify`. O recurso fica marcado como aprovado ou publicado, mas o anônimo não recebe `view`, e os `was_*` ficam com o valor antigo. Isso vale para `PATCH`/`PUT` em `/api/v2/resources/<pk>`, `/api/v2/maps/<pk>` e `/api/v2/documents/<pk>`. Em `/api/v2/datasets/<pk>` não há problema: o `partial_update` da view chama `resource_manager.update(notify=True)` em seguida. Em `/api/v2/geoapps/<pk>` também não: o serializer usa `resource_manager.update(vals=...)`. O mesmo código está no `5.0.x` e no `master`.
+  - **Contorno:** `opengeosgb/workflow.py`, instalado no `ready()` do app (`apps.py`), envolve o `ResourceBaseSerializer.update`. Ele lê `is_approved`, `is_published` e `group_id` no banco antes e depois do update original. Se algo mudou, sincroniza os `was_*` e chama `set_permissions(approval_status_changed=..., group_status_changed=...)`, como o `save(notify=True)` faria. Com os `was_*` sincronizados, um `save(notify=True)` posterior (o da view de datasets) não detecta a mudança de novo. Se o `set_permissions` falhar, o erro fica no log e a resposta continua 200.
+  - **Limites do contorno:** as notificações de "aprovado" e "publicado" não são enviadas por esse caminho. Recursos aprovados ou publicados pela API antes do contorno continuam com as permissões antigas. Para corrigi-los, use o admin: Despublicar ou Reprovar e depois Aprovar ou Publicar. Repetir só a ação não basta, porque o `save_with_workflow` lê as flags do banco e não vê mudança.
+  - **Teste de 25/11/2026 no dev (modo avançado), com um mapa:**
+    - sem o contorno, o mapa aprovado e publicado pela API continuou com 401 para o anônimo;
+    - com o contorno, o anônimo passou a ter `view_resourcebase` e 200 depois de publicado, e voltou a 401 depois de despublicado;
+    - o mesmo valeu pelo `/api/v2/maps/<pk>`.
+
+    Não foi testado com dataset, nem a regra correspondente no GeoServer.
+  - **Issue:** nds-cprm/opengeosgb#21. No upstream, falta abrir a issue e o PR (ver "Pendências"). Remover o contorno quando o GeoNode instalado salvar com `notify=True` ou passar pelo `resource_manager.update` no `ResourceBaseSerializer.update`.
 
 ## Pendências
 
@@ -189,6 +247,7 @@ Marcação de dependência: **[geonode]** depende do núcleo do GeoNode (upstrea
 - **[opengeosgb]** **Unificação do submódulo `docker/`.** As extensões `excel` e `geopkg-output` e as fontes do SGB estão no branch `unifica-opengeosgb` do `nds-cprm/geonode-docker`. Falta testar o stack com ele, fazer o merge no `opengeosgb`, voltar o `.gitmodules` para `branch = opengeosgb` e reconstruir as imagens nos outros ambientes. Nos `.env` existentes, troque `POSTGRES_BASE_IMAGE_VERSION=17-3.4` por `POSTGRES_BASE_IMAGE_VERSION`/`POSTGIS_BASE_IMAGE_VERSION` e remova o `GEOSERVER_DATA_BASE_IMAGE_VERSION`.
 - **[opengeosgb]** **Migrar os bancos dos outros ambientes para o PostgreSQL 17.** O ambiente de desenvolvimento já foi migrado. Nos outros, verifique a versão do volume `dbdata` (`cat /var/lib/postgresql/data/PG_VERSION` no container `db`). Os que estiverem no 15 precisam ser migrados pelo procedimento da seção "Banco de dados" antes de usar `POSTGRES_BASE_IMAGE_VERSION=17`. Até lá, mantenha o `.env` desses ambientes com `15`, o que também seleciona a base `ubuntu-24.04-pg15` do django.
 - **[opengeosgb]** **Conteúdo e imagens das páginas Sobre/About.** No fixture `opengeosgb-flatpages.json`, as páginas 10 e 12 ainda têm o texto de exemplo do editor (com `contato@example.org` e um link de teste da sanitização). As imagens delas (`flatpages_media/10/` e `12/`) não estão no repositório. Falta redigir o conteúdo institucional e versionar as imagens usadas, ou removê-las das páginas.
+- **[geonode]** **Abrir issue e PR no upstream sobre o `PATCH` que não recalcula as permissões do fluxo** (ver "Problemas conhecidos" e nds-cprm/opengeosgb#21). A correção proposta é fazer o `ResourceBaseSerializer.update` salvar com `notify=True` ou passar pelo `resource_manager.update(vals=...)` quando `is_approved`, `is_published` ou `group` mudarem. O PR vai para o `master`, com backport para o `5.0.x`, trabalhando no fork em `../geonode` (skill `geonode-debug-contrib`). Antes de abrir, procure issues parecidas no `GeoNode/geonode`. Na mesma investigação, vale conferir se o `GeoAppSerializer.update` aplica a checagem `ROLE_BASED_MANAGED_FIELDS`: ele não chama o `update` do `ResourceBaseSerializer`, e por isso o dono talvez consiga publicar dashboards e GeoStories pela API (não testado).
 - **[geonode]** **Pillow forçado no 13.0.0.** O `src/requirements-overrides.txt` força o `Pillow==13.0.0` sobre o `Pillow==12.1.1` do GeoNode 5.0.3 (ver "Imagem Docker"). Em 25/11/2026, com o Pillow 13 os grupos `smoke` e `main` do `./opengeosgb-tests` não tiveram falha ligada ao Pillow (as miniaturas passaram). As 27 falhas do `main` vêm das customizações do projeto: facet de escala, handlers de metadados, catálogo ISO 19115-3 e formulários do allauth. Remover a linha quando o GeoNode instalado exigir o Pillow 13 ou mais novo.
 - **[opengeosgb]** **Limpar o texto padrão antigo.** Rodar `clear_default_supplemental_information` (primeiro com `--dry-run`) nos ambientes com recursos que ainda têm "No information provided".
 
