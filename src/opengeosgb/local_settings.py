@@ -25,6 +25,14 @@ if "django.contrib.flatpages" in INSTALLED_APPS:
         "options": {"queue": "cleanup"},
     }
 
+# Proxy reverso: o nginx sempre sobrescreve X-Forwarded-Proto com o esquema público (HTTP_SCHEME,
+# ou PUBLIC_SCHEME atrás de um load balancer que termina TLS) e o Origin com a URL pública. Sem
+# isto, o Django vê "http" e recusa os POSTs com "Origin checking failed" quando o público é https.
+# Seguro enquanto a porta do Django não estiver acessível de fora sem passar pelo nginx.
+EXTERNAL_PROXY_ENABLED = ast.literal_eval(os.getenv("EXTERNAL_PROXY_ENABLED", "False"))
+if EXTERNAL_PROXY_ENABLED:
+    SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+
 
 # Internationalization
 # geonode.settings lines 1551-1565
