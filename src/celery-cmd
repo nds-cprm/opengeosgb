@@ -11,14 +11,20 @@ CELERY__AUTOSCALE_VALUES=${CELERY__AUTOSCALE_VALUES:-"10,5"}
 CELERY__MAX_TASKS_PER_CHILD=${CELERY__MAX_TASKS_PER_CHILD:-"10"}
 CELERY__OPTS=${CELERY__OPTS:-"--without-gossip --without-mingle -Ofair -E"}
 CELERY__LOG_LEVEL=${CELERY__LOG_LEVEL:-"ERROR"}
-CELERY__LOG_FILE=${CELERY__LOG_FILE:-"/var/log/geonode/celery.log"}
+# Logs em stderr (docker logs) por padrão; defina CELERY__LOG_FILE/CELERY__BEAT_LOG para gravar em arquivo
+CELERY__LOG_FILE=${CELERY__LOG_FILE:-""}
 CELERY__WORKER_NAME=${CELERY__WORKER_NAME:-"worker1@%h"}
 CELERY__WORKER_CONCURRENCY=${CELERY__WORKER_CONCURRENCY:-"4"}
 
 # Celery beat settings
 CELERY__BEAT_SCHEDULER=${CELERY_BEAT_SCHEDULER:-"celery.beat:PersistentScheduler"}
-CELERY__BEAT_SCHEDULE_FILE=${CELERY__BEAT_SCHEDULE_FILE:-"/var/log/geonode/celerybeat-schedule"}
-CELERY__BEAT_LOG=${CELERY__BEAT_LOG:-"/var/log/geonode/celery_beat.log"}
+# Junto do statedb do worker, no volume statics (o filesystem do container é somente leitura)
+CELERY__BEAT_SCHEDULE_FILE=${CELERY__BEAT_SCHEDULE_FILE:-"/mnt/volumes/statics/celerybeat-schedule"}
+CELERY__BEAT_LOG=${CELERY__BEAT_LOG:-""}
+
+# "-f <arquivo>" só quando o arquivo foi definido; sem ele, o Celery loga em stderr
+WORKER_LOG_ARGS=${CELERY__LOG_FILE:+-f $CELERY__LOG_FILE}
+BEAT_LOG_ARGS=${CELERY__BEAT_LOG:+-f $CELERY__BEAT_LOG}
 
 # Harvester settings
 CELERY__HARVESTER_WORKER_NAME=${CELERY__HARVESTER_WORKER_NAME:-"harvesting_worker@%h"}
@@ -51,13 +57,13 @@ if [[ -n "$CELERY__BEAT_SCHEDULE_FILE" ]]; then
 fi
 
 $CELERY_BIN -A $CELERY_APP beat $PERSISTENT_SCHEDULER_ARGS \
-    --loglevel=$CELERY__LOG_LEVEL -f $CELERY__BEAT_LOG --pidfile=$BEAT_PIDFILE &
+    --loglevel=$CELERY__LOG_LEVEL $BEAT_LOG_ARGS --pidfile=$BEAT_PIDFILE &
 
 echo "Starting Default Celery Worker..."
 $CELERY_BIN -A $CELERY_APP worker --autoscale=$CELERY__AUTOSCALE_VALUES \
     --max-memory-per-child=$CELERY__MAX_MEMORY_PER_CHILD $CELERY__OPTS \
     --statedb=$CELERY__STATE_DB \
-    --loglevel=$CELERY__LOG_LEVEL -n $CELERY__WORKER_NAME -f $CELERY__LOG_FILE \
+    --loglevel=$CELERY__LOG_LEVEL -n $CELERY__WORKER_NAME $WORKER_LOG_ARGS \
     --concurrency=$CELERY__WORKER_CONCURRENCY --max-tasks-per-child=$CELERY__MAX_TASKS_PER_CHILD \
     -X harvesting &
 
@@ -68,7 +74,7 @@ $CELERY_BIN -A $CELERY_APP worker -Q harvesting \
     --loglevel=$CELERY__LOG_LEVEL \
     -n $CELERY__HARVESTER_WORKER_NAME \
     --concurrency=$CELERY__HARVESTER_CONCURRENCY \
-    -f $CELERY__LOG_FILE &
+    $WORKER_LOG_ARGS &
 
 # Wait for any process to exit
 wait -n

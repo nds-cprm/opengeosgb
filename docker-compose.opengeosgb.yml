@@ -1,5 +1,18 @@
+# Sem root e com o filesystem da imagem somente leitura (read_only): cada serviço roda com um usuário
+# sem privilégio e só grava nos volumes e tmpfs listados abaixo. Os caminhos foram levantados com
+# "docker diff" no stack em execução. Para depurar algo que precise gravar fora deles, suba o serviço
+# com "read_only: false" num override local, sem mudar este arquivo.
+# Rotação dos logs do container (docker logs): sem isso o driver json-file guarda tudo, sem limite.
+# Até 5 arquivos de 10 MB por container. O driver não é fixado aqui, para valer o padrão do motor.
+x-logging:
+  &default-logging
+  options:
+    max-size: "10m"
+    max-file: "5"
+
 x-common-django:
   &default-common-django
+  logging: *default-logging
   image: ${DOCKER_NAMESPACE:-$COMPOSE_PROJECT_NAME}/geonode:${GEONODE_BASE_IMAGE_VERSION}-rootless
   volumes:
     - './src:/usr/src/project'
@@ -11,8 +24,14 @@ x-common-django:
     - data:/data
     # - /home/mota/_geonode/data:/data
     - tmp:/tmp
+  # Os logs do uWSGI/Django e do Celery vão para stdout/stderr (docker logs), sem arquivo no container
   # UID arbitrário com grupo 0: as imagens dão aos diretórios graváveis g=u
   user: '1000:0'
+  read_only: true
+  environment:
+    # O UID 1000 é o "ubuntu" da imagem base, com HOME=/home/ubuntu, somente leitura. O entrypoint já usa
+    # /tmp, e isto vale também para o "exec" (manage.py, shell), que não passa pelo entrypoint.
+    - HOME=/tmp
 
 services:
   django:
@@ -31,6 +50,7 @@ services:
     << : *default-common-django
 
   geonode:
+    logging: *default-logging
     image: ${DOCKER_NAMESPACE:-$COMPOSE_PROJECT_NAME}/nginx:${NGINX_BASE_IMAGE_VERSION}-geonode
     # user: '1000'
     build:
@@ -38,18 +58,33 @@ services:
       dockerfile: Dockerfile
       args:
         - NGINX_VERSION=${NGINX_BASE_IMAGE_VERSION}
-    # Portas (8080/8443 do nginx-unprivileged), volumes e RESOLVER vêm do compose base
+    # Portas (8080/8443 do nginx-unprivileged), volumes e RESOLVER vêm do compose base.
+    # A imagem já roda como 101:0. O entrypoint gera a configuração em /tmp/nginx (o /etc/nginx/nginx.conf
+    # da imagem é um link para lá), e o pid e os temporários do nginx também ficam em /tmp.
+    read_only: true
+    # O tmpfs ocupa RAM: só a configuração gerada, o pid e os temporários pequenos. Os uploads não são
+    # bufferizados (proxy_request_buffering off).
+    tmpfs:
+      - /tmp:mode=1777,size=64m
+    volumes:
+      # Temporários de resposta (proxy_temp_path) em disco: volume anônimo, um por container (e por
+      # réplica). Cada download lento ocupa até NGINX_PROXY_MAX_TEMP_FILE_SIZE (padrão 2 GB).
+      - /var/cache/nginx
 
   letsencrypt:
+    logging: *default-logging
     image: ${DOCKER_NAMESPACE:-$COMPOSE_PROJECT_NAME}/letsencrypt:${LETSENCRYPT_BASE_IMAGE_VERSION}
     build:
       context: ./docker/docker/letsencrypt
+    # Continua como root e sem read_only: o crond do busybox precisa de root para rodar o certbot, que
+    # também grava em /var/log/letsencrypt e /var/lib/letsencrypt. Está desligado (replicas: 0).
     deploy:
       # mode explícito: o podman-compose só respeita "replicas" quando mode é "replicated"
       mode: replicated
       replicas: 0
 
   geoserver:
+    logging: *default-logging
     image: ${DOCKER_NAMESPACE:-$COMPOSE_PROJECT_NAME}/geoserver:${GEOSERVER_BASE_IMAGE_VERSION}-geonode
     build:
       context: ./docker/docker/geoserver
@@ -63,34 +98,74 @@ services:
       # - ./draft/br:/backup_restore
       - data:/data
       - tmp:/tmp
+    read_only: true
+    tmpfs:
+      # java.io.tmpdir do Tomcat: base EPSG (HSQL) do GeoTools e bibliotecas nativas extraídas pelos
+      # jars (ex.: sqlite-jdbc da saída GeoPackage), por isso "exec"
+      - /usr/local/tomcat/temp:mode=1777,exec
+      # JSPs compiladas e o wicket-filestore da interface web
+      - /usr/local/tomcat/work:mode=1777
+      # Arquivos do JULI do Tomcat (catalina, localhost, manager, host-manager), com a configuração da
+      # imagem base: o conteúdo deles já sai no console (docker logs), e os arquivos ficam em memória e
+      # somem a cada reinício. Com o tmpfs cheio, o Tomcat só deixa de gravá-los, e o console continua.
+      # O access log vai para stdout (ver o Dockerfile da imagem).
+      - /usr/local/tomcat/logs:mode=1777,size=256m
     environment:
       - PROXY_BASE_URL=${NGINX_BASE_URL}/geoserver
       # no Podman o HOME de um UID sem passwd vira o WORKDIR (/usr/local/tomcat/tmp,
       # do root) e o entrypoint não consegue criar o .bashrc
       - HOME=/tmp
-    ports:
-      - "8080:8080"
+    # Sem porta publicada: o acesso externo passa pelo nginx (/geoserver/). O compose base publica a
+    # 8080, e o !reset apaga essa lista (listas de portas se somam no merge). Publicar a 8080 deixaria
+    # forjar o X-Forwarded-For: quem chega pelo gateway está na sub-rede em que o GeoServer confia
+    # (GEOSERVER_TRUSTED_PROXIES). Para acessar direto em dev, use um override local.
+    ports: !reset []
     user: '1000:0'
 
   db:
+    logging: *default-logging
     image: ${DOCKER_NAMESPACE:-$COMPOSE_PROJECT_NAME}/postgis:${POSTGRES_BASE_IMAGE_VERSION}-${POSTGIS_BASE_IMAGE_VERSION}-geonode
     build:
       context: ./docker/docker/postgis
       args:
         - POSTGRES_VERSION=${POSTGRES_BASE_IMAGE_VERSION}
         - POSTGIS_VERSION=${POSTGIS_BASE_IMAGE_VERSION}
-        - POSTGIS_BASE_IMAGE=docker.io/imresamu/postgis:${POSTGRES_BASE_IMAGE_VERSION}-${POSTGIS_BASE_IMAGE_VERSION}-alpine3.22
+        # - POSTGIS_BASE_IMAGE=docker.io/imresamu/postgis:${POSTGRES_BASE_IMAGE_VERSION}-${POSTGIS_BASE_IMAGE_VERSION}-alpine3.22
     volumes:
       - dbdata:/var/lib/postgresql/data
       - dbbackups:/pg_backups
+    # Usuário "postgres" da imagem (70 no Alpine), dono do volume dbdata: o entrypoint pula o chown e
+    # o gosu. Volumes criados como root precisam de "chown -R 70:70" antes da primeira subida.
+    user: postgres
+    read_only: true
+    tmpfs:
+      # socket e lock do servidor
+      - /run/postgresql:mode=1777
+      - /tmp:mode=1777
     ports:
      - "5432:5432"
 
   mailserver:
+    logging: *default-logging
     image: python:3.11-alpine
+    # Porta 1025, sem privilégio; o Python só tentaria gravar bytecode, e ignora a falha
+    user: nobody
+    read_only: true
     container_name: mailserver4${COMPOSE_PROJECT_NAME}
     restart: unless-stopped
     command: >
       sh -c "python -m smtpd -d -c DebuggingServer -n 0.0.0.0:1025"
     ports:
       - "1025:1025"
+
+  memcached:
+    logging: *default-logging
+    # A imagem já roda como "memcache" e não grava nada
+    read_only: true
+
+  redis:
+    logging: *default-logging
+    # Usuário "redis" da imagem (999:1000), dono do volume redisdata: o entrypoint pula o chown e o gosu.
+    # O redis só grava o dump em /data.
+    user: redis
+    read_only: true

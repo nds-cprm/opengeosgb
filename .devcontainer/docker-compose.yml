@@ -21,6 +21,9 @@ services:
 
     restart: "no"
 
+    # O VS Code Server se instala no home do usuário (/home/ubuntu), fora dos volumes
+    read_only: false
+
     healthcheck:
       test: "echo \"I'm alive.\""
 
