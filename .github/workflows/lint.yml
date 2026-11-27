@@ -37,7 +37,7 @@ jobs:
       - uses: actions/checkout@v5
 
       # Mesma versão do Python da imagem (Ubuntu 24.04)
-      - uses: actions/setup-python@v6
+      - uses: actions/setup-python@v7
         with:
           python-version: '3.12'
 
