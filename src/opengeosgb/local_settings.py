@@ -73,7 +73,7 @@ SOCIALACCOUNT_PROVIDERS = {
     },
     'orcid': {
         # Base domain of the API. Default value: 'orcid.org', for the production API
-        'BASE_DOMAIN':'sandbox.orcid.org',  # for the sandbox API
+        'BASE_DOMAIN': 'sandbox.orcid.org',  # for the sandbox API
         # Member API or Public API? Default: False (for the public API)
         'MEMBER_API': True,  # for the member API
     },
@@ -97,7 +97,7 @@ SOCIALACCOUNT_PROFILE_EXTRACTORS = {
 # # Haystack Search
 # HAYSTACK_SEARCH = ast.literal_eval(os.getenv("HAYSTACK_SEARCH", "False"))
 
-# if HAYSTACK_SEARCH:    
+# if HAYSTACK_SEARCH:
 #     INSTALLED_APPS += (
 #         'haystack',
 #     )
@@ -179,14 +179,14 @@ PYCSW["FILTER"] = {
 # CATALOGUE_METADATA_XSL = "/static/metadataxsl/metadata.xsl"
 
 # DOWNLOAD_FORMATS_METADATA = [
-#     # 'Atom', 'DIF', 
-#     'Dublin Core', #'ebRIM', 
+#     # 'Atom', 'DIF',
+#     'Dublin Core', #'ebRIM',
 #     'FGDC', 'ISO',
 # ]
 
 # DOWNLOAD_FORMATS_VECTOR = [
-#     'JPEG', 'PDF', 'PNG', 'Zipped Shapefile', 
-#     #'GML 2.0', 'GML 3.1.1', 
+#     'JPEG', 'PDF', 'PNG', 'Zipped Shapefile',
+#     #'GML 2.0', 'GML 3.1.1',
 #     # 'CSV',
 #     'Excel', 'GeoJSON', 'KML', 'View in Google Earth', 'Tiles',
 # ]
@@ -211,7 +211,7 @@ if isinstance(_translations_path, str):  # pode vir como texto da variável de a
 MAPSTORE_TRANSLATIONS_PATH = list(_translations_path) + ["/static/opengeosgb/translations"]
 
 # Google Tag Manager
-GOOGLE_TAG_MANAGER_ID = os.getenv("GOOGLE_TAG_MANAGER_ID", "") 
+GOOGLE_TAG_MANAGER_ID = os.getenv("GOOGLE_TAG_MANAGER_ID", "")
 TEMPLATES[0]["OPTIONS"]["context_processors"].append("opengeosgb.context_processors.google_tag_manager_snippet")
 
 # Páginas institucionais (flatpages) por idioma, usadas no aviso de cookies

@@ -18,7 +18,5 @@
 #
 #########################################################################
 
-import os
-
 
 default_app_config = "opengeosgb.apps.AppConfig"

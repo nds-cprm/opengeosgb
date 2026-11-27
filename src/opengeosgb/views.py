@@ -12,6 +12,6 @@ def legacy_metadata_detail(request, layername):
     re_path(r"^metadata/(?P<pk>[^/]*)$", views.metadata, name='metadata'),
     """
     pk = get_object_or_404(ResourceBase, alternate=layername).pk   # colcoar um index em alternate
-    
+
     # Redireciona para a nova rota passando o 'pk' obtido a partir de layername
     return redirect('metadata', pk=pk, permanent=True)

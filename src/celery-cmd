@@ -50,7 +50,9 @@ fi
 # --- END FIX ---
 
 echo "Starting Celery Beat..."
-PERSISTENT_SCHEDULER_ARGS="--scheduler=$CELERY_BEAT_SCHEDULER"
+# CELERY__BEAT_SCHEDULER (definido acima a partir do CELERY_BEAT_SCHEDULER do .env); antes, o
+# CELERY_BEAT_SCHEDULER direto gerava "--scheduler=" vazio quando a variável não estava no .env
+PERSISTENT_SCHEDULER_ARGS="--scheduler=$CELERY__BEAT_SCHEDULER"
 
 if [[ -n "$CELERY__BEAT_SCHEDULE_FILE" ]]; then
     PERSISTENT_SCHEDULER_ARGS="$PERSISTENT_SCHEDULER_ARGS --schedule=$CELERY__BEAT_SCHEDULE_FILE"

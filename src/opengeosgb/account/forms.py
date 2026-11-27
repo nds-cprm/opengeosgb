@@ -9,9 +9,11 @@ class GovBRMixin:
             'all': ('opengeosgb/css/govbr.min.css',)
         }
 
+
 # Sem recaptcha
 class GovBRLoginForm(GovBRMixin, LoginForm):
     pass
+
 
 class GovBRSignupForm(GovBRMixin, SignupForm):
     pass
@@ -20,6 +22,7 @@ class GovBRSignupForm(GovBRMixin, SignupForm):
 # Com recaptcha
 class GovBRReCaptchaLoginForm(GovBRMixin, AllauthRecaptchaLoginForm):
     pass
+
 
 class GovBRReCaptchaSignupForm(GovBRMixin, AllauthReCaptchaSignupForm):
     pass
