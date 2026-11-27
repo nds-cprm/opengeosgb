@@ -33,6 +33,15 @@ EXTERNAL_PROXY_ENABLED = ast.literal_eval(os.getenv("EXTERNAL_PROXY_ENABLED", "F
 if EXTERNAL_PROXY_ENABLED:
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
+# Download de assets (anexos, documentos, originais de datasets) entregue pelo nginx com X-Accel-Redirect,
+# sem prender o worker do uWSGI. Só vale para requisições que chegam pelo nginx (cabeçalho
+# X-Accel-Assets-Prefix); ver opengeosgb/assets.py. A subclasse mantém o LocalAssetHandler do GeoNode
+# para todo o resto (criação, cópia, remoção). ASSETS_X_ACCEL_REDIRECT=False volta ao download do GeoNode.
+ASSETS_X_ACCEL_REDIRECT = ast.literal_eval(os.getenv("ASSETS_X_ACCEL_REDIRECT", "True"))
+DEFAULT_ASSET_HANDLER = "opengeosgb.assets.XAccelLocalAssetHandler"
+ASSET_HANDLERS = [DEFAULT_ASSET_HANDLER]
+MIDDLEWARE += ("opengeosgb.assets.AssetsXAccelMiddleware",)
+
 
 # Internationalization
 # geonode.settings lines 1551-1565
