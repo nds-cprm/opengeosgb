@@ -157,7 +157,7 @@ jobs:
       # Os rótulos OCI vêm do próprio Dockerfile (VERSION, REVISION e CREATED por build arg)
       - name: Build
         id: build
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         with:
           context: .
           platforms: ${{ matrix.platform }}
@@ -204,7 +204,7 @@ jobs:
       # Mesma build do job "build" para amd64, toda vinda do cache do GitHub Actions, carregada no Docker
       # do runner. Assim o scan vale também para PRs, que não publicam a imagem.
       - name: Carregar a imagem amd64
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         with:
           context: .
           platforms: linux/amd64
