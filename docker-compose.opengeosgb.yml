@@ -17,7 +17,7 @@ x-common-django:
   # Com OPENGEOSGB_VERSION=local (padrão), é a construída por "geonode-docker build". Com uma versão
   # publicada (ex.: 1.0.0), baixe-a com "geonode-docker pull django celery" e não construa o django,
   # que sobrescreveria a tag localmente.
-  image: ghcr.io/nds-cprm/opengeosgb:${OPENGEOSGB_VERSION:-local}
+  image: ghcr.io/nds-cprm/opengeosgb-geonode:${OPENGEOSGB_VERSION:-local}
   volumes:
     - './src:/usr/src/project'  # Descomente para tirar o "bind"
     - statics:/mnt/volumes/statics

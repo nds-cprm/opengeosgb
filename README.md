@@ -81,7 +81,7 @@ geonode-docker down          # para e remove os containers (os volumes ficam)
 
 ## Versões e imagens publicadas
 
-A imagem do Django é construída pelo workflow [`.github/workflows/docker-image.yml`](.github/workflows/docker-image.yml) e publicada no GitHub Container Registry como `ghcr.io/nds-cprm/opengeosgb`, para `linux/amd64` e `linux/arm64` (cada uma num runner nativo), sobre a base `ubuntu-24.04-pg17`. As imagens do submódulo `docker/` (nginx, GeoServer, PostGIS, letsencrypt) não fazem parte dele.
+A imagem do Django é construída pelo workflow [`.github/workflows/docker-image.yml`](.github/workflows/docker-image.yml) e publicada no GitHub Container Registry como `ghcr.io/nds-cprm/opengeosgb-geonode`, para `linux/amd64` e `linux/arm64` (cada uma num runner nativo), sobre a base `ubuntu-24.04-pg17`. As imagens do submódulo `docker/` (nginx, GeoServer, PostGIS, letsencrypt) não fazem parte dele.
 
 | Evento | Tags publicadas |
 |---|---|
@@ -99,11 +99,11 @@ A imagem do Django é construída pelo workflow [`.github/workflows/docker-image
 Uma tag publicada não é reconstruída: atualizações da imagem base ou de dependências saem numa versão patch nova. A versão do GeoNode de cada imagem fica no label `io.github.nds-cprm.opengeosgb.geonode.version` e deve constar nas notas da release:
 
 ```bash
-docker image inspect ghcr.io/nds-cprm/opengeosgb:1.0.0 \
+docker image inspect ghcr.io/nds-cprm/opengeosgb-geonode:1.0.0 \
   --format '{{ index .Config.Labels "io.github.nds-cprm.opengeosgb.geonode.version" }}'
 ```
 
-**Uso no compose.** O `docker-compose.opengeosgb.yml` dá à imagem do django e do celery o nome `ghcr.io/nds-cprm/opengeosgb:${OPENGEOSGB_VERSION}` (padrão `local`):
+**Uso no compose.** O `docker-compose.opengeosgb.yml` dá à imagem do django e do celery o nome `ghcr.io/nds-cprm/opengeosgb-geonode:${OPENGEOSGB_VERSION}` (padrão `local`):
 - em desenvolvimento, `OPENGEOSGB_VERSION=local` é a imagem construída por `geonode-docker build`;
 - nos ambientes, use uma versão publicada (`OPENGEOSGB_VERSION=1.0.0`, ou `devel` para o `main`) e baixe-a com `geonode-docker pull django celery`. Não construa o django nesses ambientes: o build local sobrescreveria a tag publicada. Para construir só o resto, use `geonode-docker build geonode geoserver db`.
 
@@ -134,6 +134,19 @@ docker run --rm -v "$PWD:/mnt:ro" -w /mnt docker.io/koalaman/shellcheck:v0.11.0 
 
 Para ignorar uma regra num ponto só, use `# hadolint ignore=DLxxxx` ou `# shellcheck disable=SCxxxx` logo acima da linha, com o motivo.
 
+### Dependabot
+
+O [`.github/dependabot.yml`](.github/dependabot.yml) abre PRs semanais, às segundas, para dois ecossistemas. Cada PR passa pelo build, pelo smoke test, pelo Trivy e pelo lint.
+- **GitHub Actions:** atualizações minor e patch num único PR, e as major em separado. O `trivy-action` é atualizado pelo SHA; antes do merge, confira os advisories e atualize junto o `SCAN_TRIVY_VERSION`.
+- **pip (`src/`):** na prática, as versões forçadas do `requirements-overrides.txt`.
+
+Estes ficam de fora e precisam ser atualizados à mão:
+- a imagem base do `Dockerfile`, cujo `FROM` é montado por `ARG`;
+- as tags git do `src/requirements.txt` (GeoNode e os apps da nds-cprm), porque o Dependabot não atualiza referências git de pip;
+- as versões das imagens no `.env`.
+
+O submódulo `docker/` também fica de fora: ele tem uma configuração própria.
+
 ### Verificação de vulnerabilidades
 
 O job `scan` do workflow passa o [Trivy](https://trivy.dev/) na imagem amd64 em todos os eventos, inclusive nos pull requests, que não publicam a imagem. Ele relata as vulnerabilidades `HIGH` e `CRITICAL` que já têm correção, nos pacotes do sistema e nas bibliotecas Python do venv, e as publica em dois lugares:
@@ -158,12 +171,14 @@ Para rodar o mesmo scan localmente, com a imagem do Trivy na mesma versão:
 ```bash
 docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v "$PWD/.trivyignore:/.trivyignore:ro" \
   docker.io/aquasec/trivy:0.76.2 image --scanners vuln --severity HIGH,CRITICAL --ignore-unfixed \
-  --ignorefile /.trivyignore ghcr.io/nds-cprm/opengeosgb:local
+  --ignorefile /.trivyignore ghcr.io/nds-cprm/opengeosgb-geonode:local
 ```
 
 No Podman, troque o socket pelo do Podman, por exemplo `$XDG_RUNTIME_DIR/podman/podman.sock`. Ou exporte a imagem com `podman save -o img.tar` e use `trivy image --input img.tar`.
 
 Para lançar uma versão, a partir do `main` atualizado:
+1. Atualize o `version` do `src/pyproject.toml` para a versão nova, sem o `v`, e faça o commit. Numa tag `vX.Y.Z`, o workflow falha se o `pyproject.toml` declarar outra versão. Numa pré-release `vX.Y.Z-rc.N`, só o `X.Y.Z` é comparado.
+2. Crie e envie a tag:
 
 ```bash
 git tag -a v1.0.0 -m "OpenGeoSGB 1.0.0 (GeoNode 5.0.3)"
@@ -194,7 +209,7 @@ Sem essa linha, o build cai na `postgis/postgis` e, em arm64, falha ou sai emula
 
 Em 23/11/2026, um volume `dbdata` do PG 17 criado em amd64 abriu sem erro no postgis arm64, conferido com a leitura completa das tabelas e o `bt_index_check` de todos os índices btree. Mesmo assim, copie o volume antes de trocar a arquitetura.
 
-**Imagem publicada.** A imagem `ghcr.io/nds-cprm/opengeosgb` do GitHub Actions é multiarquitetura (amd64 e arm64, cada uma num runner nativo). O `docker pull` escolhe a variante do host. Ver "Versões e imagens publicadas".
+**Imagem publicada.** A imagem `ghcr.io/nds-cprm/opengeosgb-geonode` do GitHub Actions é multiarquitetura (amd64 e arm64, cada uma num runner nativo). O `docker pull` escolhe a variante do host. Ver "Versões e imagens publicadas".
 
 **Forçar outra arquitetura.** Com o Docker, defina `platform: linux/<arch>` no serviço, num override local. Fora da arquitetura nativa, a imagem roda emulada (QEMU), bem mais lenta. O `podman compose` delega ao `docker-compose` e, nesse caminho, ignora o `platform` na build. Como os Dockerfiles não usam mais `FROM --platform`, no Podman construa a imagem à parte com `podman build --platform linux/<arch>`.
 

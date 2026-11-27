@@ -1,0 +1,41 @@
+# Atualizações automáticas de dependências (Dependabot). Cada PR passa pelos workflows "Imagem Docker"
+# (build com smoke test e Trivy) e "Lint" antes do merge.
+#
+# Fora daqui, de propósito:
+#   - docker (Dockerfile): o FROM usa ${GEONODE_BASE_IMAGE}, montado por ARG, que o Dependabot não resolve;
+#     e a tag da base (ubuntu-24.04-pg17) não é uma versão. Atualize a base à mão.
+#   - docker-compose: as imagens com versão vêm de variáveis do .env (NGINX_BASE_IMAGE_VERSION etc.), e as
+#     fixas (memcached, redis, python) são do compose base do template.
+#   - as dependências git do src/requirements.txt (GeoNode e os apps da nds-cprm, por tag): o Dependabot
+#     não atualiza referências git de pip. Atualize as tags à mão.
+#   - gitsubmodule: o submódulo docker/ (nds-cprm/geonode-docker) tem uma configuração própria.
+version: 2
+
+updates:
+  # Actions dos workflows. As referenciadas por SHA (trivy-action) são atualizadas por SHA, com a tag no
+  # comentário. No trivy-action, confira os advisories antes do merge (ver "Verificação de
+  # vulnerabilidades" no README) e atualize junto o SCAN_TRIVY_VERSION, que o Dependabot não alcança.
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+      timezone: America/Sao_Paulo
+    commit-message:
+      prefix: "chore(deps)"
+    groups:
+      # Um PR só para as atualizações minor/patch; as major vêm separadas
+      actions:
+        update-types: [minor, patch]
+
+  # Pacotes Python de src/: na prática, as versões forçadas de requirements-overrides.txt (hoje o Pillow).
+  # Uma versão nova só entra depois de passar no build e no smoke test do PR.
+  - package-ecosystem: pip
+    directory: /src
+    schedule:
+      interval: weekly
+      day: monday
+      timezone: America/Sao_Paulo
+    commit-message:
+      prefix: "chore(deps)"
+    open-pull-requests-limit: 5

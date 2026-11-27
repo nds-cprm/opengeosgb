@@ -76,7 +76,7 @@
 #   DOCKER_NAMESPACE=<nome>          prefixo das imagens do geoserver e do postgis, como no
 #                                    docker-compose.opengeosgb.yml (padrão: o do .env ou, sem ele, o
 #                                    COMPOSE_PROJECT_NAME)
-#   OPENGEOSGB_VERSION=<tag>         tag da imagem do django, ghcr.io/nds-cprm/opengeosgb (padrão: o
+#   OPENGEOSGB_VERSION=<tag>         tag da imagem do django, ghcr.io/nds-cprm/opengeosgb-geonode (padrão: o
 #                                    do .env ou local)
 #
 # Os logs de cada grupo ficam em ~/.cache/opengeosgb-tests/logs/<data-hora>/<grupo>.log. O código de
@@ -127,7 +127,7 @@ Variáveis:
   GEONODE_SRC_REF=<ref>            commit, tag ou branch dele (padrão: o commit instalado)
   DOCKER_NAMESPACE=<nome>          prefixo das imagens do geoserver e do postgis (padrão: o do .env
                                    ou o COMPOSE_PROJECT_NAME)
-  OPENGEOSGB_VERSION=<tag>         tag da imagem do django, ghcr.io/nds-cprm/opengeosgb (padrão: o
+  OPENGEOSGB_VERSION=<tag>         tag da imagem do django, ghcr.io/nds-cprm/opengeosgb-geonode (padrão: o
                                    do .env ou local)
 
 Saída:
@@ -291,7 +291,7 @@ umask 022
 # base montaria os nomes com o projeto de testes e sem os sufixos)
 ns="${DOCKER_NAMESPACE:-$(env_get DOCKER_NAMESPACE)}"; ns="${ns:-$base_project}"
 gn_tag="${OPENGEOSGB_VERSION:-$(env_get OPENGEOSGB_VERSION)}"; gn_tag="${gn_tag:-local}"
-img_geonode="ghcr.io/nds-cprm/opengeosgb:$gn_tag"
+img_geonode="ghcr.io/nds-cprm/opengeosgb-geonode:$gn_tag"
 img_geoserver="$ns/geoserver:$(env_get GEOSERVER_BASE_IMAGE_VERSION)-geonode"
 img_postgis="$ns/postgis:$(env_get POSTGRES_BASE_IMAGE_VERSION)-$(env_get POSTGIS_BASE_IMAGE_VERSION)-geonode"
 for img in "$img_geonode" "$img_geoserver" "$img_postgis"; do

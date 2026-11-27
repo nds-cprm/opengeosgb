@@ -4,7 +4,9 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "OpenGeoSGB"
-version = "0.0.1"
+# Igual à tag git da release, sem o "v" (política em "Versões e imagens publicadas" no README). O workflow
+# "Imagem Docker" falha numa tag vX.Y.Z se esta versão for diferente.
+version = "1.0.0"
 description = "OpenGeoSGB"
 readme = "README.md"
 requires-python = ">=3.10"
