@@ -1,0 +1,97 @@
+# Boas práticas de Python e Docker, em pushes no main e em pull requests:
+#   - flake8 em src/, com a configuração do .flake8;
+#   - hadolint no Dockerfile, com a configuração do .hadolint.yaml;
+#   - shellcheck nos scripts shell versionados (fora o submódulo docker/);
+#   - docker compose config: valida o compose base com o override do projeto, sobre o .env.sample.
+# As versões das ferramentas são fixas: atualize-as à mão e corrija os avisos novos no mesmo PR.
+name: Lint
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+permissions:
+  contents: read
+
+env:
+  FLAKE8_VERSION: 7.5.0
+  HADOLINT_VERSION: v2.15.1
+  SHELLCHECK_VERSION: v0.11.0
+  # Falha a partir de warning. Os "note" (sobretudo SC2086, variável sem aspas) ficam de fora: são muitos
+  # nos scripts herdados do template, e pôr aspas pode mudar o comportamento (ex.: o celery-cmd conta
+  # com variáveis vazias sumindo da linha de comando). Corrija-os aos poucos e suba para "info".
+  SHELLCHECK_SEVERITY: warning
+
+jobs:
+  python:
+    name: Python (flake8)
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v5
+
+      # Mesma versão do Python da imagem (Ubuntu 24.04)
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+
+      - name: Instalar o flake8
+        run: pip install "flake8==${FLAKE8_VERSION}"
+
+      # O formato vira anotações nas linhas do PR
+      - name: flake8
+        run: flake8 src --format='::error file=%(path)s,line=%(row)d,col=%(col)d,title=flake8 %(code)s::%(text)s'
+
+  dockerfile:
+    name: Dockerfile (hadolint)
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: hadolint
+        run: |
+          docker run --rm -i -v "$PWD/.hadolint.yaml:/.config/hadolint.yaml:ro" \
+            "docker.io/hadolint/hadolint:${HADOLINT_VERSION}" hadolint - < Dockerfile
+
+  shell:
+    name: Scripts (shellcheck)
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v5
+
+      # Scripts versionados, pela extensão .sh ou pelo shebang (sh, bash, dash, ksh). O submódulo docker/
+      # tem o próprio repositório e fica de fora (o git ls-files só lista o gitlink dele).
+      - name: shellcheck
+        run: |
+          set -o pipefail
+          files=()
+          while IFS= read -r f; do
+            [[ -f "$f" ]] || continue
+            if [[ "$f" == *.sh ]] || head -n 1 "$f" | grep -qE '^#!.*\b(ba|da|k)?sh\b'; then
+              files+=("$f")
+            fi
+          done < <(git ls-files)
+          printf 'Scripts verificados:\n'; printf '  %s\n' "${files[@]}"
+          # Saída gcc convertida em anotações nas linhas do PR
+          docker run --rm -v "$PWD:/mnt:ro" -w /mnt "docker.io/koalaman/shellcheck:${SHELLCHECK_VERSION}" \
+              --severity="${SHELLCHECK_SEVERITY}" -f gcc "${files[@]}" \
+            | sed -E 's/^([^:]+):([0-9]+):([0-9]+): (error|warning): (.*)$/::\4 file=\1,line=\2,col=\3,title=shellcheck::\5/'
+
+  compose:
+    name: Compose (config)
+    runs-on: ubuntu-24.04
+    steps:
+      # Sem o submódulo docker/: o "config" não precisa dos contextos de build
+      - uses: actions/checkout@v5
+
+      # O env_file dos serviços é o .env, que não fica no repositório
+      - name: docker compose config
+        run: |
+          cp .env.sample .env
+          docker compose -f docker-compose.yml -f docker-compose.opengeosgb.yml config --quiet

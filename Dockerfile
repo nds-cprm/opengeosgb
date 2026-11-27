@@ -42,15 +42,16 @@ WORKDIR /usr/src/project
 # Dependências antes do código, em camada própria: mudar src/ não reinstala o GeoNode.
 # A base não tem compilador: pacotes novos no requirements.txt precisam ter wheel (ou ser Python puro).
 # Os diretórios dos volumes ganham g=u para um UID arbitrário do grupo 0 (rootless, OpenShift).
+# --no-cache-dir: a base não define PIP_NO_CACHE_DIR, e o cache dos downloads ficaria na camada.
 COPY src/requirements.txt .
-RUN pip install --src /usr/src -r requirements.txt && \
+RUN pip install --no-cache-dir --src /usr/src -r requirements.txt && \
     mkdir -p /mnt/volumes/statics /geoserver_data/data /backup_restore /data /var/log/geonode && \
     chmod g=u /mnt/volumes/statics /geoserver_data/data /backup_restore /data /var/log/geonode
 
 # Correções de segurança: versões mais novas que as fixadas pelo GeoNode (ex.: Pillow). --no-deps porque o
 # resolvedor do pip recusaria a combinação; o build-smoke-test.sh aceita só essas divergências no pip check.
 COPY src/requirements-overrides.txt .
-RUN pip install --no-deps -r requirements-overrides.txt
+RUN pip install --no-cache-dir --no-deps -r requirements-overrides.txt
 
 # 755 (e não só +x): scripts precisam de leitura para rodar com um usuário que não é root
 COPY --chmod=755 src/wait-for-databases.sh /usr/bin/wait-for-databases
@@ -63,7 +64,9 @@ COPY --chmod=755 src/ .
 
 # O smoke test da base confere o venv depois dos pacotes do projeto (GDAL, psycopg2, invoke, pip check...).
 # O build-smoke-test.sh o roda aceitando só as divergências do pip check de requirements-overrides.txt
-RUN yes w | pip install -e . && \
+# --exists-action w responde "wipe" se o pip perguntar o que fazer com um diretório que já existe (antes
+# era "yes w |", um pipe que o hadolint recusa sem pipefail, e com pipefail o SIGPIPE do yes falharia)
+RUN pip install --no-cache-dir --exists-action w -e . && \
     ./build-smoke-test.sh
 
 EXPOSE 8000

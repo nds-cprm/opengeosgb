@@ -13,16 +13,17 @@ x-logging:
 x-common-django:
   &default-common-django
   logging: *default-logging
-  image: ${DOCKER_NAMESPACE:-$COMPOSE_PROJECT_NAME}/geonode:${GEONODE_BASE_IMAGE_VERSION}-rootless
+  # Imagem do Django e do Celery, com o nome da publicada no GHCR (README, "Versões e imagens publicadas").
+  # Com OPENGEOSGB_VERSION=local (padrão), é a construída por "geonode-docker build". Com uma versão
+  # publicada (ex.: 1.0.0), baixe-a com "geonode-docker pull django celery" e não construa o django,
+  # que sobrescreveria a tag localmente.
+  image: ghcr.io/nds-cprm/opengeosgb:${OPENGEOSGB_VERSION:-local}
   volumes:
-    - './src:/usr/src/project'
+    - './src:/usr/src/project'  # Descomente para tirar o "bind"
     - statics:/mnt/volumes/statics
-    # - /home/mota/_geonode/statics:/mnt/volumes/statics
     - geoserver-data-dir:/geoserver_data/data
-    # - backup-restore:/backup_restore
-    - ./draft/br:/backup_restore
+    - backup-restore:/backup_restore
     - data:/data
-    # - /home/mota/_geonode/data:/data
     - tmp:/tmp
   # Os logs do uWSGI/Django e do Celery vão para stdout/stderr (docker logs), sem arquivo no container
   # UID arbitrário com grupo 0: as imagens dão aos diretórios graváveis g=u
@@ -43,6 +44,8 @@ services:
       args:
         # Escolhe a variante da imagem base (ubuntu-24.04-pg<versão>), igual à do postgis
         - POSTGRES_CLIENT_VERSION=${POSTGRES_BASE_IMAGE_VERSION}
+        # Label org.opencontainers.image.version do build local (no GitHub Actions vem da tag git)
+        - VERSION=${OPENGEOSGB_VERSION:-local}
     ports:
       - 8000:8000
 
@@ -130,6 +133,10 @@ services:
       args:
         - POSTGRES_VERSION=${POSTGRES_BASE_IMAGE_VERSION}
         - POSTGIS_VERSION=${POSTGIS_BASE_IMAGE_VERSION}
+        # Em amd64 vale a base oficial docker.io/postgis/postgis, padrão do Dockerfile, que só existe para
+        # amd64. Em arm64 (ex.: Mac com Apple Silicon), descomente a linha abaixo, de preferência num
+        # override local: a imresamu/postgis é uma build multiarquitetura da mesma imagem. Sem ela, o build
+        # em arm64 falha ou sai emulado.
         # - POSTGIS_BASE_IMAGE=docker.io/imresamu/postgis:${POSTGRES_BASE_IMAGE_VERSION}-${POSTGIS_BASE_IMAGE_VERSION}-alpine3.22
     volumes:
       - dbdata:/var/lib/postgresql/data

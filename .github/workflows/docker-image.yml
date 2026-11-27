@@ -1,0 +1,308 @@
+# Constrói a imagem do Django (Dockerfile da raiz) e a publica no GitHub Container Registry:
+#   ghcr.io/nds-cprm/opengeosgb
+#
+# Tags publicadas (política em "Versões e imagens publicadas" no README):
+#   - tag git vX.Y.Z      -> X.Y.Z, e latest se for a maior versão estável entre as tags vX.Y.Z do repositório
+#   - tag git vX.Y.Z-rc.N -> X.Y.Z-rc.N (pré-release, nunca latest)
+#   - push no main        -> devel
+#   - pull request        -> só constrói (com o smoke test), sem publicar
+#   - manual              -> constrói a ref escolhida; publica só com "push" marcado, com as tags da ref
+#                            (tag vX.Y.Z: as de release; main: devel; outro branch: o nome do branch)
+#
+# Cada arquitetura é construída em runner nativo (amd64 e arm64, sem QEMU) e publicada só por digest. O
+# job "merge" junta os digests num manifesto multiarquitetura e aplica as tags.
+# Só a variante pg17 da base é publicada (POSTGRES_CLIENT_VERSION=17).
+#
+# O job "scan" procura vulnerabilidades com o Trivy na imagem amd64, em todos os eventos (inclusive PRs).
+# Os achados vão para o resumo do job e para a aba Security > Code scanning. Ele não bloqueia a
+# publicação enquanto SCAN_EXIT_CODE for 0 (ver "Verificação de vulnerabilidades" no README).
+name: Imagem Docker
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*.*.*']
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      push:
+        description: Publicar no GHCR (sem isso, só constrói)
+        type: boolean
+        default: false
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  # PRs: um push novo cancela o build anterior. Main e tags: cada build vai até o fim.
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+env:
+  IMAGE: ghcr.io/nds-cprm/opengeosgb
+  POSTGRES_CLIENT_VERSION: '17'
+  # Versão fixa do Trivy: em 19/03/2026 houve uma release maliciosa (v0.69.4) e as tags do trivy-action
+  # foram sequestradas (GHSA do aquasecurity/trivy "Trivy ecosystem supply chain temporarily compromised").
+  # Por isso nem a action nem o Trivy usam "latest": atualize os dois à mão, conferindo as releases.
+  SCAN_TRIVY_VERSION: v0.76.2
+  SCAN_SEVERITY: HIGH,CRITICAL
+  # 0: só relata. 1: falha o job (e, com isso, a publicação) quando houver vulnerabilidade HIGH/CRITICAL
+  # com correção disponível que não esteja no .trivyignore
+  SCAN_EXIT_CODE: '0'
+
+permissions:
+  contents: read
+
+jobs:
+  prepare:
+    name: Preparar tags
+    runs-on: ubuntu-24.04
+    outputs:
+      push: ${{ steps.push.outputs.push }}
+      version: ${{ steps.meta.outputs.version }}
+      tags: ${{ steps.meta.outputs.tags }}
+      created: ${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.created'] }}
+      geonode-version: ${{ steps.geonode.outputs.version }}
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          # As tags são necessárias para decidir o latest
+          fetch-depth: 0
+
+      - name: Decidir se publica
+        id: push
+        run: |
+          case "$GITHUB_EVENT_NAME" in
+            pull_request)      push=false ;;
+            workflow_dispatch) push='${{ inputs.push }}' ;;
+            *)                 push=true ;;
+          esac
+          echo "push=$push" >> "$GITHUB_OUTPUT"
+
+      # latest só para a maior versão estável: publicar um v1.0.5 depois do v1.1.0 não o rebaixa
+      - name: Decidir o latest
+        id: latest
+        run: |
+          latest=false
+          if [[ "$GITHUB_REF" =~ ^refs/tags/v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            highest=$(git tag -l 'v*' | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+$' | sort -V | tail -n 1)
+            [[ "$GITHUB_REF_NAME" == "$highest" ]] && latest=true
+            echo "Maior versão estável: $highest"
+          fi
+          echo "latest=$latest" >> "$GITHUB_OUTPUT"
+
+      # As versões do opengeosgb não seguem as do GeoNode; a do GeoNode vai num label da imagem
+      - name: Versão do GeoNode
+        id: geonode
+        run: |
+          version=$(sed -nE 's|^GeoNode @ git\+https://github.com/GeoNode/geonode.git@([^#[:space:]]+).*|\1|p' src/requirements.txt)
+          [[ -n "$version" ]] || { echo "::error::Versão do GeoNode não encontrada em src/requirements.txt"; exit 1; }
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+
+      - name: Tags da imagem
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.IMAGE }}
+          flavor: latest=false
+          tags: |
+            type=semver,pattern={{version}}
+            type=raw,value=latest,enable=${{ steps.latest.outputs.latest }}
+            type=raw,value=devel,enable={{is_default_branch}}
+            type=ref,event=branch,enable=${{ github.ref != 'refs/heads/main' }}
+            type=ref,event=pr
+
+  build:
+    name: Build ${{ matrix.platform }}
+    needs: prepare
+    runs-on: ${{ matrix.runner }}
+    permissions:
+      contents: read
+      packages: write
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: linux/amd64
+            arch: amd64
+            runner: ubuntu-24.04
+          - platform: linux/arm64
+            arch: arm64
+            runner: ubuntu-24.04-arm
+    steps:
+      # O Dockerfile só copia src/: o submódulo docker/ não é necessário
+      - uses: actions/checkout@v5
+
+      - uses: docker/setup-buildx-action@v3
+
+      - name: Login no GHCR
+        if: needs.prepare.outputs.push == 'true'
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      # Os rótulos OCI vêm do próprio Dockerfile (VERSION, REVISION e CREATED por build arg)
+      - name: Build
+        id: build
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          platforms: ${{ matrix.platform }}
+          build-args: |
+            POSTGRES_CLIENT_VERSION=${{ env.POSTGRES_CLIENT_VERSION }}
+            VERSION=${{ needs.prepare.outputs.version }}
+            REVISION=${{ github.sha }}
+            CREATED=${{ needs.prepare.outputs.created }}
+          labels: |
+            io.github.nds-cprm.opengeosgb.geonode.version=${{ needs.prepare.outputs.geonode-version }}
+          outputs: ${{ needs.prepare.outputs.push == 'true' && format('type=image,name={0},push-by-digest=true,name-canonical=true,push=true', env.IMAGE) || 'type=cacheonly' }}
+          cache-from: type=gha,scope=opengeosgb-${{ matrix.arch }}
+          cache-to: type=gha,mode=max,scope=opengeosgb-${{ matrix.arch }}
+
+      - name: Exportar o digest
+        if: needs.prepare.outputs.push == 'true'
+        run: |
+          mkdir -p "$RUNNER_TEMP/digests"
+          digest='${{ steps.build.outputs.digest }}'
+          touch "$RUNNER_TEMP/digests/${digest#sha256:}"
+
+      - uses: actions/upload-artifact@v4
+        if: needs.prepare.outputs.push == 'true'
+        with:
+          name: digests-${{ matrix.arch }}
+          path: ${{ runner.temp }}/digests/*
+          if-no-files-found: error
+          retention-days: 1
+
+  scan:
+    name: Vulnerabilidades (Trivy)
+    needs: [prepare, build]
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      # Envio do SARIF para a aba Security > Code scanning
+      security-events: write
+    steps:
+      # Para o .trivyignore
+      - uses: actions/checkout@v5
+
+      - uses: docker/setup-buildx-action@v3
+
+      # Mesma build do job "build" para amd64, toda vinda do cache do GitHub Actions, carregada no Docker
+      # do runner. Assim o scan vale também para PRs, que não publicam a imagem.
+      - name: Carregar a imagem amd64
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          platforms: linux/amd64
+          load: true
+          tags: opengeosgb:scan
+          build-args: |
+            POSTGRES_CLIENT_VERSION=${{ env.POSTGRES_CLIENT_VERSION }}
+            VERSION=${{ needs.prepare.outputs.version }}
+            REVISION=${{ github.sha }}
+            CREATED=${{ needs.prepare.outputs.created }}
+          cache-from: type=gha,scope=opengeosgb-amd64
+
+      # SARIF para o Code scanning: só o que tem correção, para não encher a aba com achados sem ação
+      - name: Trivy (SARIF)
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
+        with:
+          version: ${{ env.SCAN_TRIVY_VERSION }}
+          image-ref: opengeosgb:scan
+          scanners: vuln
+          severity: ${{ env.SCAN_SEVERITY }}
+          ignore-unfixed: true
+          trivyignores: .trivyignore
+          format: sarif
+          # Sem isto, o SARIF traz todas as severidades, ignorando o "severity"
+          limit-severities-for-sarif: true
+          output: trivy.sarif
+          exit-code: '0'
+
+      # PRs de forks não recebem security-events: write
+      - name: Enviar ao Code scanning
+        if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+        uses: github/codeql-action/upload-sarif@v4
+        with:
+          sarif_file: trivy.sarif
+          category: trivy-imagem
+
+      # Tabela no resumo do job; é esta execução que aplica o SCAN_EXIT_CODE
+      - name: Trivy (resumo)
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
+        env:
+          TRIVY_SKIP_DB_UPDATE: 'true'
+        with:
+          skip-setup-trivy: true
+          image-ref: opengeosgb:scan
+          scanners: vuln
+          severity: ${{ env.SCAN_SEVERITY }}
+          ignore-unfixed: true
+          trivyignores: .trivyignore
+          format: table
+          output: trivy.txt
+          exit-code: ${{ env.SCAN_EXIT_CODE }}
+
+      - name: Publicar o resumo
+        if: always() && hashFiles('trivy.txt') != ''
+        run: |
+          {
+            echo "## Trivy: vulnerabilidades ${SCAN_SEVERITY} com correção (amd64)"
+            echo
+            echo '```'
+            cat trivy.txt
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  merge:
+    name: Publicar manifesto
+    # Depende do scan para que SCAN_EXIT_CODE=1 bloqueie a publicação
+    needs: [prepare, build, scan]
+    if: needs.prepare.outputs.push == 'true'
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: ${{ runner.temp }}/digests
+          pattern: digests-*
+          merge-multiple: true
+
+      - uses: docker/setup-buildx-action@v3
+
+      - name: Login no GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      # As anotações no índice aparecem na página do pacote no GitHub (a do source liga o pacote ao repositório)
+      - name: Criar o manifesto e aplicar as tags
+        working-directory: ${{ runner.temp }}/digests
+        env:
+          TAGS: ${{ needs.prepare.outputs.tags }}
+        run: |
+          args=()
+          while IFS= read -r tag; do
+            [[ -n "$tag" ]] && args+=(-t "$tag")
+          done <<< "$TAGS"
+          sources=()
+          for digest in *; do
+            sources+=("${IMAGE}@sha256:${digest}")
+          done
+          docker buildx imagetools create "${args[@]}" \
+            --annotation "index:org.opencontainers.image.source=https://github.com/${GITHUB_REPOSITORY}" \
+            --annotation "index:org.opencontainers.image.description=Instância GeoNode do Serviço Geológico do Brasil (SGB/CPRM)" \
+            --annotation "index:org.opencontainers.image.licenses=GPL-3.0-or-later" \
+            --annotation "index:org.opencontainers.image.version=${{ needs.prepare.outputs.version }}" \
+            --annotation "index:org.opencontainers.image.revision=${GITHUB_SHA}" \
+            "${sources[@]}"
+
+      - name: Conferir o manifesto
+        env:
+          TAGS: ${{ needs.prepare.outputs.tags }}
+        run: docker buildx imagetools inspect "$(head -n 1 <<< "$TAGS")"
