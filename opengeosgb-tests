@@ -58,8 +58,8 @@
 #   RESOURCE_PUBLISHING=False, ADMIN_MODERATE_UPLOADS=False, GROUP_PRIVATE_RESOURCES=False,
 #   RECAPTCHA_ENABLED=False e SOCIALACCOUNT_PROVIDER=google (o .env do opengeosgb liga a publicação
 #   moderada, os grupos privados e o reCAPTCHA, e os testes pressupõem os padrões do GeoNode)
-# e com INVOKE_LOG_STDOUT=True (sem o ./src montado, o /usr/src/project da imagem não é gravável para o
-# UID 1000, e o entrypoint gravaria lá o invoke.log).
+# e com INVOKE_LOG_STDOUT=True (o log do invoke vai para o stdout; com False, o entrypoint o grava em
+# /tmp/invoke.log).
 #
 # Os testes rodam em /tmp/geonode-tests (volume tmp da stack de testes, gravável), com o link "geonode" para o
 # pacote do fonte: os caminhos relativos dos testes funcionam e os arquivos que eles criam no
@@ -268,8 +268,7 @@ test_env_overrides=(
     # testes de importação de WMS usam http://localhost:8000/proxy (os testes do próprio bloqueio o
     # religam com override_settings)
     "SAFE_URL_CHECK_ENABLED=False"
-    # Log do invoke no stdout: sem o ./src montado (como no docker-compose.opengeosgb.yml), o
-    # /usr/src/project da imagem não é gravável para o UID 1000, onde o entrypoint gravaria o invoke.log
+    # Log do invoke no stdout (com False, o entrypoint o grava em /tmp/invoke.log)
     "INVOKE_LOG_STDOUT=True"
     # Fluxo de publicação, grupos e cadastro como no .env_test da CI: os testes de permissões, busca e
     # APIs pressupõem os padrões do GeoNode (no .env do opengeosgb, publicação moderada, grupos
