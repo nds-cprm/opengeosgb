@@ -47,7 +47,8 @@ def waitfordbs(ctx):
 @task
 def update(ctx):
     print("***************************setting env*********************************")
-    ctx.run("env", pty=True)
+    # Desativado: o "env" imprimiria SECRET_KEY, senhas e chaves de API no log
+    # ctx.run("env", pty=True)
     pub_host = _geonode_public_host()
     print(f"Public Hostname or IP is {pub_host}")
     pub_port = _geonode_public_port()
@@ -287,7 +288,8 @@ def update(ctx):
     )
     ctx.run(f"source {override_env}", pty=True)
     print("****************************finalize env**********************************")
-    ctx.run("env", pty=True)
+    # Desativado: o "env" imprimiria SECRET_KEY, senhas e chaves de API no log
+    # ctx.run("env", pty=True)
 
 
 @task
