@@ -11,9 +11,26 @@ ARG GEONODE_BASE_IMAGE=docker.io/ndscprm/geonode-base:ubuntu-24.04-pg${POSTGRES_
 FROM ${GEONODE_BASE_IMAGE}
 
 # https://specs.opencontainers.org/image-spec/annotations/
-LABEL org.opencontainers.image.title="OpenGeoSGB/GeoNode" \
-    org.opencontainers.image.version="dev" \
-    org.opencontainers.image.authors="GeoNode development team & NDS CPRM"    
+# Todas as chaves são declaradas aqui para não herdar os valores da imagem base (que descrevem a base,
+# não o projeto). VERSION, REVISION e CREATED vêm do build, por exemplo:
+#   --build-arg VERSION=$(git describe --tags --always) --build-arg REVISION=$(git rev-parse HEAD) \
+#   --build-arg CREATED=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+ARG GEONODE_BASE_IMAGE
+ARG VERSION=dev
+ARG REVISION=unknown
+ARG CREATED=unknown
+LABEL org.opencontainers.image.title="OpenGeoSGB" \
+      org.opencontainers.image.description="Instância GeoNode do Serviço Geológico do Brasil (SGB/CPRM)" \
+      org.opencontainers.image.version="${VERSION}" \
+      org.opencontainers.image.revision="${REVISION}" \
+      org.opencontainers.image.created="${CREATED}" \
+      org.opencontainers.image.authors="NDS CPRM" \
+      org.opencontainers.image.vendor="Serviço Geológico do Brasil (SGB/CPRM)" \
+      org.opencontainers.image.url="https://github.com/nds-cprm/opengeosgb" \
+      org.opencontainers.image.source="https://github.com/nds-cprm/opengeosgb" \
+      org.opencontainers.image.documentation="https://github.com/nds-cprm/opengeosgb#readme" \
+      org.opencontainers.image.licenses="GPL-3.0-or-later" \
+      org.opencontainers.image.base.name="${GEONODE_BASE_IMAGE}"
 
 # A base já traz curl, wget, unzip e gnupg2, e o venv com pip/setuptools/wheel atualizados e o invoke.
 # Ela não define locale; o C.UTF-8 já vem na glibc do Ubuntu 24.04, sem "locales"/"locale-gen".
